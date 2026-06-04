@@ -74,8 +74,11 @@
 * { box-sizing: border-box; }
 
 body {
-  background: var(--bg);
-  font-family: 'Segoe UI', Arial, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, #faf8f4 0%, transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, #f0ede6 0%, transparent 55%),
+    #f5f3f0;
+  font-family: 'Spline Sans', 'Segoe UI', Arial, sans-serif;
   padding: 24px 16px;
   color: #222;
 }
@@ -91,22 +94,26 @@ h3 {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   margin-bottom: 20px;
-  background: var(--card-bg);
+  background: linear-gradient(180deg, rgba(255,253,248,0.95) 0%, rgba(250,248,244,0.95) 100%);
+  backdrop-filter: blur(10px);
 }
 
 .preview-box {
-  background: var(--chat-bg);
+  background: linear-gradient(180deg, rgba(255,253,248,0.92) 0%, rgba(245,243,240,0.92) 100%);
   padding: 20px;
   border-radius: var(--radius);
   position: sticky;
-  top: 20px;
+  top: 80px;
+  border: 1px solid rgba(176,132,49,0.1);
+  backdrop-filter: blur(10px);
 }
 
 .chat {
-  background: white;
+  background: rgba(255,255,255,0.9);
   padding: 16px;
   border-radius: 14px;
   margin-bottom: 16px;
+  border: 1px solid rgba(176,132,49,0.08);
 }
 
 #livePreviewImage {
@@ -152,12 +159,27 @@ h3 {
 .sent-box { background: linear-gradient(135deg, #25D366, #128C7E); }
 .failed-box { background: linear-gradient(135deg, #ff5f6d, #d63031); }
 
+/* Form controls styling */
+.form-control, .form-select {
+  background: rgba(255,255,255,0.85) !important;
+  border: 1px solid rgba(176,132,49,0.2) !important;
+  border-radius: 10px !important;
+}
+.form-control:focus, .form-select:focus {
+  border-color: #25D366 !important;
+  box-shadow: 0 0 0 0.2rem rgba(37,211,102,0.15) !important;
+}
+.form-label {
+  color: #333;
+}
+
 /* Status table */
 #statusTableWrapper {
   max-height: 320px;
   overflow-y: auto;
   border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(176,132,49,0.15);
+  background: rgba(255,255,255,0.85);
 }
 
 #statusTable thead th {
@@ -176,14 +198,14 @@ h3 {
 }
 
 #statusTable tbody tr:hover {
-  background: #f5fdf8;
+  background: rgba(37,211,102,0.05);
 }
 
 #statusTable td {
   padding: 9px 14px;
   font-size: 13px;
   vertical-align: middle;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(176,132,49,0.08);
 }
 
 .badge-sending {
