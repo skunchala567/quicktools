@@ -216,6 +216,15 @@ header.app::before{
 }
 .props.show{display:block;animation:rise .25s ease}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.field-list{display:grid;gap:8px;margin:12px 0}
+.field-list:empty{display:none}
+.field-row{border:1px solid var(--line);border-radius:9px;background:var(--card);padding:8px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.field-row.active{border-color:var(--gold);background:var(--paper-2)}
+.field-meta{min-width:0}
+.field-name{font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.field-type{margin-top:2px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.field-edit{border:1px solid var(--line-strong);background:var(--paper-2);color:var(--ink);border-radius:7px;padding:6px 9px;cursor:pointer;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px}
+.field-edit:hover{border-color:var(--gold);color:var(--gold)}
 .props .ptitle{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-deep);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .field-tag{background:var(--paper-2);border-radius:5px;padding:2px 7px;font-size:11px;color:var(--ink)}
 .prow{display:flex;align-items:center;gap:8px;margin-bottom:9px}
@@ -236,6 +245,21 @@ header.app::before{
 .stage-head .lbl{font-family:'Fraunces',serif;font-size:20px;font-weight:600}
 .pill{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--muted);border:1px solid var(--line);padding:4px 10px;border-radius:20px;background:var(--card)}
 .spacer{flex:1}
+.generate-panel{
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--card);
+  padding:clamp(12px,1.5vw,16px);
+  margin:0 0 16px;
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+}
+.generate-panel .step-h{margin-bottom:12px}
+.generate-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px;width:100%;max-width:100%}
+.generate-actions .btn{min-height:52px;height:auto;justify-content:center;text-align:center;min-width:0;white-space:normal;line-height:1.2}
+.generate-actions .btn .ic{flex:0 0 42px}
+.generate-panel .progress{grid-column:1/-1;margin-top:2px}
 
 .canvas-wrap{
   position:relative;border-radius:14px;padding:22px;
@@ -243,16 +267,18 @@ header.app::before{
     linear-gradient(var(--card),var(--card)) padding-box,
     repeating-linear-gradient(45deg,var(--line) 0 1px,transparent 1px 11px);
   border:1px solid var(--line);box-shadow:var(--shadow-lg);
-  display:inline-block;max-width:100%;
+  display:block;width:100%;max-width:100%;overflow:auto;
 }
+.canvas-wrap.has-template{display:flex;justify-content:center;align-items:flex-start}
 .canvas-frame{
   position:relative;display:inline-block;
   box-shadow:0 0 0 1px var(--line-strong), 0 18px 40px -18px rgba(40,30,15,.4);
   background:#fff;
+  max-width:100%;
 }
 #cv{display:block;border-radius:2px}
 .empty-canvas{
-  width:min(760px,72vw);aspect-ratio:1.414/1;border-radius:10px;
+  width:100%;aspect-ratio:1.414/1;border-radius:10px;min-height:360px;
   border:2px dashed var(--line-strong);display:grid;place-items:center;text-align:center;
   background:repeating-linear-gradient(45deg,#fff 0 14px,#fbf7ee 14px 28px);color:var(--muted);
 }
@@ -302,11 +328,19 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
 .modal h4{font-family:'Fraunces',serif;font-size:21px;margin:0 0 6px}
 .modal p{font-size:13px;color:var(--muted);margin:0 0 16px}
 .modal input,.modal select{width:100%;font-family:'Inter Tight',sans-serif;font-size:15px;padding:11px 13px;border:1px solid var(--line-strong);border-radius:9px;background:#fff;color:var(--ink);margin-bottom:12px}
+.field-type-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 12px}
+.field-type-option{border:1px solid var(--line-strong);border-radius:9px;background:var(--card);padding:10px 8px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:.16s;min-width:0;text-align:center}
+.field-type-option:hover{border-color:var(--gold)}
+.field-type-option input{width:auto;margin:0;accent-color:var(--gold);flex:none}
+.field-type-option span{display:block;font-weight:700;font-size:14px;line-height:1.2;color:var(--ink);min-width:0}
+.field-type-option small{display:none}
+.field-type-option:has(input:checked){border-color:var(--gold);background:var(--paper-2)}
 .modal .quick{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .modal .quick span{font-size:11.5px;font-family:'JetBrains Mono',monospace;background:var(--paper-2);padding:5px 9px;border-radius:6px;cursor:pointer;border:1px solid var(--line);transition:.14s}
 .modal .quick span:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
-.modal .mbtns{display:flex;gap:10px}
+.modal .mbtns{display:flex;gap:10px;flex-wrap:wrap}
 .modal .mbtns .btn{justify-content:center;text-align:center}
+.modal .mbtns .btn{min-width:min(100%,120px);flex:1}
 
 .divider{height:1px;background:var(--line);margin:20px 0;border:none}
 .kbd{font-family:'JetBrains Mono',monospace;background:var(--paper-2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:11px}
@@ -316,6 +350,7 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
   .rail{border-right:none;border-bottom:1px solid var(--line);max-height:none}
   .stage{max-height:none}
   .brand .tag{display:none}
+  .empty-canvas{min-height:280px}
 }
 @media(max-width:760px){
   body{padding-left:0;padding-top:72px}
@@ -333,6 +368,9 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
   .app-navbar-logo{min-width:max-content}
   .app-nav-links{display:flex;gap:4px}
   .app-nav-item{min-width:max-content}
+  .canvas-wrap{padding:14px}
+  .empty-canvas{min-height:240px}
+  .field-type-options{grid-template-columns:1fr}
 }
 </style>
 <link rel="stylesheet" href="base-theme.css">
@@ -342,7 +380,7 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
 
 <!-- App Shell Navigation -->
 <aside class="app-sidebar" aria-label="Creator Studio apps">
-  <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">CS</span><span>CREATOR STUDIO</span></a>
+  <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">KS</span><span> Tools </span></a>
   <nav class="app-nav-links">
     <a href="index.html" class="app-nav-item active"><span class="app-nav-icon app-icon-cert" aria-hidden="true"></span><span>Certificates</span></a>
     <a href="whatsapp.html" class="app-nav-item"><span class="app-nav-icon app-icon-whatsapp" aria-hidden="true"></span><span>WhatsApp</span></a>
@@ -360,11 +398,11 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
   <div class="brand">
     <div class="seal">CG</div>
     <div>
-      <h1>Certificate Generator Studio</h1>
+      <h1>Certificate Generator</h1>
       <div class="sub">Design / Merge / Export - entirely in your browser</div>
-    </div>
+    <!-- </div>
     <div class="tag">Place dynamic fields on any template, merge from a spreadsheet, and download a ZIP of finished certificates. No server, no sign-in.</div>
-  </div>
+  </div>-->
 </header>
 
 <div class="shell">
@@ -385,7 +423,8 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
     <div class="step">
       <div class="step-h"><span class="step-n">2</span><h3>Dynamic Fields</h3></div>
       <button class="btn dark" id="addFieldBtn" disabled><span class="ic">+</span> Add Field</button>
-      <div class="hint">Add text, <span class="kbd">{{QRCode}}</span> or <span class="kbd">{{Photo}}</span> fields, then drag &amp; resize them on the template. Long text wraps inside the box - drag the side handles to widen it.</div>
+      <div class="hint">Add text, <span class="kbd">{{QRCode}}</span> or <span class="kbd">{{Photo}}</span> fields, then drag &amp; resize them on the template.</div>
+      <div class="field-list" id="fieldList" aria-label="Added dynamic fields"></div>
 
       <div class="props" id="propPanel">
         <div class="ptitle"><span>Field Properties</span><span class="field-tag" id="propName">-</span></div>
@@ -422,8 +461,7 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
 
     <div class="step">
       <div class="step-h"><span class="step-n">3</span><h3>Recipient Data</h3></div>
-      <button class="btn" id="exportLayout"><span class="ic">EXP</span> Export Excel Template</button>
-      <div class="hint"><b>Export Excel Template</b> downloads a blank Excel file with one column per field you've added - fill it in, then upload it below.</div>
+      <button class="btn" id="exportLayout"><span class="ic">EXP</span> Download sample file</button>
 
       <div class="drop" id="xlsxDrop" style="margin-top:12px">
         <div class="big">XLS</div>
@@ -441,21 +479,6 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
       <input type="file" id="importLayout" accept="application/json,.json" hidden>
     </div>
 
-    <hr class="divider">
-
-    <div class="step">
-      <div class="step-h"><span class="step-n">4</span><h3>Generate</h3></div>
-      <button class="btn" id="previewBtn" disabled><span class="ic">VIEW</span> Preview Selected Row</button>
-      <div style="height:8px"></div>
-      <button class="btn dark" id="genBtn" disabled><span class="ic">RUN</span> Generate Certificates</button>
-      <div style="height:8px"></div>
-      <button class="btn accent" id="zipBtn" disabled><span class="ic">ZIP</span> Download ZIP</button>
-      <div class="progress" id="prog">
-        <div class="bar"><i id="progBar"></i></div>
-        <div class="ptxt" id="progTxt">Working...</div>
-      </div>
-    </div>
-
   </aside>
 
   <!-- ============ STAGE ============ -->
@@ -468,6 +491,19 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
       <div class="spacer"></div>
       <span class="pill" id="previewPill">preview off</span>
     </div>
+
+    <section class="generate-panel" aria-labelledby="generateTitle">
+      <div class="step-h"><span class="step-n">4</span><h3 id="generateTitle">Generate</h3></div>
+      <div class="generate-actions">
+        <button class="btn" id="previewBtn" disabled><span class="ic">VIEW</span> Preview Selected Row</button>
+        <button class="btn dark" id="genBtn" disabled><span class="ic">RUN</span> Generate Certificates</button>
+        <button class="btn accent" id="zipBtn" disabled><span class="ic">ZIP</span> Download ZIP</button>
+        <div class="progress" id="prog">
+          <div class="bar"><i id="progBar"></i></div>
+          <div class="ptxt" id="progTxt">Working...</div>
+        </div>
+      </div>
+    </section>
 
     <div class="canvas-wrap" id="canvasWrap">
       <div class="empty-canvas" id="emptyCanvas">
@@ -508,15 +544,26 @@ tr:nth-child(even) td{background:rgba(234,227,212,.35)}
     <h4 id="modalTitle">Add a Field</h4>
     <p>Name the field exactly as you'd like it referenced. It appears on the certificate as <span class="kbd">{{name}}</span>.</p>
     <input type="text" id="fieldNameInput" placeholder="e.g. Name, Rank, Date..." autocomplete="off">
-    <select id="fieldTypeInput">
-      <option value="text">Text field</option>
-      <option value="qr">QR Code (from column value)</option>
-      <option value="photo">Photo / Image (from URL in column)</option>
-    </select>
-    <div class="quick" id="quickChips"></div>
+     <div class="quick" id="quickChips"></div>
+    <div class="field-type-options" id="fieldTypeInput" role="radiogroup" aria-label="Field type">
+      <label class="field-type-option" title="Regular text from a spreadsheet column." aria-label="Text field: regular text from a spreadsheet column.">
+        <input type="radio" name="fieldType" value="text" checked>
+        <span>Text field</span>
+      </label>
+      <label class="field-type-option" title="Creates a QR code from the mapped column value." aria-label="QR Code: creates a QR code from the mapped column value.">
+        <input type="radio" name="fieldType" value="qr">
+        <span>QR Code</span>
+      </label>
+      <label class="field-type-option" title="Loads an image from a URL in the mapped column." aria-label="Photo / Image: loads an image from a URL in the mapped column.">
+        <input type="radio" name="fieldType" value="photo">
+        <span>Photo / Image</span>
+      </label>
+    </div>
+   
     <div class="mbtns">
       <button class="btn" id="modalCancel">Cancel</button>
-      <button class="btn dark" id="modalAdd"><span class="ic">+</span> Add Field</button>
+      <button class="btn" id="modalAddAnother"><span class="ic">+</span> Add Another</button>
+      <button class="btn dark" id="modalAdd">Submit</button>
     </div>
   </div>
 </div>
@@ -542,6 +589,7 @@ let mapping = {};                 // fieldName -> excelColumn
 let generated = [];               // {name, dataURL}
 let previewRowIndex = 0;
 let previewOn = false;
+let resizeTimer = null;
 
 /* ---------- Helpers ---------- */
 const $ = id => document.getElementById(id);
@@ -552,6 +600,48 @@ function toast(msg, isErr){
   clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 2600);
 }
 function safeName(s){ return String(s==null?'':s).replace(/[\\/:*?"<>|]+/g,'_').replace(/\s+/g,'_').slice(0,80) || 'certificate'; }
+function getCanvasFitScale(){
+  if(!baseW || !baseH) return 1;
+  const wrap = $('canvasWrap');
+  const stage = wrap.closest('.stage') || wrap.parentElement;
+  const wrapStyles = getComputedStyle(wrap);
+  const padX = parseFloat(wrapStyles.paddingLeft) + parseFloat(wrapStyles.paddingRight);
+  const availableW = Math.max(260, (stage.clientWidth || window.innerWidth) - padX);
+  const top = wrap.getBoundingClientRect().top;
+  const availableH = Math.max(280, window.innerHeight - top - 34);
+  const fitScale = Math.min(availableW / baseW, availableH / baseH);
+  return Math.max(0.05, Math.min(2.5, fitScale));
+}
+function resizeLiveCanvas(){
+  if(!canvas || !baseW || !baseH) return;
+  const nextScale = getCanvasFitScale();
+  if(!nextScale || Math.abs(nextScale - displayScale) < 0.001) return;
+  const ratio = nextScale / displayScale;
+  displayScale = nextScale;
+
+  canvas.setWidth(Math.round(baseW * displayScale));
+  canvas.setHeight(Math.round(baseH * displayScale));
+  canvas.getObjects().forEach(obj=>{
+    if(isText(obj)){
+      obj.set({
+        left: obj.left * ratio,
+        top: obj.top * ratio,
+        fontSize: obj.fontSize * ratio,
+        width: obj.width * ratio
+      });
+    } else {
+      obj.set({
+        left: obj.left * ratio,
+        top: obj.top * ratio,
+        scaleX: obj.scaleX * ratio,
+        scaleY: obj.scaleY * ratio
+      });
+    }
+    obj.setCoords();
+  });
+  canvas.requestRenderAll();
+  syncTextWidthInput();
+}
 
 /* ---------- Template upload ---------- */
 function setupDrop(dropEl, inputEl, handler){
@@ -568,9 +658,8 @@ function loadTemplate(file){
   reader.onload = e=>{
     fabric.Image.fromURL(e.target.result, img=>{
       baseW = img.width; baseH = img.height;
-      // display scale: fit into available width
-      const maxW = Math.min(900, (window.innerWidth - 420));
-      displayScale = Math.min(1, maxW / baseW);
+      // Display scale fits the live stage and current viewport.
+      displayScale = getCanvasFitScale();
       initCanvas();
       tplImage = img;
       tplImage.set({selectable:false, evented:false, originX:'left', originY:'top', left:0, top:0});
@@ -581,7 +670,8 @@ function loadTemplate(file){
       canvas.requestRenderAll();
       $('emptyCanvas').style.display='none';
       $('canvasFrame').style.display='inline-block';
-      $('dimPill').textContent = baseW+' Ã— '+baseH+' px';
+      $('canvasWrap').classList.add('has-template');
+      $('dimPill').textContent = baseW+' x '+baseH+' px';
       $('addFieldBtn').disabled = false;
       toast('Template loaded - add some fields');
     });
@@ -598,7 +688,7 @@ function initCanvas(){
   canvas.setHeight(Math.round(baseH*displayScale));
   canvas.on('selection:created', onSelect);
   canvas.on('selection:updated', onSelect);
-  canvas.on('selection:cleared', ()=>{ $('propPanel').classList.remove('show'); });
+  canvas.on('selection:cleared', ()=>{ $('propPanel').classList.remove('show'); renderFieldList(); });
   canvas.on('object:modified', ()=>{ updateFieldPill(); syncTextWidthInput(); });
   canvas.on('object:scaling', syncTextWidthInput);
 }
@@ -606,14 +696,19 @@ function initCanvas(){
 /* ---------- Fields ---------- */
 function openModal(){
   $('fieldNameInput').value='';
-  $('fieldTypeInput').value='text';
+  const textType = document.querySelector('input[name="fieldType"][value="text"]');
+  if(textType) textType.checked = true;
   $('modalBg').classList.add('show');
   setTimeout(()=>$('fieldNameInput').focus(),50);
 }
 function closeModal(){ $('modalBg').classList.remove('show'); }
+function selectedFieldType(){
+  const checked = document.querySelector('input[name="fieldType"]:checked');
+  return checked ? checked.value : 'text';
+}
 
 function buildChips(){
-  const chips = ['Name','ID','Class','Section','Sport','Rank','Date','Certificate Number'];
+  const chips = ['Name','ID','Class','Section','Rank','Date'];
   const box = $('quickChips'); box.innerHTML='';
   chips.forEach(c=>{
     const s=document.createElement('span'); s.textContent=c;
@@ -653,8 +748,10 @@ function addField(name, type){
   canvas.add(obj); canvas.setActiveObject(obj); canvas.requestRenderAll();
   fields.push({ id, name, type, obj });
   updateFieldPill();
+  renderFieldList();
   refreshMapping();
   toast('Field "'+name+'" added');
+  return true;
 }
 
 function makePlaceholderRect(name, label, color){
@@ -669,6 +766,7 @@ function makePlaceholderRect(name, label, color){
 function onSelect(){
   const o = canvas.getActiveObject(); if(!o || !o._cgId) { $('propPanel').classList.remove('show'); return; }
   const f = fields.find(f=>f.id===o._cgId); if(!f) return;
+  renderFieldList(o._cgId);
   $('propPanel').classList.add('show');
   $('propName').textContent = '{{'+f.name+'}}';
   if(f.type==='text'){
@@ -718,10 +816,40 @@ $('delField').addEventListener('click',()=>{
   const o=canvas.getActiveObject(); if(!o||!o._cgId)return;
   fields = fields.filter(f=>f.id!==o._cgId);
   canvas.remove(o); canvas.discardActiveObject(); canvas.requestRenderAll();
-  $('propPanel').classList.remove('show'); updateFieldPill(); refreshMapping();
+  $('propPanel').classList.remove('show'); updateFieldPill(); renderFieldList(); refreshMapping();
 });
 
 function updateFieldPill(){ $('fieldPill').textContent = fields.length+' field'+(fields.length===1?'':'s'); }
+function typeLabel(type){ return type==='qr' ? 'QR Code' : type==='photo' ? 'Photo / Image' : 'Text field'; }
+function renderFieldList(activeId){
+  const box = $('fieldList');
+  if(!box) return;
+  const currentId = activeId || (canvas && canvas.getActiveObject() && canvas.getActiveObject()._cgId);
+  box.innerHTML = fields.map(f=>`
+    <div class="field-row ${f.id===currentId?'active':''}" data-id="${f.id}">
+      <div class="field-meta">
+        <div class="field-name" title="{{${esc(f.name)}}}">{{${esc(f.name)}}}</div>
+        <div class="field-type">${esc(typeLabel(f.type))}</div>
+      </div>
+      <button class="field-edit" type="button" data-id="${f.id}">Edit</button>
+    </div>
+  `).join('');
+}
+function editField(id){
+  const f = fields.find(field=>field.id===id);
+  if(!f || !canvas) return;
+  clearPreview();
+  previewOn=false;
+  $('previewPill').textContent='preview off';
+  canvas.setActiveObject(f.obj);
+  f.obj.setCoords();
+  onSelect();
+  canvas.requestRenderAll();
+}
+$('fieldList').addEventListener('click',e=>{
+  const btn = e.target.closest('.field-edit');
+  if(btn) editField(btn.dataset.id);
+});
 
 /* keyboard delete */
 document.addEventListener('keydown',e=>{
@@ -731,6 +859,10 @@ document.addEventListener('keydown',e=>{
       $('delField').click(); e.preventDefault();
     }
   }
+});
+window.addEventListener('resize', ()=>{
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(resizeLiveCanvas, 120);
 });
 
 /* ---------- Excel template export (columns = added fields) ---------- */
@@ -747,7 +879,7 @@ function exportExcelTemplate(){
   ws['!cols'] = headers.map(h=>({wch:Math.max(14, h.length+4)}));
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Recipients');
-  XLSX.writeFile(wb, 'certificate-data-template.xlsx');
+  XLSX.writeFile(wb, 'sample-template.xlsx');
   toast('Template exported - '+headers.length+' column'+(headers.length===1?'':'s'));
 }
 
@@ -809,7 +941,7 @@ function importLayout(file){
       canvas.add(obj);
       fields.push({id,name:fd.field,type:fd.type||'text',obj});
     });
-    canvas.requestRenderAll(); updateFieldPill(); refreshMapping();
+    canvas.requestRenderAll(); updateFieldPill(); renderFieldList(); refreshMapping();
     toast('Layout imported - '+fields.length+' fields');
   };
   r.readAsText(file);
@@ -1014,7 +1146,15 @@ setupDrop($('xlsxDrop'),$('xlsxInput'),loadExcel);
 $('addFieldBtn').onclick=()=>{ buildChips(); openModal(); };
 $('modalCancel').onclick=closeModal;
 $('modalBg').addEventListener('click',e=>{ if(e.target===$('modalBg')) closeModal(); });
-$('modalAdd').onclick=()=>{ addField($('fieldNameInput').value,$('fieldTypeInput').value); closeModal(); };
+$('modalAdd').onclick=()=>{
+  if(addField($('fieldNameInput').value, selectedFieldType())) closeModal();
+};
+$('modalAddAnother').onclick=()=>{
+  if(addField($('fieldNameInput').value, selectedFieldType())){
+    $('fieldNameInput').value='';
+    $('fieldNameInput').focus();
+  }
+};
 $('fieldNameInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ $('modalAdd').click(); } });
 
 $('exportLayout').onclick=exportExcelTemplate;
