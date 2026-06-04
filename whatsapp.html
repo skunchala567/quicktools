@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,53 +10,75 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-/* ===== APP SHELL NAVIGATION ===== */
-.app-navbar {
-  background: linear-gradient(135deg, #075E54 0%, #054741 100%);
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  border-bottom: 2px solid #25D366;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  position: sticky;
-  top: 0;
+/* ===== APP SHELL SIDEBAR ===== */
+.app-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 232px;
   z-index: 1000;
+  background: linear-gradient(180deg, #075E54 0%, #054741 100%);
+  border-right: 2px solid #25D366;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 .app-navbar-logo {
-  font-size: 16px;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 10px;
   color: #25D366;
   text-decoration: none;
-  margin-right: auto;
-  letter-spacing: 1px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .7px;
+}
+.app-logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #25D366;
+  color: #075E54;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
 }
 .app-nav-links {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  display: grid;
+  gap: 4px;
 }
 .app-nav-item {
-  padding: 8px 16px;
-  border-radius: 8px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
-  color: #ccc;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  color: #dff5e8;
   transition: all 0.2s;
   cursor: pointer;
+}
+.app-nav-icon {
+  width: 22px;
+  flex: none;
+  text-align: center;
+  font-size: 17px;
 }
 .app-nav-item:hover {
   background: rgba(255,255,255,0.1);
   color: #25D366;
-  border-color: #25D366;
 }
 .app-nav-item.active {
-  background: #25D366;
-  color: #075E54;
-  border-color: #25D366;
+  background: rgba(37,211,102,0.22);
+  color: #fff;
   font-weight: 700;
 }
 
@@ -77,9 +99,9 @@ body {
   background:
     radial-gradient(1200px 600px at 85% -10%, #faf8f4 0%, transparent 60%),
     radial-gradient(900px 500px at -10% 110%, #f0ede6 0%, transparent 55%),
-    #f5f3f0;
-  font-family: 'Spline Sans', 'Segoe UI', Arial, sans-serif;
-  padding: 24px 16px;
+  #f5f3f0;
+  font-family: 'Inter Tight', 'Segoe UI', Arial, sans-serif;
+  padding: 24px 16px 24px 248px;
   color: #222;
 }
 
@@ -319,7 +341,7 @@ h3 {
   margin-bottom: 18px;
 }
 
-/* ─── HISTORY PANEL ──────────────────────────────────────── */
+/* HISTORY PANEL */
 #historyPanel {
   position: fixed;
   top: 0; right: 0;
@@ -533,7 +555,7 @@ h3 {
 #historyOverlay.show { display: block; }
 
 
-/* ─── BULK CAMPAIGN CARD ──────────────────────────────────── */
+/* â”€â”€â”€ BULK CAMPAIGN CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bulk-card {
   background: white;
   border-radius: 16px;
@@ -594,19 +616,46 @@ h3 {
   transition: width 0.5s ease;
 }
 
+@media (max-width: 760px) {
+  body { padding: 88px 16px 24px; }
+  .app-sidebar {
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: 72px;
+    padding: 8px 10px;
+    flex-direction: row;
+    align-items: center;
+    border-right: 0;
+    border-bottom: 2px solid #25D366;
+    overflow-x: auto;
+  }
+  .app-navbar-logo { min-width: max-content; }
+  .app-nav-links { display: flex; gap: 4px; }
+  .app-nav-item { min-width: max-content; }
+}
+
 </style>
+<link rel="stylesheet" href="base-theme.css">
+<script src="base-theme.js"></script>
 </head>
 
 <body>
 
 <!-- App Shell Navigation -->
-<nav class="app-navbar">
-  <a href="index.html" class="app-navbar-logo">🎓 CREATOR STUDIO</a>
-  <div class="app-nav-links">
-    <a href="index.html" class="app-nav-item">📜 Certificates</a>
-    <a href="whatsapp.html" class="app-nav-item active">💬 WhatsApp</a>
+<aside class="app-sidebar" aria-label="Creator Studio apps">
+  <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">CS</span><span>CREATOR STUDIO</span></a>
+  <nav class="app-nav-links">
+    <a href="index.html" class="app-nav-item"><span class="app-nav-icon app-icon-cert" aria-hidden="true"></span><span>Certificates</span></a>
+    <a href="whatsapp.html" class="app-nav-item active"><span class="app-nav-icon app-icon-whatsapp" aria-hidden="true"></span><span>WhatsApp</span></a>
+    <a href="excel-merger.html" class="app-nav-item"><span class="app-nav-icon app-icon-excel" aria-hidden="true"></span><span>Excel Merger</span></a>
+  </nav>
+  <div class="app-shell-footer">
+    <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme">
+      <span class="app-theme-icon" data-theme-icon aria-hidden="true">L</span>
+      <span data-theme-label>Light mode</span>
+    </button>
   </div>
-</nav>
+</aside>
 
 <div class="container-fluid">
 <div class="row">
@@ -615,11 +664,11 @@ h3 {
 <div class="col-md-8">
 <div class="card p-4">
 
-  <h3 class="mb-1">📲 WhatsApp Dashboard</h3>
+  <h3 class="mb-1">WhatsApp Dashboard</h3>
   <p class="text-muted small mb-3">Campaign message sender with live tracking</p>
 
   <div class="cloudinary-badge">
-    ☁️ Cloudinary Upload Preset: <b>whatsapp</b>
+    Cloudinary Upload Preset: <b>whatsapp</b>
   </div>
 
   <div class="row g-3">
@@ -717,8 +766,8 @@ h3 {
 <!-- Status Table (bulk only) -->
 <div class="card p-4 hidden" id="statusTableCard">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0" style="color:var(--green-dark)">📋 Send Status Log</h5>
-    <span class="text-muted small" id="statusSummary">0 sent · 0 failed</span>
+    <h5 class="mb-0" style="color:var(--green-dark)">Send Status Log</h5>
+    <span class="text-muted small" id="statusSummary">0 sent - 0 failed</span>
   </div>
   <div id="statusTableWrapper">
     <table id="statusTable" class="table table-hover mb-0">
@@ -781,8 +830,8 @@ h3 {
 
       <!-- Pause / Stop / Resume Controls -->
       <div class="control-bar hidden" id="controlBar">
-        <button class="btn btn-pause" id="pauseBtn" onclick="togglePause()">⏸ Pause</button>
-        <button class="btn btn-stop" id="stopBtn" onclick="stopSending()">⏹ Stop</button>
+        <button class="btn btn-pause" id="pauseBtn" onclick="togglePause()">Pause</button>
+        <button class="btn btn-stop" id="stopBtn" onclick="stopSending()">Stop</button>
       </div>
 
     </div>
@@ -835,11 +884,11 @@ let isPaused = false;
 let isStopped = false;
 let pauseResolve = null;
 
-// ─── LIVE PREVIEW ───────────────────────────────────────
+// â”€â”€â”€ LIVE PREVIEW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 
 
-// ─── MODE TOGGLE ─────────────────────────────────────────
+// â”€â”€â”€ MODE TOGGLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function toggleMode(){
   const mode = document.getElementById('modeSelect').value;
   document.getElementById('singleSection').classList.toggle('hidden', mode !== 'single');
@@ -847,7 +896,7 @@ function toggleMode(){
   document.getElementById('statusTableCard').classList.toggle('hidden', mode !== 'bulk');
 }
 
-// ─── IMAGE UPLOAD ─────────────────────────────────────────
+// â”€â”€â”€ IMAGE UPLOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function uploadImageToCloudinary(){
   const file = document.getElementById('imageFile').files[0];
@@ -870,7 +919,7 @@ async function uploadImageToCloudinary(){
       document.getElementById('imageUrl').value = data.secure_url;
       document.getElementById('livePreviewImage').src = data.secure_url;
       document.getElementById('livePreviewImage').style.display = 'block';
-      setUploadStatus('success','✅ Image uploaded successfully');
+      setUploadStatus('success','Image uploaded successfully');
     } else {
       throw new Error(data.error?.message || 'Upload failed');
     }
@@ -895,7 +944,7 @@ function clearImageUpload(){
   setUploadStatus('secondary','No image uploaded');
 }
 
-// ─── EXCEL UPLOAD ─────────────────────────────────────────
+// â”€â”€â”€ EXCEL UPLOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function handleExcel(e){
   const file = e.target.files[0];
@@ -931,7 +980,7 @@ function clearExcelUpload(){
   document.getElementById('statusTableBody').innerHTML = '';
 }
 
-// ─── STATUS TABLE ─────────────────────────────────────────
+// â”€â”€â”€ STATUS TABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildStatusTable(){
   const tbody = document.getElementById('statusTableBody');
   tbody.innerHTML = contacts.map((c, i) => `
@@ -949,12 +998,12 @@ function setRowStatus(index, status){
   const cell = document.getElementById(`status-${index}`);
   if(!cell) return;
   const map = {
-    waiting: `<span class="badge-waiting">⏳ Waiting</span>`,
-    sending: `<span class="badge-sending">📤 Sending...</span>`,
-    sent:    `<span class="badge-sent">✅ Sent</span>`,
-    failed:  `<span class="badge-failed">❌ Failed</span>`,
-    paused:  `<span class="badge-paused">⏸ Paused</span>`,
-    stopped: `<span class="badge-paused">⏹ Stopped</span>`,
+    waiting: `<span class="badge-waiting">Waiting</span>`,
+    sending: `<span class="badge-sending">Sending...</span>`,
+    sent:    `<span class="badge-sent">Sent</span>`,
+    failed:  `<span class="badge-failed">Failed</span>`,
+    paused:  `<span class="badge-paused">Paused</span>`,
+    stopped: `<span class="badge-paused">Stopped</span>`,
   };
   cell.innerHTML = map[status] || status;
   // scroll into view
@@ -964,10 +1013,10 @@ function setRowStatus(index, status){
 
 function updateSummary(){
   document.getElementById('statusSummary').textContent =
-    `${sentCount} sent · ${failedCount} failed`;
+    `${sentCount} sent - ${failedCount} failed`;
 }
 
-// ─── PROGRESS ─────────────────────────────────────────────
+// â”€â”€â”€ PROGRESS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function updateProgress(current, total, name, status){
   const pct = total > 0 ? Math.round((current/total)*100) : 0;
   document.getElementById('progressBar').style.width = pct + '%';
@@ -979,16 +1028,16 @@ function updateProgress(current, total, name, status){
   updateSummary();
 }
 
-// ─── PAUSE / STOP ─────────────────────────────────────────
+// â”€â”€â”€ PAUSE / STOP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function togglePause(){
   if(isPaused){
     isPaused = false;
-    document.getElementById('pauseBtn').innerHTML = '⏸ Pause';
+    document.getElementById('pauseBtn').innerHTML = 'Pause';
     document.getElementById('progressStatus').innerText = 'Resumed';
     if(pauseResolve){ pauseResolve(); pauseResolve = null; }
   } else {
     isPaused = true;
-    document.getElementById('pauseBtn').innerHTML = '▶️ Resume';
+    document.getElementById('pauseBtn').innerHTML = 'Resume';
     document.getElementById('progressStatus').innerText = 'Paused';
   }
 }
@@ -1009,13 +1058,13 @@ function waitIfPaused(){
   });
 }
 
-// ─── SCHOOL DROPDOWN DATA ─────────────────────────────────
+// â”€â”€â”€ SCHOOL DROPDOWN DATA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-// ─── SEND ─────────────────────────────────────────────────
+// â”€â”€â”€ SEND â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function sendMessages(){
   // Validate Message To
   if(!document.getElementById('messageTo').value.trim()){
-    alert('⚠️ "Message To" is mandatory. Please fill it in before sending.');
+    alert('"Message To" is mandatory. Please fill it in before sending.');
     document.getElementById('messageTo').focus();
     return;
   }
@@ -1041,8 +1090,8 @@ async function sendMessages(){
     );
     document.getElementById('sentCount').innerText = sentCount;
     document.getElementById('failedCount').innerText = failedCount;
-    updateProgress(1, 1, name || 'Contact', success ? 'Sent ✅' : 'Failed ❌');
-    alert(success ? '✅ Message sent successfully' : '❌ Failed to send message');
+    updateProgress(1, 1, name || 'Contact', success ? 'Sent' : 'Failed');
+    alert(success ? 'Message sent successfully' : 'Failed to send message');
     return;
   }
 
@@ -1057,7 +1106,7 @@ async function sendMessages(){
 
   document.getElementById('sendBtn').disabled = true;
   document.getElementById('controlBar').classList.remove('hidden');
-  document.getElementById('pauseBtn').innerHTML = '⏸ Pause';
+  document.getElementById('pauseBtn').innerHTML = 'Pause';
 
   buildStatusTable();
 
@@ -1107,15 +1156,15 @@ async function sendMessages(){
   });
 
   if(!isStopped){
-    document.getElementById('progressStatus').innerText = 'Completed ✅';
+    document.getElementById('progressStatus').innerText = 'Completed';
     document.getElementById('controlBar').classList.add('hidden');
-    alert(`✅ Bulk complete!\nSent: ${sentCount} | Failed: ${failedCount}`);
+    alert(`Bulk complete!\nSent: ${sentCount} | Failed: ${failedCount}`);
   }
 
   document.getElementById('sendBtn').disabled = false;
 }
 
-// ─── API CALL ─────────────────────────────────────────────
+// â”€â”€â”€ API CALL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function sendSingle(contact){
   const payload = {
     apiKey: document.getElementById('apiKey').value,
@@ -1152,7 +1201,7 @@ async function sendSingle(contact){
 }
 
 
-// ─── API KEY MODAL ────────────────────────────────────────
+// â”€â”€â”€ API KEY MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _pendingSend = false;
 
 function requireApiKey(){
@@ -1160,7 +1209,7 @@ function requireApiKey(){
   document.getElementById('apiKeyInput').value = '';
   document.getElementById('apiKeyError').innerText = '';
   document.getElementById('apiKeyInput').type = 'password';
-  document.getElementById('eyeBtn').innerText = '👁️';
+  document.getElementById('eyeBtn').innerText = 'Show';
   const modal = document.getElementById('apiKeyModal');
   modal.style.display = 'flex';
   setTimeout(() => document.getElementById('apiKeyInput').focus(), 100);
@@ -1176,17 +1225,17 @@ function toggleApiKeyVisibility(){
   const btn = document.getElementById('eyeBtn');
   if(inp.type === 'password'){
     inp.type = 'text';
-    btn.innerText = '🙈';
+    btn.innerText = 'Hide';
   } else {
     inp.type = 'password';
-    btn.innerText = '👁️';
+    btn.innerText = 'Show';
   }
 }
 
 function confirmApiKey(){
   const key = document.getElementById('apiKeyInput').value.trim();
   if(!key){
-    document.getElementById('apiKeyError').innerText = '⚠️ API key cannot be empty.';
+    document.getElementById('apiKeyError').innerText = 'API key cannot be empty.';
     document.getElementById('apiKeyInput').focus();
     return;
   }
@@ -1201,7 +1250,7 @@ function confirmApiKey(){
 
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-// ─── HISTORY PANEL ────────────────────────────────────────
+// â”€â”€â”€ HISTORY PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let sentHistory = [];   // { name, mobile, school, message, imageUrl, status, time }
 
 function openHistoryPanel(){
@@ -1246,15 +1295,15 @@ function renderSingleBubble(entry, idx){
     <div class="bubble ${isSent ? '' : 'failed-bubble'}">
       ${entry.imageUrl ? `<img class="bubble-img" src="${entry.imageUrl}" onerror="this.style.display='none'">` : ''}
       <div class="bubble-name">${entry.name}</div>
-      <div class="bubble-mobile">📱 ${entry.mobile}</div>
-      ${entry.school ? `<div class="bubble-school">🏫 ${entry.school}</div>` : ''}
+      <div class="bubble-mobile">${entry.mobile}</div>
+      ${entry.school ? `<div class="bubble-school">${entry.school}</div>` : ''}
       <div class="bubble-msg">${entry.message || '<em style="color:#aaa">No message</em>'}</div>
       <div class="bubble-footer">
         <span class="bubble-status-badge ${isSent ? 'status-sent-badge' : 'status-fail-badge'}">
-          ${isSent ? '✅ Sent' : '❌ Failed'}
+          ${isSent ? 'Sent' : 'Failed'}
         </span>
         <span class="bubble-time">${entry.time}</span>
-        ${isSent ? '<span class="bubble-tick">✓✓</span>' : ''}
+        ${isSent ? '<span class="bubble-tick">OK</span>' : ''}
       </div>
     </div>
   `;
@@ -1266,30 +1315,30 @@ function renderBulkCard(entry, idx){
   const feed = document.getElementById('historyFeed');
   document.getElementById('historyEmpty').style.display = 'none';
   const pct = entry.total > 0 ? Math.round((entry.sent / entry.total) * 100) : 0;
-  const statusLabel = entry.stopped ? '⏹ Stopped' : '✅ Completed';
+  const statusLabel = entry.stopped ? 'Stopped' : 'Completed';
   const div = document.createElement('div');
   div.id = `bubble-${idx}`;
   div.innerHTML = `
     <div class="bulk-card">
       <div class="bulk-card-header">
-        <span class="bulk-icon">📢</span>
+        <span class="bulk-icon">BULK</span>
         <div>
           <div class="bulk-title">${entry.campaignName || 'Bulk Campaign'}</div>
-          <div class="bulk-sub">${entry.time} &nbsp;·&nbsp; ${statusLabel}</div>
+          <div class="bulk-sub">${entry.time} &nbsp;-&nbsp; ${statusLabel}</div>
         </div>
       </div>
       ${entry.imageUrl ? `<img class="bubble-img" src="${entry.imageUrl}" onerror="this.style.display='none'" style="margin-bottom:10px">` : ''}
-      ${entry.school ? `<div class="bubble-school" style="margin-bottom:6px">🏫 ${entry.school}</div>` : ''}
+      ${entry.school ? `<div class="bubble-school" style="margin-bottom:6px">${entry.school}</div>` : ''}
       <div class="bubble-msg" style="margin-bottom:12px">${entry.message || '<em style="color:#aaa">No message</em>'}</div>
       <div class="bulk-stats">
         <div class="bulk-stat-box bsb-total">
           <div class="bsn">${entry.total}</div><div class="bsl">Total</div>
         </div>
         <div class="bulk-stat-box bsb-sent">
-          <div class="bsn">${entry.sent}</div><div class="bsl">✅ Sent</div>
+          <div class="bsn">${entry.sent}</div><div class="bsl">Sent</div>
         </div>
         <div class="bulk-stat-box bsb-fail">
-          <div class="bsn">${entry.failed}</div><div class="bsl">❌ Failed</div>
+          <div class="bsn">${entry.failed}</div><div class="bsl">Failed</div>
         </div>
       </div>
       <div class="bulk-progress-wrap">
@@ -1362,14 +1411,14 @@ window.onload = function(){
 };
 </script>
 
-<!-- ─── HISTORY OVERLAY ─── -->
+<!-- â”€â”€â”€ HISTORY OVERLAY â”€â”€â”€ -->
 <div id="historyOverlay" onclick="closeHistoryPanel()"></div>
 
-<!-- ─── HISTORY SIDE PANEL ─── -->
+<!-- â”€â”€â”€ HISTORY SIDE PANEL â”€â”€â”€ -->
 <div id="historyPanel">
   <div id="historyPanelHeader">
-    <h5>📨 Sent Messages History</h5>
-    <button class="close-btn" onclick="closeHistoryPanel()">✕</button>
+    <h5>Sent Messages History</h5>
+    <button class="close-btn" onclick="closeHistoryPanel()">Close</button>
   </div>
   <div id="historyStats">
     <div class="hstat">
@@ -1378,28 +1427,28 @@ window.onload = function(){
     </div>
     <div class="hstat">
       <div class="hnum" id="hSuccessCount">0</div>
-      <div class="hlabel">✅ Success</div>
+      <div class="hlabel">Success</div>
     </div>
     <div class="hstat">
       <div class="hnum" id="hFailCount">0</div>
-      <div class="hlabel">❌ Failed</div>
+      <div class="hlabel">Failed</div>
     </div>
   </div>
   <div id="historyFeed">
-    <div id="historyEmpty">📭 No messages sent yet</div>
+    <div id="historyEmpty">No messages sent yet</div>
   </div>
 </div>
 
-<!-- ─── FLOATING BUTTON ─── -->
+<!-- â”€â”€â”€ FLOATING BUTTON â”€â”€â”€ -->
 <button id="historyToggleBtn" onclick="openHistoryPanel()">
-  📨 Sent History <span id="historyBadge">0</span>
+  Sent History <span id="historyBadge">0</span>
 </button>
 
 
 <!-- Hidden API Key store (never shown in form) -->
 <input type="hidden" id="apiKey">
 
-<!-- ─── API KEY MODAL ─── -->
+<!-- â”€â”€â”€ API KEY MODAL â”€â”€â”€ -->
 <div id="apiKeyModal" style="
   display:none;
   position:fixed;
@@ -1419,7 +1468,7 @@ window.onload = function(){
     animation: modalIn 0.25s ease;
   ">
     <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:40px;margin-bottom:8px">🔐</div>
+      <div style="font-size:20px;margin-bottom:8px;font-weight:700">API</div>
       <h5 style="font-weight:800;color:#075E54;margin:0">Authentication Required</h5>
       <p style="color:#888;font-size:13px;margin-top:6px">Enter your API key to authorize sending</p>
     </div>
@@ -1438,7 +1487,7 @@ window.onload = function(){
         position:absolute;right:10px;top:50%;transform:translateY(-50%);
         background:none;border:none;cursor:pointer;font-size:18px;color:#888;
         padding:0;line-height:1;
-      " id="eyeBtn" title="Show/Hide">👁️</button>
+      " id="eyeBtn" title="Show/Hide">Show</button>
     </div>
     <div id="apiKeyError" style="color:#d63031;font-size:12px;min-height:18px;margin-bottom:14px"></div>
 

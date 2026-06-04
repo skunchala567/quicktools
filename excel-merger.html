@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sheet Fusion — Excel Merger</title>
+
+<!-- SheetJS (xlsx) from CDN: handles reading/writing .xlsx, .xls, .csv -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- Distinctive typography pairing: Fraunces (display) + Inter Tight (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ---------- Theme tokens ---------- */
+:root {
+  --bg: #0d0e10;
+  --bg-elev: #16181c;
+  --bg-elev-2: #1c1f24;
+  --border: #262a30;
+  --border-strong: #353a42;
+  --text: #e8e9eb;
+  --text-dim: #9ba2ab;
+  --text-mute: #6b7280;
+  --accent: #c6ff3d;          /* electric lime — the "one thing" people remember */
+  --accent-soft: rgba(198,255,61,0.12);
+  --accent-strong: #d8ff66;
+  --danger: #ff6b6b;
+  --danger-soft: rgba(255,107,107,0.12);
+  --success: #4ade80;
+  --success-soft: rgba(74,222,128,0.12);
+  --warn: #fbbf24;
+  --warn-soft: rgba(251,191,36,0.12);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-lg: 0 30px 80px -20px rgba(0,0,0,0.6);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+[data-theme="light"] {
+  --bg: #f7f6f2;
+  --bg-elev: #ffffff;
+  --bg-elev-2: #f1efe9;
+  --border: #e6e2d8;
+  --border-strong: #d4cfc0;
+  --text: #14161a;
+  --text-dim: #555a63;
+  --text-mute: #8a8f99;
+  --accent: #2d5a27;
+  --accent-soft: rgba(45,90,39,0.10);
+  --accent-strong: #1f4019;
+  --shadow-lg: 0 20px 50px -20px rgba(20,22,26,0.18);
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(circle at 20% 0%, var(--accent-soft) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(255,255,255,0.02) 0%, transparent 40%);
+  background-attachment: fixed;
+  padding-left: 232px;
+}
+
+/* ===== APP SHELL SIDEBAR ===== */
+.app-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 232px;
+  z-index: 1000;
+  background: linear-gradient(180deg, #0d0e10 0%, #16181c 100%);
+  border-right: 2px solid var(--accent);
+  box-shadow: 2px 0 16px rgba(0,0,0,0.28);
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.app-navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 10px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .7px;
+}
+.app-logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: #0d0e10;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.app-nav-links {
+  display: grid;
+  gap: 4px;
+}
+.app-nav-item {
+  min-height: 44px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  transition: all 0.2s;
+}
+.app-nav-icon {
+  width: 22px;
+  flex: none;
+  text-align: center;
+  font-size: 17px;
+}
+.app-nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--accent);
+}
+.app-nav-item.active {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* ---------- Layout ---------- */
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+}
+
+header.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-mark {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #0d0e10;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  box-shadow: 0 0 0 1px var(--border-strong), 0 10px 30px -10px var(--accent);
+}
+.brand-text h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.brand-text h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+.brand-text p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-mute);
+  letter-spacing: 0.02em;
+}
+
+.theme-toggle {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s ease;
+}
+.theme-toggle:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+
+/* ---------- Hero strip ---------- */
+.hero {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin: 0 0 12px;
+}
+.hero em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--accent);
+}
+.hero-sub {
+  font-size: 16px;
+  color: var(--text-dim);
+  max-width: 580px;
+  margin: 0 0 36px;
+  line-height: 1.55;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card-pad { padding: 28px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Drop zone ---------- */
+.dropzone {
+  position: relative;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 48px 28px;
+  text-align: center;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 12px, var(--bg-elev-2) 12px 13px);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.dropzone:hover {
+  border-color: var(--accent);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 12px, var(--accent-soft) 12px 13px);
+}
+.dropzone.drag-over {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: scale(1.005);
+}
+.dropzone-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+}
+.dropzone-icon svg { width: 26px; height: 26px; }
+.dropzone h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 22px;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+.dropzone p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+.dropzone .pick {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.dropzone small {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-mute);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+#fileInput { display: none; }
+
+/* ---------- File list ---------- */
+.section-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 28px 0 14px;
+}
+.section-label h4 {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-mute);
+  margin: 0;
+}
+.section-label .count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.file-list::-webkit-scrollbar { width: 6px; }
+.file-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  animation: slide-in 0.3s ease;
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.file-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.file-meta { flex: 1; min-width: 0; }
+.file-name {
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file-size {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-top: 2px;
+}
+.file-status {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--bg-elev);
+  color: var(--text-dim);
+}
+.file-status.ok { background: var(--success-soft); color: var(--success); }
+.file-status.err { background: var(--danger-soft); color: var(--danger); }
+.file-status.proc { background: var(--warn-soft); color: var(--warn); }
+
+.btn-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.15s ease;
+}
+.btn-remove:hover { color: var(--danger); border-color: var(--danger); background: var(--danger-soft); }
+.btn-remove svg { width: 14px; height: 14px; }
+
+.empty-state {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text-mute);
+  font-size: 13px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Mode selector ---------- */
+.mode-block {
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.mode-block .mode-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-mute);
+  margin-bottom: 12px;
+  display: block;
+}
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+}
+.seg-option {
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 7px;
+  text-align: left;
+  transition: all 0.18s ease;
+  border: 1px solid transparent;
+}
+.seg-option:hover { background: var(--bg-elev-2); }
+.seg-option input { display: none; }
+.seg-option.active {
+  background: var(--bg-elev);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+.seg-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.seg-option.active .seg-title { color: var(--accent); }
+.seg-desc {
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+@media (max-width: 540px) {
+  .segmented { grid-template-columns: 1fr; }
+}
+
+/* ---------- Actions ---------- */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 13px 22px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary {
+  background: var(--accent);
+  color: #0d0e10;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px -10px var(--accent);
+}
+[data-theme="light"] .btn-primary { color: #fff; }
+.btn-secondary {
+  background: var(--bg-elev-2);
+  border-color: var(--border);
+  color: var(--text);
+}
+.btn-secondary:hover:not(:disabled) { border-color: var(--border-strong); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+}
+.btn-ghost:hover:not(:disabled) { color: var(--text); }
+.btn svg { width: 16px; height: 16px; }
+
+/* ---------- Stats panel ---------- */
+.stats-panel {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background:
+    linear-gradient(180deg, var(--bg-elev) 0%, var(--bg-elev-2) 100%);
+}
+.stats-header {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-mute);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stats-header::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-mute);
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.stat-value em { color: var(--accent); font-style: italic; font-weight: 300; }
+
+/* ---------- Progress ---------- */
+.progress-wrap {
+  margin-top: 20px;
+  display: none;
+}
+.progress-wrap.active { display: block; }
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.progress-bar {
+  height: 6px;
+  background: var(--bg-elev-2);
+  border-radius: 100px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: 100px;
+}
+
+/* ---------- Toasts ---------- */
+.toast-stack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+  pointer-events: none;
+}
+.toast {
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  min-width: 280px;
+  max-width: 360px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  pointer-events: auto;
+  animation: toast-in 0.3s ease;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.toast.success { border-left: 3px solid var(--success); }
+.toast.error { border-left: 3px solid var(--danger); }
+.toast.info { border-left: 3px solid var(--accent); }
+.toast-icon { flex-shrink: 0; margin-top: 1px; }
+.toast.success .toast-icon { color: var(--success); }
+.toast.error .toast-icon { color: var(--danger); }
+.toast.info .toast-icon { color: var(--accent); }
+.toast-body { flex: 1; }
+.toast-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.toast-msg { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+
+/* ---------- Footer ---------- */
+footer.foot {
+  margin-top: 60px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-mute);
+  letter-spacing: 0.04em;
+}
+footer.foot a { color: var(--text-dim); text-decoration: none; }
+footer.foot a:hover { color: var(--accent); }
+
+/* ---------- Loading spinner ---------- */
+.spinner {
+  width: 14px; height: 14px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 760px) {
+  body { padding-left: 0; padding-top: 72px; }
+  .app-sidebar {
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: 72px;
+    padding: 8px 10px;
+    flex-direction: row;
+    align-items: center;
+    border-right: 0;
+    border-bottom: 2px solid var(--accent);
+    overflow-x: auto;
+  }
+  .app-navbar-logo { min-width: max-content; }
+  .app-nav-links { display: flex; gap: 4px; }
+  .app-nav-item { min-width: max-content; }
+}
+</style>
+<link rel="stylesheet" href="base-theme.css">
+<script src="base-theme.js"></script>
+</head>
+<body>
+
+<!-- App Shell Navigation -->
+<aside class="app-sidebar" aria-label="Creator Studio apps">
+  <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">CS</span><span>CREATOR STUDIO</span></a>
+  <nav class="app-nav-links">
+    <a href="index.html" class="app-nav-item"><span class="app-nav-icon app-icon-cert" aria-hidden="true"></span><span>Certificates</span></a>
+    <a href="whatsapp.html" class="app-nav-item"><span class="app-nav-icon app-icon-whatsapp" aria-hidden="true"></span><span>WhatsApp</span></a>
+    <a href="excel-merger.html" class="app-nav-item active"><span class="app-nav-icon app-icon-excel" aria-hidden="true"></span><span>Excel Merger</span></a>
+  </nav>
+  <div class="app-shell-footer">
+    <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme">
+      <span class="app-theme-icon" data-theme-icon aria-hidden="true">L</span>
+      <span data-theme-label>Light mode</span>
+    </button>
+  </div>
+</aside>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div class="brand-text">
+        <h1>Sheet <em>Fusion</em></h1>
+        <p>Local-first Excel merger · runs entirely in your browser</p>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle theme">
+      <span id="themeIcon">L</span>
+      <span id="themeLabel">DARK</span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <h2 class="hero">Merge spreadsheets,<br/><em>without uploading them.</em></h2>
+  <p class="hero-sub">
+    Drop in any number of .xlsx, .xls, or .csv files. Every sheet from every workbook gets stitched
+    into one clean download. Headers stay aligned, blank rows vanish, and a Source File column traces
+    every row back to where it came from.
+  </p>
+
+  <!-- MAIN GRID -->
+  <div class="grid">
+
+    <!-- LEFT: Upload + file list -->
+    <div class="card card-pad">
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <h3>Drop files here</h3>
+        <p>or <span class="pick">browse to select</span> multiple files at once</p>
+        <small>.xlsx · .xls · .csv</small>
+        <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv" />
+      </div>
+
+      <div class="section-label">
+        <h4>Queued files</h4>
+        <span class="count" id="queueCount">0 files</span>
+      </div>
+
+      <ul class="file-list" id="fileList"></ul>
+      <div id="emptyState" class="empty-state">No files added yet. Drop or browse to begin.</div>
+
+      <!-- Merge mode selector -->
+      <div class="mode-block">
+        <label class="mode-label">Merge mode</label>
+        <div class="segmented" id="modeSegmented">
+          <label class="seg-option active" data-mode="header">
+            <input type="radio" name="mergeMode" value="header" checked />
+            <div class="seg-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+              Match by header
+            </div>
+            <div class="seg-desc">Same column names align. New headers add new columns.</div>
+          </label>
+          <label class="seg-option" data-mode="position">
+            <input type="radio" name="mergeMode" value="position" />
+            <div class="seg-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              Match by position
+            </div>
+            <div class="seg-desc">Column 1 always to column 1. Header names ignored.</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-info">
+          <span id="progressLabel">Processing…</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="actions">
+        <button class="btn btn-primary" id="mergeBtn" disabled type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Merge Files
+        </button>
+        <button class="btn btn-secondary" id="downloadBtn" disabled type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download Merged Excel
+        </button>
+        <button class="btn btn-ghost" id="clearBtn" type="button">Clear all</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Stats -->
+    <div class="card stats-panel">
+      <div class="stats-header">Run summary</div>
+
+      <div class="stat">
+        <span class="stat-label">Files processed</span>
+        <span class="stat-value" id="statFiles">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Sheets read</span>
+        <span class="stat-value" id="statSheets">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Rows merged</span>
+        <span class="stat-value" id="statRows"><em>0</em></span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Columns</span>
+        <span class="stat-value" id="statCols">0</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>SHEET FUSION · v1.0</span>
+    <span>NO DATA LEAVES YOUR DEVICE</span>
+  </footer>
+
+</div>
+
+<!-- Toast container -->
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<script>
+/* =========================================================================
+   SHEET FUSION — Excel merger
+   Pure browser-side. Uses SheetJS to read .xlsx/.xls/.csv, merges all rows
+   from all sheets across all uploaded files, preserves first-seen column
+   order, drops blank rows, adds a "Source File" column, writes one .xlsx.
+   ========================================================================= */
+
+// -------- DOM references --------
+const dropzone     = document.getElementById('dropzone');
+const fileInput    = document.getElementById('fileInput');
+const fileListEl   = document.getElementById('fileList');
+const emptyStateEl = document.getElementById('emptyState');
+const queueCountEl = document.getElementById('queueCount');
+const mergeBtn     = document.getElementById('mergeBtn');
+const downloadBtn  = document.getElementById('downloadBtn');
+const clearBtn     = document.getElementById('clearBtn');
+const progressWrap = document.getElementById('progressWrap');
+const progressFill = document.getElementById('progressFill');
+const progressLabel= document.getElementById('progressLabel');
+const progressPct  = document.getElementById('progressPct');
+const themeBtn     = document.getElementById('themeBtn');
+const themeIcon    = document.getElementById('themeIcon');
+const themeLabel   = document.getElementById('themeLabel');
+const statFiles    = document.getElementById('statFiles');
+const statSheets   = document.getElementById('statSheets');
+const statRows     = document.getElementById('statRows');
+const statCols     = document.getElementById('statCols');
+const toastStack   = document.getElementById('toastStack');
+
+// -------- App state --------
+const state = {
+  files: [],          // array of { id, file, status }
+  mergedBlob: null,   // Blob of the merged workbook (ready for download)
+  mergedName: 'merged.xlsx',
+  mode: 'header'      // 'header' = match by column name; 'position' = match by column index
+};
+
+const ACCEPTED_EXT = ['xlsx', 'xls', 'csv'];
+
+// =========================================================================
+//  Merge mode segmented control
+// =========================================================================
+document.querySelectorAll('.seg-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.seg-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    state.mode = opt.getAttribute('data-mode');
+    // Changing mode invalidates any previously merged blob
+    state.mergedBlob = null;
+    downloadBtn.disabled = true;
+  });
+});
+
+// Theme behavior is shared by base-theme.js so the app shell stays universal.
+
+// =========================================================================
+//  Toast notifications
+// =========================================================================
+function toast(type, title, msg) {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  const icons = {
+    success: '<svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    info:    '<svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+  };
+  el.innerHTML = `${icons[type] || icons.info}
+    <div class="toast-body">
+      <div class="toast-title">${escapeHtml(title)}</div>
+      <div class="toast-msg">${escapeHtml(msg)}</div>
+    </div>`;
+  toastStack.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity 0.3s, transform 0.3s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(20px)';
+    setTimeout(() => el.remove(), 300);
+  }, 4200);
+}
+
+// Escape HTML to prevent XSS when echoing filenames
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+// =========================================================================
+//  Drag & drop wiring
+// =========================================================================
+['dragenter','dragover'].forEach(ev => {
+  dropzone.addEventListener(ev, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    dropzone.classList.add('drag-over');
+  });
+});
+['dragleave','drop'].forEach(ev => {
+  dropzone.addEventListener(ev, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    dropzone.classList.remove('drag-over');
+  });
+});
+dropzone.addEventListener('drop', (e) => {
+  const files = Array.from(e.dataTransfer.files || []);
+  addFiles(files);
+});
+dropzone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => {
+  addFiles(Array.from(e.target.files || []));
+  fileInput.value = '';   // allow re-selecting the same file
+});
+
+// =========================================================================
+//  File queue management
+// =========================================================================
+function addFiles(files) {
+  let added = 0, skipped = 0;
+  files.forEach(file => {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!ACCEPTED_EXT.includes(ext)) {
+      skipped++;
+      return;
+    }
+    // Skip exact duplicates (same name + size)
+    const dup = state.files.some(f => f.file.name === file.name && f.file.size === file.size);
+    if (dup) { skipped++; return; }
+    state.files.push({
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Math.random()),
+      file,
+      status: 'queued'
+    });
+    added++;
+  });
+  renderFileList();
+  if (added)   toast('info', `${added} file${added>1?'s':''} added`, 'Ready to merge.');
+  if (skipped) toast('error', `${skipped} file${skipped>1?'s':''} skipped`, 'Unsupported type or duplicate.');
+}
+
+function removeFile(id) {
+  state.files = state.files.filter(f => f.id !== id);
+  // Removing inputs invalidates any previously merged blob
+  state.mergedBlob = null;
+  downloadBtn.disabled = true;
+  renderFileList();
+}
+
+function clearAll() {
+  state.files = [];
+  state.mergedBlob = null;
+  downloadBtn.disabled = true;
+  resetStats();
+  renderFileList();
+  toast('info', 'Cleared', 'All files removed.');
+}
+clearBtn.addEventListener('click', clearAll);
+
+function renderFileList() {
+  fileListEl.innerHTML = '';
+  if (state.files.length === 0) {
+    emptyStateEl.style.display = 'block';
+    mergeBtn.disabled = true;
+    queueCountEl.textContent = '0 files';
+    return;
+  }
+  emptyStateEl.style.display = 'none';
+  mergeBtn.disabled = false;
+  queueCountEl.textContent = `${state.files.length} file${state.files.length>1?'s':''}`;
+
+  state.files.forEach(entry => {
+    const ext = entry.file.name.split('.').pop().toUpperCase();
+    const li = document.createElement('li');
+    li.className = 'file-item';
+    li.innerHTML = `
+      <div class="file-icon">${escapeHtml(ext)}</div>
+      <div class="file-meta">
+        <div class="file-name" title="${escapeHtml(entry.file.name)}">${escapeHtml(entry.file.name)}</div>
+        <div class="file-size">${formatBytes(entry.file.size)}</div>
+      </div>
+      <span class="file-status ${statusClass(entry.status)}">${entry.status}</span>
+      <button class="btn-remove" data-id="${entry.id}" aria-label="Remove file" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>`;
+    fileListEl.appendChild(li);
+  });
+  // Wire remove buttons
+  fileListEl.querySelectorAll('.btn-remove').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeFile(b.getAttribute('data-id'));
+    });
+  });
+}
+
+function statusClass(status) {
+  if (status === 'done')    return 'ok';
+  if (status === 'error')   return 'err';
+  if (status === 'reading') return 'proc';
+  return '';
+}
+function setStatus(id, status) {
+  const e = state.files.find(f => f.id === id);
+  if (e) e.status = status;
+  renderFileList();
+}
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+  return (b/1024/1024).toFixed(2) + ' MB';
+}
+
+// =========================================================================
+//  Stats helpers
+// =========================================================================
+function resetStats() {
+  statFiles.textContent = '0';
+  statSheets.textContent = '0';
+  statRows.innerHTML = '<em>0</em>';
+  statCols.textContent = '0';
+}
+
+// =========================================================================
+//  Async file read helper (Promise wrapper around FileReader)
+// =========================================================================
+function readFileAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(new Error('Failed to read ' + file.name));
+    r.readAsArrayBuffer(file);
+  });
+}
+
+// Tiny yield so the browser can repaint between heavy chunks
+const yieldUI = () => new Promise(r => setTimeout(r, 0));
+
+// =========================================================================
+//  Core merge routine
+// =========================================================================
+async function mergeFiles() {
+  if (state.files.length === 0) return;
+
+  mergeBtn.disabled = true;
+  downloadBtn.disabled = true;
+  clearBtn.disabled = true;
+  progressWrap.classList.add('active');
+  resetStats();
+
+  // ---- Strategy depends on selected mode ----
+  // HEADER MODE: collect unique headers across all sheets in first-seen order.
+  //              Rows are stored as { headerName: value } maps.
+  // POSITION MODE: ignore header names entirely. Column index is king.
+  //                The first sheet processed sets the canonical header labels;
+  //                values from later sheets fill columns by their position.
+  const mode = state.mode;
+  const headers = [];               // canonical header labels (per current mode)
+  const headerSet = new Set();      // for header-mode O(1) lookup
+  const mergedRows = [];            // rows: header mode = objects, position mode = arrays
+  let totalSheets = 0;
+  let totalFiles = 0;
+  let hadError = false;
+
+  // Process each file sequentially to keep memory bounded
+  for (let i = 0; i < state.files.length; i++) {
+    const entry = state.files[i];
+    const file = entry.file;
+    const pct = Math.round(((i) / state.files.length) * 100);
+    updateProgress(pct, `Reading ${file.name}…`);
+    setStatus(entry.id, 'reading');
+
+    try {
+      const buf = await readFileAsArrayBuffer(file);
+
+      // dense:true gives sparse but lower-memory parsing; cellDates parses dates
+      const wb = XLSX.read(buf, { type: 'array', cellDates: true, dense: true });
+
+      // Walk every sheet in the workbook
+      for (const sheetName of wb.SheetNames) {
+        const ws = wb.Sheets[sheetName];
+        if (!ws) continue;
+
+        // Array-of-arrays gives us raw rows including the header row
+        const rows = XLSX.utils.sheet_to_json(ws, {
+          header: 1,
+          blankrows: false,
+          defval: '',
+          raw: false   // formatted strings; dates already parsed by cellDates
+        });
+
+        if (!rows || rows.length === 0) continue;
+
+        // First non-empty row is treated as the header
+        const sheetHeaders = (rows[0] || []).map(h => String(h ?? '').trim());
+
+        if (mode === 'header') {
+          // ---- Header-match mode ----
+          // Register any new headers in first-seen order
+          sheetHeaders.forEach(h => {
+            if (h && !headerSet.has(h)) {
+              headerSet.add(h);
+              headers.push(h);
+            }
+          });
+        } else {
+          // ---- Position-match mode ----
+          // The first sheet that ships headers seeds the canonical labels.
+          // Subsequent sheets only extend the column count if they're wider.
+          for (let c = 0; c < sheetHeaders.length; c++) {
+            if (c >= headers.length) {
+              // Use this sheet's label if non-empty, otherwise a generic name
+              const lbl = sheetHeaders[c] || `Column ${c + 1}`;
+              headers.push(lbl);
+            }
+          }
+        }
+
+        // Map every data row (skip the header row at index 0)
+        for (let r = 1; r < rows.length; r++) {
+          const row = rows[r];
+          if (!row || row.length === 0) continue;
+
+          // Drop blank rows (every cell empty/whitespace)
+          const isBlank = row.every(cell =>
+            cell === null || cell === undefined || String(cell).trim() === ''
+          );
+          if (isBlank) continue;
+
+          if (mode === 'header') {
+            // Store as an object keyed by this sheet's header strings
+            const obj = {};
+            for (let c = 0; c < sheetHeaders.length; c++) {
+              const key = sheetHeaders[c];
+              if (!key) continue;
+              obj[key] = row[c] !== undefined ? row[c] : '';
+            }
+            obj.__source__ = file.name;
+            mergedRows.push(obj);
+          } else {
+            // Store as a positional array — value at index c lands in output column c
+            const arr = [];
+            for (let c = 0; c < row.length; c++) {
+              arr[c] = row[c] !== undefined && row[c] !== null ? row[c] : '';
+            }
+            arr.__source__ = file.name;
+            mergedRows.push(arr);
+          }
+        }
+
+        totalSheets++;
+        // Yield occasionally so the UI can repaint
+        if (totalSheets % 4 === 0) await yieldUI();
+      }
+
+      totalFiles++;
+      setStatus(entry.id, 'done');
+    } catch (err) {
+      console.error(err);
+      hadError = true;
+      setStatus(entry.id, 'error');
+      toast('error', 'Read failed', `${file.name}: ${err.message || err}`);
+    }
+
+    // Live-update stats as we go
+    statFiles.textContent  = totalFiles;
+    statSheets.textContent = totalSheets;
+    statRows.innerHTML     = `<em>${mergedRows.length.toLocaleString()}</em>`;
+    statCols.textContent   = headers.length + (mergedRows.length ? 1 : 0); // +1 for Source File
+
+    await yieldUI();
+  }
+
+  if (mergedRows.length === 0) {
+    progressWrap.classList.remove('active');
+    mergeBtn.disabled = false;
+    clearBtn.disabled = false;
+    toast('error', 'Nothing to merge', 'No usable rows were found in the uploaded files.');
+    return;
+  }
+
+  updateProgress(95, 'Building workbook…');
+  await yieldUI();
+
+  // Final column order: canonical headers + "Source File"
+  const finalCols = headers.slice();
+  finalCols.push('Source File');
+
+  // Build AOA (array-of-arrays) for the output sheet for memory efficiency
+  const aoa = [finalCols];
+  for (const r of mergedRows) {
+    const row = new Array(finalCols.length);
+    if (mode === 'header') {
+      // Object lookup by header name
+      for (let c = 0; c < headers.length; c++) {
+        const k = headers[c];
+        row[c] = (r[k] !== undefined && r[k] !== null) ? r[k] : '';
+      }
+    } else {
+      // Position lookup by array index
+      for (let c = 0; c < headers.length; c++) {
+        row[c] = (r[c] !== undefined && r[c] !== null) ? r[c] : '';
+      }
+    }
+    row[finalCols.length - 1] = r.__source__;
+    aoa.push(row);
+  }
+
+  // Convert AOA into a worksheet, then a workbook
+  const outWs = XLSX.utils.aoa_to_sheet(aoa);
+  const outWb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(outWb, outWs, 'Merged');
+
+  // Write workbook to an ArrayBuffer, wrap in a Blob for download
+  const wbout = XLSX.write(outWb, { bookType: 'xlsx', type: 'array' });
+  state.mergedBlob = new Blob([wbout], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  });
+  state.mergedName = `merged_${new Date().toISOString().slice(0,10)}.xlsx`;
+
+  updateProgress(100, 'Done.');
+  setTimeout(() => progressWrap.classList.remove('active'), 800);
+
+  // Final stat refresh
+  statFiles.textContent  = totalFiles;
+  statSheets.textContent = totalSheets;
+  statRows.innerHTML     = `<em>${mergedRows.length.toLocaleString()}</em>`;
+  statCols.textContent   = finalCols.length;
+
+  mergeBtn.disabled = false;
+  downloadBtn.disabled = false;
+  clearBtn.disabled = false;
+
+  if (hadError) {
+    toast('info', 'Merged with warnings', `${mergedRows.length.toLocaleString()} rows ready. Some files failed.`);
+  } else {
+    toast('success', 'Merge complete', `${mergedRows.length.toLocaleString()} rows across ${totalSheets} sheets.`);
+  }
+}
+
+function updateProgress(pct, label) {
+  progressFill.style.width = pct + '%';
+  progressPct.textContent = pct + '%';
+  if (label) progressLabel.textContent = label;
+}
+
+mergeBtn.addEventListener('click', () => {
+  // Defer so the disabled state paints before we start the heavy work
+  requestAnimationFrame(() => mergeFiles().catch(err => {
+    console.error(err);
+    toast('error', 'Merge failed', err.message || String(err));
+    mergeBtn.disabled = false;
+    clearBtn.disabled = false;
+    progressWrap.classList.remove('active');
+  }));
+});
+
+// =========================================================================
+//  Download handler
+// =========================================================================
+downloadBtn.addEventListener('click', () => {
+  if (!state.mergedBlob) {
+    toast('error', 'Nothing to download', 'Merge files first.');
+    return;
+  }
+  const url = URL.createObjectURL(state.mergedBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = state.mergedName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // Revoke later to free memory
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+  toast('success', 'Downloaded', state.mergedName);
+});
+
+// Initial render
+renderFileList();
+resetStats();
+</script>
+</body>
+</html>
