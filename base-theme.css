@@ -169,6 +169,7 @@ small,
 .app-icon-whatsapp::before { content: "WA"; }
 .app-icon-excel::before { content: "XL"; }
 .app-icon-image::before { content: "IM"; }
+.app-icon-rfid::before { content: "RF"; }
 
 .app-nav-item.active .app-nav-icon {
   background: #0d0e10;

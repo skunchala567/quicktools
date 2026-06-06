@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Creator Studio - RFID Coupons</title>
+<link rel="manifest" href="rfid-manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f8;
+  --panel:#ffffff;
+  --panel-2:#eef2f7;
+  --ink:#111827;
+  --muted:#64748b;
+  --line:#d7dee8;
+  --line-strong:#aeb9c8;
+  --accent:#14532d;
+  --accent-2:#16a34a;
+  --danger:#b91c1c;
+  --warn:#b45309;
+  --blue:#1d4ed8;
+  --shadow:0 16px 44px -30px rgba(15,23,42,.55);
+}
+[data-theme="dark"]{
+  --bg:#0d0e10;
+  --panel:#16181c;
+  --panel-2:#1f242b;
+  --ink:#e8e9eb;
+  --muted:#9ba2ab;
+  --line:#262a30;
+  --line-strong:#3a414b;
+  --accent:#c6ff3d;
+  --accent-2:#84cc16;
+  --danger:#ff6b6b;
+  --warn:#fbbf24;
+  --blue:#60a5fa;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh;
+  padding-left:232px;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Inter Tight",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font-family:inherit}
+h1,h2,h3{font-family:"Fraunces",serif;letter-spacing:0}
+code,.mono,.pill,.nav-icon{font-family:"JetBrains Mono",monospace}
+.app-sidebar{
+  position:fixed;inset:0 auto 0 0;width:232px;z-index:1000;
+  background:linear-gradient(180deg,#111827,#0f172a);
+  border-right:2px solid var(--accent-2);
+  box-shadow:2px 0 16px rgba(0,0,0,.18);
+  padding:18px 12px;display:flex;flex-direction:column;gap:18px;
+}
+.app-navbar-logo{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 10px;color:var(--accent-2);text-decoration:none;font-size:15px;font-weight:800;letter-spacing:.7px}
+.app-logo-mark{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent-2);color:#0f172a;font-size:13px;font-weight:900}
+.app-nav-links{display:grid;gap:4px}
+.app-nav-item{min-height:44px;padding:9px 12px;border-radius:10px;display:flex;align-items:center;gap:14px;text-decoration:none;font-size:14px;font-weight:700;color:#cbd5e1;transition:.18s}
+.app-nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.app-nav-item.active{background:rgba(22,163,74,.22);color:#fff}
+.app-nav-icon{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--accent-2);font-size:10px;font-weight:900}
+.app-shell-footer{margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.app-theme-toggle{width:100%;min-height:42px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.08);color:#e5e7eb;display:flex;align-items:center;gap:10px;padding:8px 10px;cursor:pointer;font-weight:800}
+.app-theme-icon{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--accent-2);color:#0f172a;font-family:"JetBrains Mono";font-size:11px;font-weight:900}
+header{padding:28px 32px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),rgba(255,255,255,0))}
+[data-theme="dark"] header{background:linear-gradient(180deg,var(--panel),rgba(22,24,28,0))}
+.brand{display:flex;align-items:center;gap:14px}
+.seal{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;background:var(--accent);color:#fff;font-family:"JetBrains Mono";font-weight:900}
+[data-theme="dark"] .seal{color:#0d0e10}
+h1{margin:0;font-size:clamp(28px,4vw,48px);line-height:1}
+.sub{margin-top:5px;color:var(--muted);font-size:15px}
+.top-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.wrap{padding:22px 32px 36px;display:grid;gap:18px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.tab{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:10px;padding:10px 13px;font-weight:800;white-space:nowrap;cursor:pointer}
+.tab.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{grid-column:span 12;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+.span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}
+.card h2,.card h3{margin:0 0 12px;font-size:22px}
+.metric{display:grid;gap:5px}.metric .k{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.metric .v{font-size:30px;font-weight:900}
+.row{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;align-items:end}
+.field{display:grid;gap:6px;grid-column:span 6}.field.third{grid-column:span 4}.field.full{grid-column:1/-1}
+label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+input,select,textarea{width:100%;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--ink);padding:10px 11px;font-size:14px}
+textarea{min-height:78px;resize:vertical}
+.btn{min-height:40px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel);color:var(--ink);font-weight:900;padding:9px 12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+[data-theme="dark"] .btn.primary{color:#0d0e10}
+.btn.good{background:var(--accent-2);border-color:var(--accent-2);color:#07130b}
+.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.warn{background:var(--warn);border-color:var(--warn);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.icon-actions{display:flex;gap:6px;align-items:center;flex-wrap:nowrap}
+.icon-btn{width:38px;height:38px;border:1px solid var(--line-strong);border-radius:10px;background:var(--panel);color:var(--ink);display:inline-grid;place-items:center;cursor:pointer;font-size:16px;font-weight:900;line-height:1;transition:.16s}
+.icon-btn:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 8px 20px -18px rgba(15,23,42,.8)}
+.icon-btn.edit{color:var(--blue)}
+.icon-btn.delete{color:var(--danger)}
+.icon-btn.warn{color:var(--warn)}
+.icon-btn.good{color:var(--accent-2)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar input,.toolbar select{max-width:260px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.section-title h2{margin:0}
+.range-shell{position:relative;margin-bottom:12px}
+.section-title .range-shell{margin:0;margin-left:auto}
+.range-trigger{width:100%;max-width:340px;min-height:42px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--muted);display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;font-weight:700;text-align:left}
+.range-trigger strong{color:var(--ink);font-weight:800}
+.section-title .range-trigger{min-width:280px}
+.range-popover{position:absolute;right:0;top:48px;width:min(700px,calc(100vw - 320px));min-width:640px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 30px 80px -38px rgba(0,0,0,.7);z-index:1200;display:grid;grid-template-columns:114px 1fr}
+.range-presets{border-right:1px solid var(--line);display:grid;align-content:start}
+.range-presets strong{padding:18px 12px 10px;text-align:center;font-size:13px}
+.range-presets button{border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);padding:12px 10px;font-weight:800;cursor:pointer;text-align:center}
+.range-presets button:hover{background:var(--panel-2)}
+.range-calendars{display:grid;grid-template-columns:1fr 1fr}
+.range-month{padding:14px 16px;border-right:1px solid var(--line)}
+.range-month:last-child{border-right:0}
+.range-month-head{display:grid;grid-template-columns:32px 1fr 1fr 32px;gap:8px;align-items:center;margin-bottom:12px}
+.range-month:first-child .range-next,.range-month:last-child .range-prev{visibility:hidden}
+.range-month-head select{padding:7px 8px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.dow{color:#8fa0b6;font-size:12px;font-weight:800}
+.day-cell{height:34px;border:1px solid transparent;border-radius:999px;background:transparent;color:var(--ink);cursor:pointer;font-weight:700}
+.day-cell:hover{border-color:var(--line-strong);background:var(--panel-2)}
+.day-cell.today{border-color:var(--line-strong)}
+.day-cell.in-range{border-radius:8px;background:rgba(22,163,74,.12)}
+.day-cell.selected{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.58);display:grid;place-items:center;padding:18px;z-index:5000}
+.modal{width:min(620px,100%);max-height:calc(100vh - 36px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px -30px rgba(0,0,0,.65);padding:18px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.modal-head h2{margin:0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--panel-2)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:11px;color:var(--muted);background:var(--panel-2);white-space:nowrap}
+.status-active{color:var(--accent-2);font-weight:900}.status-blocked,.status-inactive{color:var(--danger);font-weight:900}
+.counter-screen{min-height:430px;display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:16px}
+.tap-box{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.photo{width:126px;height:126px;border-radius:16px;object-fit:cover;border:1px solid var(--line);background:var(--panel);display:block}
+.result{border-radius:14px;padding:22px;display:grid;place-items:center;text-align:center;border:1px solid var(--line);background:var(--panel-2)}
+.result .big{font-size:clamp(34px,6vw,72px);font-weight:900;line-height:1;font-family:"Fraunces",serif}
+.result .small{margin-top:10px;font-size:18px;font-weight:800;color:var(--muted)}
+.approved{background:rgba(22,163,74,.14);border-color:var(--accent-2)}.rejected{background:rgba(185,28,28,.13);border-color:var(--danger)}.blocked{background:rgba(180,83,9,.14);border-color:var(--warn)}
+.list{display:grid;gap:8px}.list-item{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:10px;display:flex;justify-content:space-between;gap:12px}
+.report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+.report-block{display:grid;gap:10px;margin-top:0;min-width:0}
+.report-block h3{margin:0;font-size:19px}
+.hidden{display:none!important}
+.view{display:none}.view.active{display:block}
+.toast{position:fixed;left:calc(50% + 116px);bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.2s;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:9999;font-weight:900;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1100px){.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}.counter-screen{grid-template-columns:1fr}.report-grid{grid-template-columns:1fr}}
+@media(max-width:760px){body{padding-left:0;padding-top:72px}.app-sidebar{inset:0 0 auto 0;width:100%;height:72px;padding:8px 10px;flex-direction:row;align-items:center;border-right:0;border-bottom:2px solid var(--accent-2);overflow-x:auto}.app-navbar-logo{min-width:max-content}.app-nav-links{display:flex;gap:4px}.app-nav-item{min-width:max-content}.app-shell-footer{margin-top:0;padding-top:0;border-top:0;margin-left:auto;min-width:126px}header,.wrap{padding-left:16px;padding-right:16px}.brand{align-items:flex-start}.top-actions{width:100%;margin-left:0}.section-title{align-items:flex-start;flex-direction:column}.section-title .range-shell{width:100%;margin-left:0}.section-title .range-trigger{min-width:0;max-width:none}.row{grid-template-columns:1fr}.field,.field.third{grid-column:1/-1}.range-popover{position:static;width:100%;min-width:0;margin-top:8px;grid-template-columns:1fr}.range-presets{border-right:0;border-bottom:1px solid var(--line)}.range-calendars{grid-template-columns:1fr}.range-month{border-right:0;border-bottom:1px solid var(--line)}.toast{left:50%}}
+</style>
+<link rel="stylesheet" href="base-theme.css">
+<script src="base-theme.js"></script>
+</head>
+<body>
+<aside class="app-sidebar" aria-label="Creator Studio apps">
+  <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">KS</span><span>Tools</span></a>
+  <nav class="app-nav-links">
+    <a href="index.html" class="app-nav-item"><span class="app-nav-icon app-icon-cert" aria-hidden="true"></span><span>Certificates</span></a>
+    <a href="rfid-coupon.html" class="app-nav-item active"><span class="app-nav-icon app-icon-rfid" aria-hidden="true"></span><span>RFID Coupons</span></a>
+    <a href="image-url-generator.html" class="app-nav-item"><span class="app-nav-icon app-icon-image" aria-hidden="true"></span><span>Image URLs</span></a>
+    <a href="whatsapp.html" class="app-nav-item"><span class="app-nav-icon app-icon-whatsapp" aria-hidden="true"></span><span>WhatsApp</span></a>
+    <a href="excel-merger.html" class="app-nav-item"><span class="app-nav-icon app-icon-excel" aria-hidden="true"></span><span>Excel Merger</span></a>
+  </nav>
+  <div class="app-shell-footer">
+    <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme">
+      <span class="app-theme-icon" data-theme-icon aria-hidden="true">L</span>
+      <span data-theme-label>Light mode</span>
+    </button>
+  </div>
+</aside>
+
+<header>
+  <div class="brand">
+    <div class="seal">RF</div>
+    <div>
+      <h1>RFID Coupon Management</h1>
+      <div class="sub">Users, meal rates, recharge, RFID counter, offline queue, and reports</div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="installBtn" type="button" hidden>Install App</button>
+      <button class="btn" id="exportBtn" type="button">Export JSON</button>
+      <button class="btn danger" id="resetBtn" type="button">Reset Demo</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="dashboard">Dashboard</button>
+    <button class="tab" data-view="counter">RFID Counter</button>
+    <button class="tab" data-view="users">Users</button>
+    <button class="tab" data-view="cards">RFID Cards</button>
+    <button class="tab" data-view="recharge">Recharge</button>
+    <button class="tab" data-view="settings">Configurations</button>
+    <button class="tab" data-view="reports">Reports</button>
+    <button class="tab" data-view="docs">Schema/API</button>
+  </nav>
+
+  <section class="view active" id="dashboard"></section>
+  <section class="view" id="counter"></section>
+  <section class="view" id="users"></section>
+  <section class="view" id="cards"></section>
+  <section class="view" id="recharge"></section>
+  <section class="view" id="settings"></section>
+  <section class="view" id="reports"></section>
+  <section class="view" id="docs"></section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const DB_KEY = 'rfid-coupon-demo-v1';
+let deferredInstall = null;
+let state = loadState();
+let activeView = 'dashboard';
+let lastCounterResult = null;
+let toastTimer = null;
+let editingUserId = null;
+let editingRechargeId = null;
+let editingMealId = null;
+let editingCounterId = null;
+let dashboardDateFrom = today();
+let dashboardDateTo = today();
+let dashboardPickerOpen = false;
+let dashboardDraftStart = null;
+let dashboardPickerMonth = today().slice(0,7) + '-01';
+
+function uid(prefix){ return prefix + '-' + Math.random().toString(36).slice(2,8).toUpperCase(); }
+function nowISO(){ return new Date().toISOString(); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function dateISO(date){
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+function addDays(dateValue, days){ const d = new Date(dateValue + 'T00:00:00'); d.setDate(d.getDate() + days); return dateISO(d); }
+function addMonths(dateValue, months){ const d = new Date(dateValue + 'T00:00:00'); d.setMonth(d.getMonth() + months, 1); return dateISO(d); }
+function money(n){ return 'Rs. ' + Number(n || 0).toFixed(2); }
+function esc(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+function save(){ localStorage.setItem(DB_KEY, JSON.stringify(state)); render(); }
+function loadState(){
+  try{
+    const saved = localStorage.getItem(DB_KEY);
+    if(saved) return normalizeState(JSON.parse(saved));
+  }catch(error){}
+  return normalizeState(seedState());
+}
+function normalizeState(data){
+  data.preventPerMealSession = data.preventPerMealSession !== false;
+  data.duplicateWindow = Number(data.duplicateWindow || 120);
+  data.categories = data.categories || [];
+  data.meals = data.meals || [];
+  data.rates = data.rates || {};
+  data.users = (data.users || []).map(u => ({coupons:{}, wallet:0, ...u, coupons:u.coupons || {}}));
+  data.recharges = (data.recharges || []).map(r => ({remainingAmount:undefined, remainingCoupons:undefined, expired:false, ...r}));
+  data.transactions = data.transactions || [];
+  data.cardHistory = data.cardHistory || [];
+  data.offlineQueue = data.offlineQueue || [];
+  data.audit = data.audit || [];
+  data.counters = (data.counters || []).map(c => ({assignedUserIds:[], ...c, assignedUserIds:c.assignedUserIds || []}));
+  migrateUserIdsToIntegers(data);
+  return data;
+}
+function migrateUserIdsToIntegers(data){
+  const idMap = {};
+  let next = 1;
+  data.users.forEach(u=>{
+    const oldId = String(u.id);
+    let newId = Number.isInteger(Number(u.id)) && Number(u.id) > 0 ? Number(u.id) : next;
+    while(data.users.some(other => other !== u && Number(other.id) === newId) || Object.values(idMap).includes(newId)) newId++;
+    idMap[oldId] = newId;
+    u.id = newId;
+    next = Math.max(next, newId + 1);
+  });
+  const mapId = value => idMap[String(value)] || (Number.isInteger(Number(value)) ? Number(value) : value);
+  data.recharges.forEach(r=>{ r.userId = mapId(r.userId); });
+  data.transactions.forEach(t=>{ t.userId = t.userId ? mapId(t.userId) : ''; });
+  data.cardHistory.forEach(h=>{ h.userId = mapId(h.userId); });
+  data.counters.forEach(c=>{ c.assignedUserIds = (c.assignedUserIds || []).map(mapId); });
+}
+function nextUserId(){
+  return (state.users || []).reduce((max,u)=>Math.max(max, Number(u.id) || 0), 0) + 1;
+}
+function isExpiredDate(dateValue){
+  if(!dateValue) return false;
+  const end = new Date(String(dateValue) + 'T23:59:59');
+  return !Number.isNaN(end.getTime()) && Date.now() > end.getTime();
+}
+function activeRechargesFor(userId, mealId){
+  expireRecharges();
+  return state.recharges
+    .filter(r => r.userId === userId && !r.expired && (!r.validTill || !isExpiredDate(r.validTill)))
+    .filter(r => mealId ? (!r.mealId || r.mealId === mealId) : true);
+}
+function recRemainingAmount(rec){
+  return rec.remainingAmount == null ? Number(rec.amount || 0) : Number(rec.remainingAmount || 0);
+}
+function recRemainingCoupons(rec){
+  return rec.remainingCoupons == null ? Number(rec.coupons || 0) : Number(rec.remainingCoupons || 0);
+}
+function expireRecharges(){
+  let changed = false;
+  state.recharges.forEach(rec=>{
+    if(rec.expired || !rec.validTill || !isExpiredDate(rec.validTill)) return;
+    const u = state.users.find(x=>x.id===rec.userId);
+    const amountLeft = recRemainingAmount(rec);
+    const couponLeft = recRemainingCoupons(rec);
+    if(u){
+      u.wallet = Math.max(0, Number(u.wallet || 0) - amountLeft);
+      if(rec.mealId && couponLeft){
+        u.coupons = u.coupons || {};
+        u.coupons[rec.mealId] = Math.max(0, Number(u.coupons[rec.mealId] || 0) - couponLeft);
+      }
+    }
+    rec.remainingAmount = 0;
+    rec.remainingCoupons = 0;
+    rec.expired = true;
+    rec.expiredAt = nowISO();
+    changed = true;
+  });
+  if(changed){
+    audit('Expired recharge validity balances');
+    localStorage.setItem(DB_KEY, JSON.stringify(state));
+  }
+}
+function seedState(){
+  const categories = [
+    {id:'cat-student', name:'Student', status:'active'},
+    {id:'cat-employee', name:'Employee', status:'active'},
+    {id:'cat-contractor', name:'Contractor', status:'active'},
+    {id:'cat-guest', name:'Guest', status:'active'},
+    {id:'cat-visitor', name:'Visitor', status:'active'}
+  ];
+  const meals = [
+    {id:'meal-breakfast', name:'Breakfast', start:'07:00', end:'11:00', status:'active'},
+    {id:'meal-lunch', name:'Lunch', start:'11:30', end:'15:00', status:'active'},
+    {id:'meal-snacks', name:'Snacks', start:'16:00', end:'18:00', status:'active'},
+    {id:'meal-dinner', name:'Dinner', start:'19:00', end:'22:00', status:'active'}
+  ];
+  const rate = {
+    'meal-breakfast': {'cat-student':30,'cat-employee':50,'cat-contractor':40,'cat-guest':60,'cat-visitor':75},
+    'meal-lunch': {'cat-student':60,'cat-employee':100,'cat-contractor':80,'cat-guest':120,'cat-visitor':150},
+    'meal-snacks': {'cat-student':25,'cat-employee':35,'cat-contractor':30,'cat-guest':45,'cat-visitor':55},
+    'meal-dinner': {'cat-student':55,'cat-employee':90,'cat-contractor':75,'cat-guest':110,'cat-visitor':140}
+  };
+  const users = [
+    {id:1, rfid:'RF1001', empNo:'STU-001', name:'Aarav Kumar', mobile:'9000000001', email:'aarav@example.com', categoryId:'cat-student', department:'Science', branch:'Main Campus', photo:'', status:'active', joinDate:today(), cardIssueDate:today(), cardExpiryDate:'2027-12-31', wallet:500, coupons:{'meal-breakfast':5,'meal-lunch':4,'meal-snacks':2,'meal-dinner':3}, createdBy:'Super Admin', createdAt:nowISO()},
+    {id:2, rfid:'RF1002', empNo:'EMP-014', name:'Meera Rao', mobile:'9000000002', email:'meera@example.com', categoryId:'cat-employee', department:'Accounts', branch:'Block A', photo:'', status:'active', joinDate:today(), cardIssueDate:today(), cardExpiryDate:'2027-12-31', wallet:900, coupons:{'meal-breakfast':3,'meal-lunch':6,'meal-snacks':4,'meal-dinner':2}, createdBy:'Super Admin', createdAt:nowISO()},
+    {id:3, rfid:'RF1003', empNo:'CON-022', name:'Rafiq Shaik', mobile:'9000000003', email:'rafiq@example.com', categoryId:'cat-contractor', department:'Maintenance', branch:'Kitchen', photo:'', status:'blocked', joinDate:today(), cardIssueDate:today(), cardExpiryDate:'2027-12-31', wallet:120, coupons:{'meal-breakfast':0,'meal-lunch':1,'meal-snacks':0,'meal-dinner':0}, createdBy:'Super Admin', createdAt:nowISO()}
+  ];
+  return {
+    model:'wallet',
+    duplicateWindow:120,
+    preventPerMealSession:true,
+    categories, meals, rates:rate, users,
+    counters:[
+      {id:'CTR-1', name:'Counter 1', location:'Main Cafeteria', status:'active', assignedUserIds:[2]},
+      {id:'CTR-2', name:'Counter 2', location:'Annex', status:'active', assignedUserIds:[]}
+    ],
+    cardHistory:[],
+    recharges:[],
+    transactions:[],
+    offlineQueue:[],
+    audit:[{at:nowISO(), actor:'system', action:'Seeded demo data'}],
+    notifications:[]
+  };
+}
+function categoryName(id){ return (state.categories.find(c=>c.id===id)||{}).name || 'Unknown'; }
+function mealName(id){ return (state.meals.find(m=>m.id===id)||{}).name || 'Unknown'; }
+function counterName(id){ return (state.counters.find(c=>c.id===id)||{}).name || (id || '-'); }
+function counterLocation(id){
+  const counter = state.counters.find(c=>c.id===id);
+  return counter ? (counter.location || counter.name) : (id ? 'Unknown location' : 'No counter');
+}
+function rateFor(user, mealId){ return Number((state.rates[mealId] || {})[user.categoryId] || 0); }
+function activeMeal(date = new Date()){
+  const minutes = date.getHours() * 60 + date.getMinutes();
+  return state.meals.find(m=>{
+    if(m.status !== 'active') return false;
+    const s = toMinutes(m.start), e = toMinutes(m.end);
+    return s <= e ? minutes >= s && minutes <= e : minutes >= s || minutes <= e;
+  }) || null;
+}
+function toMinutes(t){ const p = String(t||'00:00').split(':').map(Number); return p[0]*60 + p[1]; }
+function recentDuplicate(userId, mealId){
+  const windowMs = Number(state.duplicateWindow || 120) * 1000;
+  const cutoff = Date.now() - windowMs;
+  return state.transactions.find(tx => tx.userId === userId && tx.mealId === mealId && tx.status === 'approved' && new Date(tx.at).getTime() >= cutoff);
+}
+function sameMealSession(tx, meal){
+  if(!meal || !tx || tx.mealId !== meal.id || tx.status !== 'approved') return false;
+  const at = new Date(tx.at);
+  const now = new Date();
+  if(at.toDateString() !== now.toDateString()) return false;
+  const mins = at.getHours() * 60 + at.getMinutes();
+  const s = toMinutes(meal.start), e = toMinutes(meal.end);
+  return s <= e ? mins >= s && mins <= e : mins >= s || mins <= e;
+}
+function alreadyUsedMealSession(userId, meal){
+  return state.preventPerMealSession && state.transactions.find(tx => tx.userId === userId && sameMealSession(tx, meal));
+}
+function userSearchLabel(u){
+  return u ? [u.name, u.id, u.rfid, u.mobile, u.empNo].filter(Boolean).join(' / ') : '';
+}
+function findUserBySearch(value){
+  const q = String(value || '').trim().toLowerCase();
+  return state.users.find(u => [u.id,u.rfid,u.mobile,u.name,u.empNo].some(v => String(v || '').toLowerCase() === q))
+    || state.users.find(u => userSearchLabel(u).toLowerCase() === q);
+}
+function counterOwnerNames(counter){
+  const ids = counter && counter.assignedUserIds ? counter.assignedUserIds : [];
+  if(!ids.length) return 'Not assigned';
+  return ids.map(id => (state.users.find(u=>u.id===id)||{}).name || id).join(', ');
+}
+function selectedValues(select){
+  return Array.from(select.selectedOptions || []).map(option => option.value);
+}
+function formatDateLabel(dateValue){
+  return new Date(dateValue + 'T00:00:00').toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+}
+function rangeLabel(start, end){
+  return start === end ? formatDateLabel(start) : formatDateLabel(start) + ' - ' + formatDateLabel(end);
+}
+function setDashboardRange(start, end){
+  dashboardDateFrom = start <= end ? start : end;
+  dashboardDateTo = start <= end ? end : start;
+  dashboardDraftStart = null;
+}
+function applyDashboardPreset(preset){
+  const t = today();
+  const d = new Date(t + 'T00:00:00');
+  const weekday = d.getDay();
+  if(preset === 'today') setDashboardRange(t, t);
+  if(preset === 'yesterday'){ const y = addDays(t, -1); setDashboardRange(y, y); }
+  if(preset === 'this-week') setDashboardRange(addDays(t, -weekday), t);
+  if(preset === 'last-week') setDashboardRange(addDays(t, -weekday - 7), addDays(t, -weekday - 1));
+  if(preset === 'last-30') setDashboardRange(addDays(t, -29), t);
+  if(preset === 'last-90') setDashboardRange(addDays(t, -89), t);
+  dashboardPickerMonth = dashboardDateFrom.slice(0,7) + '-01';
+}
+function chooseDashboardDate(dateValue){
+  if(!dashboardDraftStart || dashboardDateFrom !== dashboardDateTo){
+    dashboardDraftStart = dateValue;
+    setDashboardRange(dateValue, dateValue);
+    dashboardDraftStart = dateValue;
+  }else{
+    setDashboardRange(dashboardDraftStart, dateValue);
+    dashboardPickerOpen = false;
+  }
+}
+function dashboardRangePickerHTML(start, end){
+  return `<div class="range-shell"><button class="range-trigger" id="dashboardRangeBtn" type="button" aria-haspopup="dialog" aria-expanded="${dashboardPickerOpen ? 'true' : 'false'}"><span aria-hidden="true">&#128197;</span><strong>${esc(rangeLabel(start, end))}</strong></button>${dashboardPickerOpen ? `<div class="range-popover" role="dialog" aria-label="Dashboard date range"><div class="range-presets"><strong>Choose a Period</strong>${[['today','Today'],['yesterday','Yesterday'],['this-week','This Week'],['last-week','Last Week'],['last-30','Last 30 Days'],['last-90','Last 90 Days']].map(([id,label])=>`<button type="button" data-range-preset="${id}">${label}</button>`).join('')}</div><div class="range-calendars">${calendarMonthHTML(dashboardPickerMonth, 0, start, end)}${calendarMonthHTML(dashboardPickerMonth, 1, start, end)}</div></div>` : ''}</div>`;
+}
+function calendarMonthHTML(baseMonth, offset, start, end){
+  const monthDate = new Date(addMonths(baseMonth, offset) + 'T00:00:00');
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const first = new Date(year, month, 1);
+  const days = new Date(year, month + 1, 0).getDate();
+  const blanks = Array.from({length:first.getDay()},()=>'<span></span>').join('');
+  const years = Array.from({length:7},(_,i)=>year - 3 + i);
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dayButtons = Array.from({length:days},(_,i)=>{
+    const day = i + 1;
+    const iso = dateISO(new Date(year, month, day));
+    const cls = ['day-cell'];
+    if(iso === today()) cls.push('today');
+    if(iso > start && iso < end) cls.push('in-range');
+    if(iso === start || iso === end) cls.push('selected');
+    return `<button type="button" class="${cls.join(' ')}" data-range-date="${iso}">${day}</button>`;
+  }).join('');
+  return `<div class="range-month"><div class="range-month-head"><button class="icon-btn range-prev" type="button" data-range-shift="-1" title="Previous month" aria-label="Previous month">&#8249;</button><select data-range-year="${offset}">${years.map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('')}</select><select data-range-month="${offset}">${months.map((m,i)=>`<option value="${i}" ${i===month?'selected':''}>${m}</option>`).join('')}</select><button class="icon-btn range-next" type="button" data-range-shift="1" title="Next month" aria-label="Next month">&#8250;</button></div><div class="calendar-grid">${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<span class="dow">${d}</span>`).join('')}${blanks}${dayButtons}</div></div>`;
+}
+function csvEscape(value){
+  return '"' + String(value == null ? '' : value).replace(/"/g,'""') + '"';
+}
+function parseCSV(text){
+  const rows = [];
+  let row = [], cell = '', quote = false;
+  for(let i=0;i<text.length;i++){
+    const ch = text[i], next = text[i+1];
+    if(ch === '"' && quote && next === '"'){ cell += '"'; i++; }
+    else if(ch === '"'){ quote = !quote; }
+    else if(ch === ',' && !quote){ row.push(cell); cell = ''; }
+    else if((ch === '\n' || ch === '\r') && !quote){
+      if(ch === '\r' && next === '\n') i++;
+      row.push(cell); cell = '';
+      if(row.some(v=>String(v).trim() !== '')) rows.push(row);
+      row = [];
+    }else cell += ch;
+  }
+  row.push(cell);
+  if(row.some(v=>String(v).trim() !== '')) rows.push(row);
+  return rows;
+}
+function fileText(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsText(file);
+  });
+}
+function audit(action){ state.audit.unshift({at:nowISO(), actor:'Admin', action}); }
+function consumeRFID(rfid, counterId){
+  expireRecharges();
+  const clean = String(rfid||'').trim();
+  const user = state.users.find(u=>u.rfid.toLowerCase() === clean.toLowerCase());
+  const meal = activeMeal();
+  const tx = {id:uid('TX'), at:nowISO(), rfid:clean, counterId, userId:user ? user.id : '', mealId:meal ? meal.id : '', amount:0, status:'failed', reason:''};
+  if(!navigator.onLine){
+    tx.reason = 'Offline queued';
+    state.offlineQueue.push(tx);
+    audit('Queued offline RFID transaction '+clean);
+    save();
+    return {...tx, user, meal, display:'OFFLINE QUEUED', css:'blocked'};
+  }
+  if(!user){ tx.reason = 'Unknown RFID'; state.transactions.unshift(tx); audit('Rejected unknown RFID '+clean); save(); return {...tx, user:null, meal, display:'UNKNOWN CARD', css:'rejected'}; }
+  if(user.status === 'blocked'){ tx.reason = 'Card blocked'; state.transactions.unshift(tx); audit('Rejected blocked card '+clean); save(); return {...tx, user, meal, display:'CARD BLOCKED', css:'blocked'}; }
+  if(user.status !== 'active'){ tx.reason = 'Inactive user'; state.transactions.unshift(tx); save(); return {...tx, user, meal, display:'USER INACTIVE', css:'rejected'}; }
+  if(!meal){ tx.reason = 'No active meal window'; state.transactions.unshift(tx); save(); return {...tx, user, meal:null, display:'NO MEAL WINDOW', css:'rejected'}; }
+  if(recentDuplicate(user.id, meal.id)){ tx.reason = 'Already utilized'; state.transactions.unshift(tx); save(); return {...tx, user, meal, display:'ALREADY UTILIZED', css:'blocked'}; }
+  if(alreadyUsedMealSession(user.id, meal)){ tx.reason = 'Already utilized in this meal session'; state.transactions.unshift(tx); save(); return {...tx, user, meal, display:'SESSION USED', css:'blocked'}; }
+  const amount = rateFor(user, meal.id);
+  tx.amount = amount;
+  if(state.model === 'coupon'){
+    const current = Number((user.coupons || {})[meal.id] || 0);
+    if(current < 1){ tx.reason = 'Insufficient coupons'; state.transactions.unshift(tx); save(); return {...tx, user, meal, display:'INSUFFICIENT COUPON', css:'rejected'}; }
+    user.coupons[meal.id] = current - 1;
+    consumeRechargeCoupon(user.id, meal.id);
+  }else{
+    if(Number(user.wallet || 0) < amount){ tx.reason = 'Insufficient wallet'; state.transactions.unshift(tx); save(); return {...tx, user, meal, display:'INSUFFICIENT BALANCE', css:'rejected'}; }
+    user.wallet = Number(user.wallet || 0) - amount;
+    consumeRechargeAmount(user.id, amount);
+  }
+  tx.status = 'approved';
+  tx.reason = 'Approved';
+  state.transactions.unshift(tx);
+  audit('Approved '+meal.name+' for '+user.name);
+  save();
+  beep('success');
+  return {...tx, user, meal, display:'APPROVED', css:'approved'};
+}
+function beep(type){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = type === 'success' ? 880 : 220;
+    gain.gain.value = .05;
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); setTimeout(()=>{ osc.stop(); ctx.close(); }, 120);
+  }catch(error){}
+}
+function rowsToCSV(rows, filename){
+  const csv = rows.map(row => row.map(v => '"' + String(v == null ? '' : v).replace(/"/g,'""') + '"').join(',')).join('\r\n');
+  const blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function consumeRechargeAmount(userId, amount){
+  let remaining = Number(amount || 0);
+  activeRechargesFor(userId).forEach(rec=>{
+    if(remaining <= 0) return;
+    const left = recRemainingAmount(rec);
+    const take = Math.min(left, remaining);
+    rec.remainingAmount = left - take;
+    remaining -= take;
+  });
+}
+function consumeRechargeCoupon(userId, mealId){
+  const rec = activeRechargesFor(userId, mealId).find(r => r.mealId === mealId && recRemainingCoupons(r) > 0);
+  if(rec) rec.remainingCoupons = recRemainingCoupons(rec) - 1;
+}
+function render(){
+  expireRecharges();
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id === activeView));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view === activeView));
+  renderDashboard(); renderCounter(); renderUsers(); renderCards(); renderRecharge(); renderSettings(); renderReports(); renderDocs();
+}
+function renderDashboard(){
+  const todayTx = state.transactions.filter(t=>t.at.slice(0,10) === today());
+  const approved = todayTx.filter(t=>t.status === 'approved');
+  const from = dashboardDateFrom || today();
+  const to = dashboardDateTo || from;
+  const rangeStart = from <= to ? from : to;
+  const rangeEnd = from <= to ? to : from;
+  const rangeApproved = state.transactions.filter(t=>t.status === 'approved' && t.at.slice(0,10) >= rangeStart && t.at.slice(0,10) <= rangeEnd);
+  const locationUsage = {};
+  rangeApproved.forEach(t=>{
+    const label = counterLocation(t.counterId);
+    locationUsage[label] = locationUsage[label] || {count:0, amount:0};
+    locationUsage[label].count += 1;
+    locationUsage[label].amount += Number(t.amount || 0);
+  });
+  const categoryUsage = state.categories.map(c=>{
+    const txs = rangeApproved.filter(t=>{ const u=state.users.find(x=>x.id===t.userId); return u && u.categoryId===c.id; });
+    return {name:c.name, count:txs.length, amount:txs.reduce((s,t)=>s+Number(t.amount||0),0)};
+  });
+  const mealUsage = state.meals.map(m=>{
+    const txs = rangeApproved.filter(t=>t.mealId===m.id);
+    return {name:m.name, count:txs.length, amount:txs.reduce((s,t)=>s+Number(t.amount||0),0)};
+  });
+  const counterLocationUsage = Object.entries(locationUsage)
+    .map(([name,data])=>({name, count:data.count, amount:data.amount}))
+    .sort((a,b)=>b.count-a.count || b.amount-a.amount);
+  const collections = state.recharges.reduce((s,r)=>s+Number(r.amount||0),0);
+  const mealCards = state.meals.map(m=>`<div class="card span-3 metric"><div class="k">Today's ${esc(m.name)}</div><div class="v">${approved.filter(t=>t.mealId===m.id).length}</div></div>`).join('');
+  $('dashboard').innerHTML = `<div class="grid">
+    <div class="card span-3 metric"><div class="k">Total Users</div><div class="v">${state.users.length}</div></div>
+    <div class="card span-3 metric"><div class="k">Active Users</div><div class="v">${state.users.filter(u=>u.status==='active').length}</div></div>
+    <div class="card span-3 metric"><div class="k">Today's Consumption</div><div class="v">${approved.length}</div></div>
+    <div class="card span-3 metric"><div class="k">Collections</div><div class="v">${money(collections)}</div></div>
+    ${mealCards}
+    <div class="card"><div class="section-title"><h2>Usage Reports</h2>${dashboardRangePickerHTML(rangeStart, rangeEnd)}</div><div class="report-grid"><div class="report-block"><h3>Category Usage</h3>${usageReportTable('Category', categoryUsage)}</div><div class="report-block"><h3>Meal Wise Usage</h3>${usageReportTable('Meal', mealUsage)}</div><div class="report-block"><h3>Counter Location Usage</h3>${usageReportTable('Counter Location', counterLocationUsage)}</div></div></div>
+  </div>`;
+  $('dashboardRangeBtn').onclick = () => { dashboardPickerOpen = !dashboardPickerOpen; render(); };
+  document.querySelectorAll('[data-range-preset]').forEach(b=>b.onclick=()=>{ applyDashboardPreset(b.dataset.rangePreset); dashboardPickerOpen = false; render(); });
+  document.querySelectorAll('[data-range-date]').forEach(b=>b.onclick=()=>{ chooseDashboardDate(b.dataset.rangeDate); render(); });
+  document.querySelectorAll('[data-range-shift]').forEach(b=>b.onclick=()=>{ dashboardPickerMonth = addMonths(dashboardPickerMonth, Number(b.dataset.rangeShift)); render(); });
+  document.querySelectorAll('[data-range-year],[data-range-month]').forEach(s=>s.onchange=()=>{
+    const offset = Number(s.dataset.rangeYear || s.dataset.rangeMonth || 0);
+    const yearSelect = document.querySelector(`[data-range-year="${offset}"]`);
+    const monthSelect = document.querySelector(`[data-range-month="${offset}"]`);
+    const nextPanel = dateISO(new Date(Number(yearSelect.value), Number(monthSelect.value), 1));
+    dashboardPickerMonth = addMonths(nextPanel, -offset);
+    render();
+  });
+}
+function renderCounter(){
+  const result = lastCounterResult;
+  const activeCounters = state.counters.filter(c=>c.status === 'active');
+  $('counter').innerHTML = `<div class="grid">
+    <div class="card">
+      <h2>Full Screen RFID Counter</h2>
+      <div class="counter-screen">
+        <div class="tap-box">
+          <div class="field full"><label>Counter Device</label><select id="counterDevice">${activeCounters.map(c=>`<option value="${c.id}">${esc(c.name)} - ${esc(c.location)}</option>`).join('')}</select></div>
+          <div class="pill" id="counterAccessPill">Counter owner: ${activeCounters[0] ? esc(counterOwnerNames(activeCounters[0])) : 'No active counters'}</div>
+          <div class="field full"><label>RFID Input</label><input id="rfidInput" placeholder="Tap card or type RFID, e.g. RF1001" autofocus></div>
+          <button class="btn primary" id="tapBtn" type="button" ${activeCounters.length ? '' : 'disabled'}>Process Tap</button>
+          <div class="pill">Current meal: ${activeMeal() ? esc(activeMeal().name) : 'No active meal'}</div>
+          <div class="pill">Duplicate window: ${state.duplicateWindow}s</div>
+          <div class="pill">Session restriction: ${state.preventPerMealSession ? 'Once per meal' : 'Window only'}</div>
+          <div class="pill">Mode: ${state.model === 'wallet' ? 'Wallet Based' : 'Coupon Quantity Based'}</div>
+        </div>
+        <div class="result ${result ? result.css : ''}">
+          <div>
+            <div class="big">${result ? esc(result.display) : 'READY'}</div>
+            <div class="small">${result && result.user ? esc(result.user.name)+' / '+esc(categoryName(result.user.categoryId)) : 'Waiting for RFID tap'}</div>
+            ${result && result.user ? `<p><span class="pill">Wallet ${money(result.user.wallet)}</span> <span class="pill">Meal ${result.meal ? esc(result.meal.name) : '-'}</span></p>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card"><h2>Recent Consumption</h2>${transactionTable(state.transactions.slice(0,8), true)}</div>
+  </div>`;
+  $('counterDevice').onchange = () => {
+    const counter = state.counters.find(c=>c.id===$('counterDevice').value);
+    $('counterAccessPill').textContent = 'Counter owner: ' + counterOwnerNames(counter);
+  };
+  $('tapBtn').onclick = () => {
+    lastCounterResult = consumeRFID($('rfidInput').value, $('counterDevice').value);
+    render();
+  };
+  $('rfidInput').onkeydown = e => { if(e.key === 'Enter') $('tapBtn').click(); };
+}
+function renderUsers(){
+  const edit = editingUserId ? state.users.find(u=>String(u.id)===String(editingUserId)) : null;
+  $('users').innerHTML = `<div class="grid">
+    <div class="card span-5"><h2>${edit ? 'Edit User' : 'Add User'}</h2>
+      <div class="row">
+        <div class="field"><label>Name</label><input id="uName" value="${esc(edit ? edit.name : '')}"></div>
+        <div class="field"><label>RFID Card</label><input id="uRfid" value="${esc(edit ? edit.rfid : '')}"></div>
+        <div class="field"><label>User ID</label><input id="uId" type="number" value="${esc(edit ? edit.id : nextUserId())}" readonly></div>
+        <div class="field"><label>Employee/Student No.</label><input id="uEmp" value="${esc(edit ? edit.empNo : '')}"></div>
+        <div class="field"><label>Mobile</label><input id="uMobile" value="${esc(edit ? edit.mobile : '')}"></div>
+        <div class="field"><label>Email</label><input id="uEmail" value="${esc(edit ? edit.email : '')}"></div>
+        <div class="field"><label>Category</label><select id="uCat">${state.categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
+        <div class="field"><label>Department</label><input id="uDept" value="${esc(edit ? edit.department : '')}"></div>
+        <div class="field"><label>Branch/Location</label><input id="uBranch" value="${esc(edit ? edit.branch : '')}"></div>
+        <div class="field"><label>Expiry</label><input id="uExpiry" type="date" value="${esc(edit ? edit.cardExpiryDate : '2027-12-31')}"></div>
+        <div class="field full"><label>Photo URL</label><input id="uPhoto" placeholder="Optional image URL" value="${esc(edit ? edit.photo : '')}"></div>
+        <div class="field full"><button class="btn primary" id="saveUser" type="button">${edit ? 'Update User' : 'Save User'}</button>${edit ? ' <button class="btn" id="cancelUserEdit" type="button">Cancel Edit</button>' : ''}</div>
+      </div>
+      <hr>
+      <h3>Bulk Upload Users</h3>
+      <div class="toolbar">
+        <button class="btn" id="sampleUsers" type="button">Download Sample CSV</button>
+        <button class="btn" id="bulkUserBtn" type="button">Upload CSV</button>
+        <input id="bulkUserFile" class="hidden" type="file" accept=".csv,text/csv">
+      </div>
+    </div>
+    <div class="card span-7"><div class="toolbar"><input id="userSearch" placeholder="Search users"><button class="btn" id="exportUsers" type="button">Export Users CSV</button></div><div id="userTable"></div></div>
+  </div>`;
+  if(edit) $('uCat').value = edit.categoryId;
+  $('saveUser').onclick = () => {
+    const id = edit ? Number(edit.id) : nextUserId();
+    if(!$('uName').value.trim() || !$('uRfid').value.trim()){ toast('Name and RFID are required'); return; }
+    const payload = {id, rfid:$('uRfid').value.trim(), empNo:$('uEmp').value, name:$('uName').value, mobile:$('uMobile').value, email:$('uEmail').value, categoryId:$('uCat').value, department:$('uDept').value, branch:$('uBranch').value, photo:$('uPhoto').value, status:edit ? edit.status : 'active', joinDate:edit ? edit.joinDate : today(), cardIssueDate:edit ? edit.cardIssueDate : today(), cardExpiryDate:$('uExpiry').value, wallet:edit ? Number(edit.wallet||0) : 0, coupons:edit ? (edit.coupons||{}) : {}, createdBy:edit ? edit.createdBy : 'Admin', createdAt:edit ? edit.createdAt : nowISO()};
+    if(edit){ Object.assign(edit, payload); audit('Updated user '+payload.name); editingUserId = null; }
+    else{
+      if(state.users.some(u=>u.rfid.toLowerCase() === payload.rfid.toLowerCase())) return toast('RFID already exists');
+      state.users.push(payload); audit('Created user '+payload.name);
+    }
+    save(); toast('User saved');
+  };
+  if(edit) $('cancelUserEdit').onclick = () => { editingUserId = null; render(); };
+  $('sampleUsers').onclick = () => rowsToCSV([['rfid','emp_no','name','mobile','email','category','department','branch','expiry_date'],['RF2001','STU-2001','Sample User','9000000999','sample@example.com','Student','Science','Main Campus','2027-12-31']], 'rfid-users-sample.csv');
+  $('bulkUserBtn').onclick = () => $('bulkUserFile').click();
+  $('bulkUserFile').onchange = async e => { if(e.target.files[0]) await importUsersCSV(e.target.files[0]); e.target.value=''; };
+  $('exportUsers').onclick = () => rowsToCSV([['User ID','RFID','Name','Mobile','Category','Status']].concat(state.users.map(u=>[u.id,u.rfid,u.name,u.mobile,categoryName(u.categoryId),u.status])), 'rfid-users.csv');
+  $('userSearch').oninput = () => drawUserTable($('userSearch').value);
+  drawUserTable('');
+}
+async function importUsersCSV(file){
+  const rows = parseCSV(await fileText(file));
+  if(rows.length < 2) return toast('CSV has no users');
+  const headers = rows[0].map(h=>String(h).trim().toLowerCase());
+  const idx = name => headers.indexOf(name);
+  const val = (row, name) => {
+    const i = idx(name);
+    return i >= 0 ? String(row[i] || '').trim() : '';
+  };
+  let added = 0, skipped = 0;
+  rows.slice(1).forEach(row=>{
+    const categoryText = val(row, 'category') || 'Student';
+    const cat = state.categories.find(c=>c.name.toLowerCase() === String(categoryText).trim().toLowerCase()) || state.categories[0];
+    const id = nextUserId();
+    const rfid = val(row, 'rfid');
+    const name = val(row, 'name');
+    if(!rfid || !name || state.users.some(u=>Number(u.id)===Number(id) || u.rfid.toLowerCase()===String(rfid).toLowerCase())){ skipped++; return; }
+    state.users.push({id, rfid, empNo:val(row, 'emp_no'), name, mobile:val(row, 'mobile'), email:val(row, 'email'), categoryId:cat.id, department:val(row, 'department'), branch:val(row, 'branch'), photo:'', status:'active', joinDate:today(), cardIssueDate:today(), cardExpiryDate:val(row, 'expiry_date')||'2027-12-31', wallet:0, coupons:{}, createdBy:'Bulk Upload', createdAt:nowISO()});
+    added++;
+  });
+  audit('Bulk uploaded users: '+added);
+  save(); toast('Imported '+added+' users. Skipped '+skipped+'.');
+}
+function drawUserTable(query){
+  query = String(query||'').toLowerCase();
+  const users = state.users.filter(u => [u.id,u.rfid,u.name,u.mobile,u.empNo].join(' ').toLowerCase().includes(query));
+  $('userTable').innerHTML = `<div class="table-wrap"><table><thead><tr><th>User</th><th>RFID</th><th>Category</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead><tbody>${users.map(u=>`<tr><td><strong>${esc(u.name)}</strong><br><span class="mono">${esc(u.id)}</span></td><td>${esc(u.rfid)}</td><td>${esc(categoryName(u.categoryId))}</td><td>${money(u.wallet)}</td><td><span class="status-${u.status}">${esc(u.status)}</span></td><td><div class="icon-actions"><button class="icon-btn edit" data-edit-user="${u.id}" title="Edit user" aria-label="Edit user">&#9998;</button><button class="icon-btn ${u.status === 'blocked' ? 'good' : 'warn'}" data-block-user="${u.id}" title="${u.status === 'blocked' ? 'Unblock user' : 'Block user'}" aria-label="${u.status === 'blocked' ? 'Unblock user' : 'Block user'}">${u.status === 'blocked' ? '&#128275;' : '&#128274;'}</button></div></td></tr>`).join('')}</tbody></table></div>`;
+  document.querySelectorAll('[data-edit-user]').forEach(b=>b.onclick=()=>{ editingUserId = b.dataset.editUser; render(); });
+  document.querySelectorAll('[data-block-user]').forEach(b=>b.onclick=()=>{ const u=state.users.find(x=>String(x.id)===String(b.dataset.blockUser)); u.status = u.status === 'blocked' ? 'active' : 'blocked'; audit('Changed card block status '+u.id); save(); });
+}
+function renderCards(){
+  $('cards').innerHTML = `<div class="grid">
+    <div class="card span-4"><h2>Replace RFID Card</h2><div class="row"><div class="field full"><label>Search User</label><input id="cardUserSearch" list="userSearchList" placeholder="Name, RFID, mobile, or user ID"><datalist id="userSearchList">${state.users.map(u=>`<option value="${esc(userSearchLabel(u))}"></option>`).join('')}</datalist></div><div class="field full"><label>New RFID</label><input id="newRfid"></div><div class="field full"><label>Reason</label><input id="cardReason" placeholder="Lost, damaged, renewal"></div><div class="field full"><button class="btn primary" id="replaceCard">Replace Card</button></div></div></div>
+    <div class="card span-8"><h2>Card History</h2><div class="table-wrap"><table><thead><tr><th>User</th><th>Old RFID</th><th>New RFID</th><th>Reason</th><th>Date</th></tr></thead><tbody>${state.cardHistory.map(h=>`<tr><td>${esc(h.userId)}</td><td>${esc(h.oldRfid)}</td><td>${esc(h.newRfid)}</td><td>${esc(h.reason)}</td><td>${new Date(h.at).toLocaleString()}</td></tr>`).join('')}</tbody></table></div></div>
+  </div>`;
+  $('replaceCard').onclick = () => {
+    const u = findUserBySearch($('cardUserSearch').value);
+    if(!u || !$('newRfid').value.trim()) return toast('Choose user and new RFID');
+    state.cardHistory.unshift({userId:u.id, oldRfid:u.rfid, newRfid:$('newRfid').value.trim(), reason:$('cardReason').value, at:nowISO()});
+    u.rfid = $('newRfid').value.trim();
+    audit('Replaced RFID for '+u.id); save(); toast('RFID replaced');
+  };
+}
+function renderRecharge(){
+  const edit = editingRechargeId ? state.recharges.find(r=>r.id===editingRechargeId) : null;
+  const editUser = edit ? state.users.find(u=>u.id===edit.userId) : null;
+  $('recharge').innerHTML = `<div class="grid">
+    <div class="card span-4"><h2>${edit ? 'Edit Recharge' : 'Recharge'}</h2><div class="row"><div class="field full"><label>Search User</label><input id="rUserSearch" list="rechargeUserList" placeholder="Name, RFID, mobile, or user ID" value="${esc(userSearchLabel(editUser))}"><datalist id="rechargeUserList">${state.users.map(u=>`<option value="${esc(userSearchLabel(u))}"></option>`).join('')}</datalist></div><div class="field"><label>Amount</label><input id="rAmount" type="number" value="${edit ? edit.amount : 500}"></div><div class="field"><label>Meal Coupon</label><select id="rMeal"><option value="">Wallet Only</option>${state.meals.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('')}</select></div><div class="field"><label>Coupons</label><input id="rCoupons" type="number" value="${edit ? edit.coupons : 0}"></div><div class="field"><label>Valid Till</label><input id="rValidTill" type="date" value="${esc(edit ? (edit.validTill || '') : '')}"></div><div class="field full"><label>Remarks</label><textarea id="rRemarks">${esc(edit ? edit.remarks : '')}</textarea></div><div class="field full"><button class="btn primary" id="doRecharge">${edit ? 'Update Recharge' : 'Recharge'}</button>${edit ? ' <button class="btn" id="cancelRechargeEdit" type="button">Cancel Edit</button>' : ''}</div></div></div>
+    <div class="card span-8"><h2>Recharge History</h2>${rechargeTable()}</div>
+  </div>`;
+  if(edit) $('rMeal').value = edit.mealId || '';
+  $('doRecharge').onclick = () => {
+    const u = findUserBySearch($('rUserSearch').value);
+    const amount = Number($('rAmount').value || 0);
+    const mealId = $('rMeal').value;
+    const coupons = Number($('rCoupons').value || 0);
+    if(!u) return toast('Select a valid user');
+    if(edit){
+      reverseRecharge(edit);
+      edit.userId = u.id; edit.amount = amount; edit.mealId = mealId; edit.coupons = coupons; edit.validTill = $('rValidTill').value; edit.remarks = $('rRemarks').value; edit.editedAt = nowISO(); edit.expired = false; edit.expiredAt = '';
+      applyRecharge(edit);
+      editingRechargeId = null;
+      audit('Edited recharge '+edit.id);
+      save(); toast('Recharge updated');
+    }else{
+      const rec = {id:uid('RC'), userId:u.id, amount, mealId, coupons, validTill:$('rValidTill').value, remainingAmount:amount, remainingCoupons:coupons, expired:false, afterWallet:0, operator:'Admin', remarks:$('rRemarks').value, at:nowISO()};
+      applyRecharge(rec);
+      state.recharges.unshift(rec);
+      audit('Recharge for '+u.name); save(); toast('Recharge complete. Receipt generated in history.');
+    }
+  };
+  if(edit) $('cancelRechargeEdit').onclick = () => { editingRechargeId = null; render(); };
+  document.querySelectorAll('[data-edit-recharge]').forEach(b=>b.onclick=()=>{ editingRechargeId = b.dataset.editRecharge; render(); });
+  document.querySelectorAll('[data-delete-recharge]').forEach(b=>b.onclick=()=>{
+    const rec = state.recharges.find(r=>r.id===b.dataset.deleteRecharge);
+    if(!rec || !confirm('Delete recharge '+rec.id+'?')) return;
+    reverseRecharge(rec);
+    state.recharges = state.recharges.filter(r=>r.id!==rec.id);
+    if(editingRechargeId === rec.id) editingRechargeId = null;
+    audit('Deleted recharge '+rec.id);
+    save(); toast('Recharge deleted');
+  });
+}
+function applyRecharge(rec){
+  const u = state.users.find(x=>x.id===rec.userId);
+  if(!u) return;
+  u.wallet = Number(u.wallet || 0) + Number(rec.amount || 0);
+  rec.remainingAmount = Number(rec.amount || 0);
+  rec.remainingCoupons = Number(rec.coupons || 0);
+  if(rec.mealId && Number(rec.coupons || 0)){
+    u.coupons = u.coupons || {};
+    u.coupons[rec.mealId] = Number(u.coupons[rec.mealId] || 0) + Number(rec.coupons || 0);
+  }
+  rec.afterWallet = u.wallet;
+}
+function reverseRecharge(rec){
+  const u = state.users.find(x=>x.id===rec.userId);
+  if(!u) return;
+  u.wallet = Math.max(0, Number(u.wallet || 0) - recRemainingAmount(rec));
+  if(rec.mealId && Number(rec.coupons || 0)){
+    u.coupons = u.coupons || {};
+    u.coupons[rec.mealId] = Math.max(0, Number(u.coupons[rec.mealId] || 0) - recRemainingCoupons(rec));
+  }
+}
+function renderSettings(){
+  const editMeal = editingMealId && editingMealId !== 'new' ? state.meals.find(m=>m.id===editingMealId) : null;
+  const editCounter = editingCounterId && editingCounterId !== 'new' ? state.counters.find(c=>c.id===editingCounterId) : null;
+  const mealModal = editingMealId ? `<div class="modal-backdrop" id="mealModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mealModalTitle"><div class="modal-head"><h2 id="mealModalTitle">${editMeal ? 'Edit Meal' : 'Add Meal'}</h2><button class="icon-btn delete" id="closeMealModal" type="button" title="Close" aria-label="Close">&#10005;</button></div><div class="row"><div class="field full"><label>Meal Name</label><input id="mealNameInput" value="${esc(editMeal ? editMeal.name : '')}"></div><div class="field"><label>Start Time</label><input id="mealStartInput" type="time" value="${esc(editMeal ? editMeal.start : '07:00')}"></div><div class="field"><label>End Time</label><input id="mealEndInput" type="time" value="${esc(editMeal ? editMeal.end : '10:00')}"></div><div class="field full"><label>Status</label><select id="mealStatusInput"><option value="active">Active</option><option value="inactive">Inactive</option></select></div><div class="field full"><button class="btn primary" id="saveMeal">${editMeal ? 'Update Meal' : 'Add Meal'}</button><button class="btn" id="cancelMealEdit" type="button">Cancel</button></div></div></div></div>` : '';
+  const counterModal = editingCounterId ? `<div class="modal-backdrop" id="counterModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="counterModalTitle"><div class="modal-head"><h2 id="counterModalTitle">${editCounter ? 'Edit Counter Device' : 'Add Counter Device'}</h2><button class="icon-btn delete" id="closeCounterModal" type="button" title="Close" aria-label="Close">&#10005;</button></div><div class="row"><div class="field full"><label>Device ID</label><input id="counterIdInput" value="${esc(editCounter ? editCounter.id : uid('CTR'))}" ${editCounter ? 'readonly' : ''}></div><div class="field full"><label>Counter Name</label><input id="counterNameInput" value="${esc(editCounter ? editCounter.name : '')}"></div><div class="field full"><label>Location</label><input id="counterLocationInput" value="${esc(editCounter ? editCounter.location : '')}"></div><div class="field full"><label>Status</label><select id="counterStatusInput"><option value="active">Active</option><option value="inactive">Inactive</option></select></div><div class="field full"><label>Counter Owner / Operator</label><select id="counterUsersInput" multiple size="6">${state.users.map(u=>`<option value="${u.id}" ${editCounter && (editCounter.assignedUserIds||[]).map(String).includes(String(u.id)) ? 'selected' : ''}>${esc(userSearchLabel(u))}</option>`).join('')}</select></div><div class="field full"><button class="btn primary" id="saveCounter">${editCounter ? 'Update Counter' : 'Add Counter'}</button><button class="btn" id="cancelCounterEdit" type="button">Cancel</button></div></div></div></div>` : '';
+  $('settings').innerHTML = `<div class="grid">
+    <div class="card"><div class="section-title"><h2>Meal Timings & Category Rates</h2><button class="icon-btn good" id="addMealBtn" type="button" title="Add meal" aria-label="Add meal">&#43;</button></div><div class="table-wrap"><table><thead><tr><th>Meal</th><th>Timing</th>${state.categories.map(c=>`<th>${esc(c.name)}</th>`).join('')}<th>Actions</th></tr></thead><tbody>${state.meals.map(m=>`<tr><td><strong>${esc(m.name)}</strong><br><span class="pill">${esc(m.status)}</span></td><td>${m.start} to ${m.end}</td>${state.categories.map(c=>`<td><input data-rate="${m.id}:${c.id}" type="number" value="${rateFor({categoryId:c.id},m.id)}"></td>`).join('')}<td><div class="icon-actions"><button class="icon-btn edit" data-edit-meal="${m.id}" title="Edit meal" aria-label="Edit meal">&#9998;</button><button class="icon-btn delete" data-delete-meal="${m.id}" title="Delete meal" aria-label="Delete meal">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div><p><button class="btn primary" id="saveRates">Save Rates</button></p></div>
+    <div class="card"><div class="section-title"><h2>Counter Device Management</h2><button class="icon-btn good" id="addCounterBtn" type="button" title="Add counter device" aria-label="Add counter device">&#43;</button></div><div class="table-wrap"><table><thead><tr><th>Device</th><th>Location</th><th>Status</th><th>Counter Owner</th><th>Actions</th></tr></thead><tbody>${state.counters.map(c=>`<tr><td><strong>${esc(c.name)}</strong><br><span class="mono">${esc(c.id)}</span></td><td>${esc(c.location)}</td><td><span class="status-${c.status === 'active' ? 'active' : 'inactive'}">${esc(c.status)}</span></td><td>${esc(counterOwnerNames(c))}</td><td><div class="icon-actions"><button class="icon-btn edit" data-edit-counter="${c.id}" title="Edit counter" aria-label="Edit counter">&#9998;</button><button class="icon-btn delete" data-delete-counter="${c.id}" title="Delete counter" aria-label="Delete counter">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div></div>
+    <div class="card"><h2>System Settings</h2><div class="row"><div class="field third"><label>Consumption Model</label><select id="model"><option value="wallet">Wallet Based</option><option value="coupon">Coupon Quantity Based</option></select></div><div class="field third"><label>Duplicate Tap Window Seconds</label><input id="dup" type="number" value="${state.duplicateWindow}"></div><div class="field third"><label>Restrict RFID Once Per Meal Session</label><select id="onceSession"><option value="yes">Yes</option><option value="no">No</option></select></div><div class="field full"><button class="btn primary" id="saveSettings">Save Settings</button></div></div></div>
+  </div>${mealModal}${counterModal}`;
+  $('model').value = state.model;
+  $('onceSession').value = state.preventPerMealSession ? 'yes' : 'no';
+  if(editingMealId) $('mealStatusInput').value = editMeal ? editMeal.status : 'active';
+  if(editingCounterId) $('counterStatusInput').value = editCounter ? editCounter.status : 'active';
+  $('saveSettings').onclick = () => { state.model = $('model').value; state.duplicateWindow = Number($('dup').value || 120); state.preventPerMealSession = $('onceSession').value === 'yes'; audit('Updated settings'); save(); toast('Settings saved'); };
+  $('saveRates').onclick = () => { document.querySelectorAll('[data-rate]').forEach(i=>{ const [mealId,catId]=i.dataset.rate.split(':'); state.rates[mealId] = state.rates[mealId] || {}; state.rates[mealId][catId] = Number(i.value || 0); }); audit('Updated rates'); save(); toast('Rates saved'); };
+  $('addMealBtn').onclick = () => { editingMealId = 'new'; render(); };
+  if(editingMealId) $('saveMeal').onclick = () => {
+    const name = $('mealNameInput').value.trim();
+    if(!name) return toast('Meal name is required');
+    if(editMeal){
+      editMeal.name = name; editMeal.start = $('mealStartInput').value; editMeal.end = $('mealEndInput').value; editMeal.status = $('mealStatusInput').value; editingMealId = null; audit('Updated meal '+name);
+    }else{
+      const id = uid('meal').toLowerCase();
+      state.meals.push({id, name, start:$('mealStartInput').value, end:$('mealEndInput').value, status:$('mealStatusInput').value});
+      state.rates[id] = {};
+      state.categories.forEach(c=>state.rates[id][c.id]=0);
+      editingMealId = null;
+      audit('Added meal '+name);
+    }
+    save(); toast('Meal saved');
+  };
+  if(editingMealId){
+    $('cancelMealEdit').onclick = () => { editingMealId = null; render(); };
+    $('closeMealModal').onclick = () => { editingMealId = null; render(); };
+  }
+  document.querySelectorAll('[data-edit-meal]').forEach(b=>b.onclick=()=>{ editingMealId = b.dataset.editMeal; render(); });
+  document.querySelectorAll('[data-delete-meal]').forEach(b=>b.onclick=()=>{
+    const meal = state.meals.find(m=>m.id===b.dataset.deleteMeal);
+    if(!meal || !confirm('Delete meal '+meal.name+'?')) return;
+    state.meals = state.meals.filter(m=>m.id!==meal.id);
+    delete state.rates[meal.id];
+    state.users.forEach(u=>{ if(u.coupons) delete u.coupons[meal.id]; });
+    audit('Deleted meal '+meal.name); save(); toast('Meal deleted');
+  });
+  $('addCounterBtn').onclick = () => { editingCounterId = 'new'; render(); };
+  if(editingCounterId) $('saveCounter').onclick = () => {
+    const id = $('counterIdInput').value.trim();
+    const name = $('counterNameInput').value.trim();
+    if(!id || !name) return toast('Device ID and counter name are required');
+    const payload = {id, name, location:$('counterLocationInput').value.trim(), status:$('counterStatusInput').value, assignedUserIds:selectedValues($('counterUsersInput'))};
+    if(editCounter){
+      Object.assign(editCounter, payload);
+      editingCounterId = null;
+      audit('Updated counter '+payload.name);
+    }else{
+      if(state.counters.some(c=>c.id.toLowerCase() === id.toLowerCase())) return toast('Counter Device ID already exists');
+      state.counters.push(payload);
+      editingCounterId = null;
+      audit('Added counter '+payload.name);
+    }
+    save(); toast('Counter saved');
+  };
+  if(editingCounterId){
+    $('cancelCounterEdit').onclick = () => { editingCounterId = null; render(); };
+    $('closeCounterModal').onclick = () => { editingCounterId = null; render(); };
+  }
+  document.querySelectorAll('[data-edit-counter]').forEach(b=>b.onclick=()=>{ editingCounterId = b.dataset.editCounter; render(); });
+  document.querySelectorAll('[data-delete-counter]').forEach(b=>b.onclick=()=>{
+    const counter = state.counters.find(c=>c.id===b.dataset.deleteCounter);
+    if(!counter || !confirm('Delete counter '+counter.name+'?')) return;
+    state.counters = state.counters.filter(c=>c.id!==counter.id);
+    state.transactions.forEach(tx=>{ if(tx.counterId === counter.id) tx.counterId = ''; });
+    audit('Deleted counter '+counter.name); save(); toast('Counter deleted');
+  });
+}
+function renderReports(){
+  $('reports').innerHTML = `<div class="grid">
+    <div class="card"><div class="toolbar"><button class="btn" id="exportTx">Export Consumption CSV</button><button class="btn" id="exportRecharge">Export Recharge CSV</button><button class="btn" id="syncOffline">Sync Offline Queue (${state.offlineQueue.length})</button></div><h2>Consumption Report</h2>${transactionTable(state.transactions)}</div>
+    <div class="card span-6"><h2>Balance Report</h2><div class="table-wrap"><table><thead><tr><th>User</th><th>Wallet</th><th>Coupons</th></tr></thead><tbody>${state.users.map(u=>`<tr><td>${esc(u.name)}</td><td>${money(u.wallet)}</td><td>${state.meals.map(m=>esc(m.name)+': '+Number((u.coupons||{})[m.id]||0)).join('<br>')}</td></tr>`).join('')}</tbody></table></div></div>
+    <div class="card span-6"><h2>Audit Log</h2><div class="list">${state.audit.slice(0,20).map(a=>`<div class="list-item"><span>${esc(a.action)}</span><span>${new Date(a.at).toLocaleString()}</span></div>`).join('')}</div></div>
+  </div>`;
+  $('exportTx').onclick = () => rowsToCSV([['TX','Date','User','RFID','Meal','Amount','Status','Reason']].concat(state.transactions.map(t=>[t.id,t.at,t.userId,t.rfid,mealName(t.mealId),t.amount,t.status,t.reason])), 'consumption-report.csv');
+  $('exportRecharge').onclick = () => rowsToCSV([['Receipt','Date','User','Amount','Remaining Amount','Coupons','Remaining Coupons','Valid Till','Status','Wallet After','Operator']].concat(state.recharges.map(r=>[r.id,r.at,r.userId,r.amount,recRemainingAmount(r),r.coupons,recRemainingCoupons(r),r.validTill || '',r.expired ? 'Expired' : 'Active',r.afterWallet,r.operator])), 'recharge-report.csv');
+  $('syncOffline').onclick = () => { state.transactions.unshift(...state.offlineQueue.map(q=>({...q, reason:'Synced from local queue'}))); state.offlineQueue=[]; audit('Synced offline queue'); save(); toast('Offline queue synced'); };
+}
+function renderDocs(){
+  $('docs').innerHTML = `<div class="grid">
+    <div class="card span-6"><h2>Database Schema Blueprint</h2><div class="list">${['users','categories','rfid_cards','meal_types','coupon_rates','wallet_transactions','coupon_balances','recharge_transactions','meal_transactions','counter_devices','notification_logs','audit_logs','settings','roles','permissions','user_roles'].map(t=>`<div class="list-item"><code>${t}</code><span>indexed, auditable</span></div>`).join('')}</div></div>
+    <div class="card span-6"><h2>REST API Blueprint</h2><div class="table-wrap"><table><thead><tr><th>Module</th><th>Endpoints</th></tr></thead><tbody>${['auth','users','categories','meals','coupons','wallet','recharge','rfid-consumption','reports','dashboard','settings','notifications'].map(m=>`<tr><td><code>/api/${m}</code></td><td>GET, POST, PUT, DELETE where applicable</td></tr>`).join('')}</tbody></table></div></div>
+    <div class="card"><h2>Implementation Note</h2><p>This PWA is a functional browser prototype. For production, move persistence and RFID consumption into Laravel 12 services, MySQL migrations, JWT protected API routes, queues for notifications, and server-side duplicate protection.</p></div>
+  </div>`;
+}
+function transactionTable(rows, showCounter = false){
+  return `<div class="table-wrap"><table><thead><tr><th>Time</th><th>User</th><th>RFID</th>${showCounter ? '<th>Counter</th>' : ''}<th>Meal</th><th>Amount</th><th>Status</th><th>Reason</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${new Date(t.at).toLocaleString()}</td><td>${esc((state.users.find(u=>u.id===t.userId)||{}).name || t.userId || '-')}</td><td>${esc(t.rfid)}</td>${showCounter ? `<td>${esc(counterName(t.counterId))}</td>` : ''}<td>${esc(mealName(t.mealId))}</td><td>${money(t.amount)}</td><td>${esc(t.status)}</td><td>${esc(t.reason)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function usageReportTable(label, rows){
+  const body = rows.length ? rows.map(r=>`<tr><td><strong>${esc(r.name)}</strong></td><td>${Number(r.count || 0)} used</td><td>${money(r.amount)}</td></tr>`).join('') : `<tr><td><strong>No ${esc(label.toLowerCase())}</strong></td><td>0 used</td><td>${money(0)}</td></tr>`;
+  return `<div class="table-wrap"><table><thead><tr><th>${esc(label)}</th><th>Usage</th><th>Total Amount</th></tr></thead><tbody>${body}</tbody></table></div>`;
+}
+function rechargeTable(){
+  return `<div class="table-wrap"><table><thead><tr><th>Receipt</th><th>User</th><th>Amount</th><th>Coupons</th><th>Validity</th><th>Balance After</th><th>Date</th><th>Action</th></tr></thead><tbody>${state.recharges.map(r=>`<tr><td>${r.id}</td><td>${esc((state.users.find(u=>u.id===r.userId)||{}).name)}</td><td>${money(r.amount)}<br><span class="pill">left ${money(recRemainingAmount(r))}</span></td><td>${r.coupons || 0} ${r.mealId ? mealName(r.mealId) : ''}<br><span class="pill">left ${recRemainingCoupons(r)}</span></td><td>${r.validTill ? esc(r.validTill) : 'No expiry'}<br><span class="pill">${r.expired ? 'expired' : 'active'}</span></td><td>${money(r.afterWallet)}</td><td>${new Date(r.at).toLocaleString()}${r.editedAt ? '<br><span class="pill">edited</span>' : ''}</td><td><div class="icon-actions"><button class="icon-btn edit" data-edit-recharge="${r.id}" title="Edit recharge" aria-label="Edit recharge">&#9998;</button><button class="icon-btn delete" data-delete-recharge="${r.id}" title="Delete recharge" aria-label="Delete recharge">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div>`;
+}
+
+$('tabs').onclick = e => { const b = e.target.closest('.tab'); if(!b) return; activeView = b.dataset.view; render(); };
+$('resetBtn').onclick = () => { if(confirm('Reset all demo RFID data?')){ localStorage.removeItem(DB_KEY); state = seedState(); activeView='dashboard'; save(); } };
+$('exportBtn').onclick = () => {
+  const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='rfid-coupon-data.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+};
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; $('installBtn').hidden = false; });
+$('installBtn').onclick = async () => { if(deferredInstall){ deferredInstall.prompt(); deferredInstall = null; $('installBtn').hidden = true; } };
+window.addEventListener('online', ()=>toast('Back online. Offline queue can be synced from Reports.'));
+window.addEventListener('offline', ()=>toast('Offline mode active. RFID taps will queue locally.'));
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>navigator.serviceWorker.register('rfid-sw.js').catch(()=>{}));
+}
+render();
+</script>
+</body>
+</html>
