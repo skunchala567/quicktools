@@ -994,19 +994,26 @@ function consumeRechargeCoupon(userId, mealId){
 }
 function updateNavButtonAccessControl(){
   // Get current user's role
-  let employee = ADMIN_USER.id === currentEmployeeId ? ADMIN_USER : state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  let employee = null;
+  if(String(ADMIN_USER.id) === String(currentEmployeeId)){
+    employee = ADMIN_USER;
+  } else {
+    employee = state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  }
   const role = employee?.role || 'Unknown';
 
   // Update visibility of navigation buttons based on access control
   document.querySelectorAll('.screen-nav-btn').forEach(btn => {
     const screen = btn.dataset.screen;
-    const hasAccess = state.accessControl?.[role]?.[screen]?.['view'] === true;
+    // For admin users, show all screens. For others, check access control
+    let hasAccess = role === 'Admin' ? true : (state.accessControl?.[role]?.[screen]?.['view'] === true);
 
-    if(!hasAccess){
-      btn.style.display = 'none';
-    } else {
-      btn.style.display = '';
+    // If screen not in access control for non-admin, hide it
+    if(role !== 'Admin' && state.accessControl?.[role] && !(screen in state.accessControl[role])){
+      hasAccess = false;
     }
+
+    btn.style.display = hasAccess ? '' : 'none';
   });
 }
 
