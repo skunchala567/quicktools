@@ -1,8 +1,8 @@
 {
-  "name": "RFID Coupon Management",
-  "short_name": "RFID Coupons",
+  "name": "Mess Management",
+  "short_name": "Mess Mgmt",
   "description": "RFID based cafeteria coupon and wallet management PWA.",
-  "start_url": "rfid-coupon.html",
+  "start_url": "rfid-coupon.html#dashboard",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0d0e10",

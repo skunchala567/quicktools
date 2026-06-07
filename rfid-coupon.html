@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#111827">
-<title>Creator Studio - RFID Coupons</title>
+<title>Mess Management</title>
 <link rel="manifest" href="rfid-manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,6 +48,13 @@ body{
   color:var(--ink);
   font-family:"Inter Tight",system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;
+}
+body.login-view{
+  padding-left:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+}
+body.login-view header,body.login-view .app-sidebar,body.login-view main{
+  display:none;
 }
 button,input,select,textarea{font-family:inherit}
 h1,h2,h3{font-family:"Fraunces",serif;letter-spacing:0}
@@ -175,7 +182,8 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute
 .toast{position:fixed;left:calc(50% + 116px);bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.2s;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:9999;font-weight:900;box-shadow:var(--shadow)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:1100px){.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}.counter-screen{grid-template-columns:1fr}.report-grid{grid-template-columns:1fr}}
-@media(max-width:760px){body{padding-left:0;padding-top:72px;font-size:14px}.app-sidebar{inset:0 0 auto 0;width:100%;height:72px;padding:8px 10px;flex-direction:row;align-items:center;border-right:0;border-bottom:2px solid var(--accent-2);overflow-x:auto}.app-navbar-logo{min-width:max-content}.app-nav-links{display:flex;gap:4px}.app-nav-item{min-width:max-content;padding:8px 10px;font-size:13px}.app-nav-icon{width:24px;height:24px}.app-shell-footer{margin-top:0;padding-top:0;border-top:0;margin-left:auto;min-width:118px}header,.wrap{padding-left:12px;padding-right:12px}.wrap{padding-top:14px;gap:12px}.brand{align-items:flex-start}.seal{width:42px;height:42px;border-radius:11px}h1{font-size:25px}.sub{font-size:13px}.top-actions{width:100%;margin-left:0}.tabs{gap:6px}.tab{padding:8px 10px;font-size:13px}.grid{gap:10px}.card{padding:12px;border-radius:10px}.card h2,.card h3{font-size:19px}.metric .k{font-size:11px}.metric .v{font-size:24px}.section-title{align-items:flex-start;flex-direction:column}.range-shell{width:100%;margin-left:0}.range-trigger{min-width:0}.range-popover{position:static;width:100%;min-width:0;margin-top:8px;grid-template-columns:1fr}.range-presets{border-right:0;border-bottom:1px solid var(--line)}.range-calendars{grid-template-columns:1fr}.range-month{border-right:0;border-bottom:1px solid var(--line)}.row{grid-template-columns:1fr}.field,.field.third{grid-column:1/-1}input,select,textarea{font-size:13px;padding:9px 10px}.btn{min-height:36px;padding:8px 10px;font-size:13px}.icon-btn{width:34px;height:34px}.table-wrap{border-radius:9px}table{font-size:12px;min-width:640px}th,td{padding:8px}.pill{font-size:10px;padding:3px 7px}.list-item{padding:9px;font-size:13px}.summary-row{padding:9px}.summary-row strong{font-size:14px}.summary-meta{font-size:12px}.counter-screen{min-height:auto;gap:10px}.tap-box{padding:12px}.result{min-height:190px;min-height:5cm;padding:22px 16px}.result .big{font-size:40px}.result .small{font-size:15px}.toast{left:50%;width:calc(100% - 24px);text-align:center}}
+.hamburger-btn{display:none;background:none;border:none;color:var(--ink);font-size:24px;cursor:pointer;padding:8px}
+@media(max-width:760px){body{padding-left:0;padding-top:72px;font-size:14px}.hamburger-btn{display:block;position:fixed;top:12px;left:12px;z-index:1001}.app-sidebar{inset:0 auto 0 0;width:240px;height:auto;padding:12px 10px;flex-direction:column;align-items:flex-start;border-right:2px solid var(--accent-2);border-bottom:0;overflow-y:auto;max-height:0;opacity:0;transition:.3s;z-index:999;position:fixed;top:72px;left:0;pointer-events:none}.app-sidebar.mobile-open{max-height:calc(100vh - 72px);opacity:1;pointer-events:auto}.app-navbar-logo{min-width:max-content;font-size:13px}.app-nav-links{display:flex;gap:4px;flex-direction:column;width:100%}.app-nav-item{min-width:max-content;padding:12px;font-size:13px}.app-nav-icon{width:24px;height:24px}.mess-submenu{flex-direction:column!important;gap:8px!important;width:100%}.screen-nav-btn{width:calc(100% - 24px)!important;padding:10px 12px!important;font-size:13px!important}.app-shell-footer{margin-top:0;padding-top:0;border-top:0;margin-left:auto;min-width:118px}header,.wrap{padding-left:12px;padding-right:12px}.wrap{padding-top:14px;gap:12px}.brand{align-items:flex-start}.seal{width:42px;height:42px;border-radius:11px}h1{font-size:25px}.sub{font-size:13px}.top-actions{width:100%;margin-left:0}.tabs{gap:6px}.tab{padding:8px 10px;font-size:13px}.grid{gap:10px}.card{padding:12px;border-radius:10px}.card h2,.card h3{font-size:19px}.metric .k{font-size:11px}.metric .v{font-size:24px}.section-title{align-items:flex-start;flex-direction:column}.range-shell{width:100%;margin-left:0}.range-trigger{min-width:0}.range-popover{position:static;width:100%;min-width:0;margin-top:8px;grid-template-columns:1fr}.range-presets{border-right:0;border-bottom:1px solid var(--line)}.range-calendars{grid-template-columns:1fr}.range-month{border-right:0;border-bottom:1px solid var(--line)}.row{grid-template-columns:1fr}.field,.field.third{grid-column:1/-1}input,select,textarea{font-size:13px;padding:9px 10px}.btn{min-height:36px;padding:8px 10px;font-size:13px}.icon-btn{width:34px;height:34px}.table-wrap{border-radius:9px}table{font-size:12px;min-width:640px}th,td{padding:8px}.pill{font-size:10px;padding:3px 7px}.list-item{padding:9px;font-size:13px}.summary-row{padding:9px}.summary-row strong{font-size:14px}.summary-meta{font-size:12px}.counter-screen{min-height:auto;gap:10px}.tap-box{padding:12px}.result{min-height:190px;min-height:5cm;padding:22px 16px}.result .big{font-size:40px}.result .small{font-size:15px}.toast{left:50%;width:calc(100% - 24px);text-align:center}}
 </style>
 <link rel="stylesheet" href="base-theme.css">
 <style>
@@ -185,11 +193,31 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute
 <script src="base-theme.js"></script>
 </head>
 <body>
+<button id="sidebarToggleBtn" class="hamburger-btn" aria-label="Toggle navigation menu">☰</button>
 <aside class="app-sidebar" aria-label="Creator Studio apps">
   <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">KS</span><span>Tools</span></a>
   <nav class="app-nav-links">
     <a href="index.html" class="app-nav-item"><span class="app-nav-icon app-icon-cert" aria-hidden="true"></span><span>Certificates</span></a>
-    <a href="rfid-coupon.html" class="app-nav-item active"><span class="app-nav-icon app-icon-rfid" aria-hidden="true"></span><span>RFID Coupons</span></a>
+    <div class="app-nav-item active" style="display:flex;flex-direction:column;gap:0;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:12px;">
+      <button id="messToggleBtn" style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 12px;border-radius:10px;background:rgba(22,163,74,.22);border:none;color:#fff;cursor:pointer;font-weight:700;font-size:14px;transition:.18s;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <span class="app-nav-icon app-icon-rfid" aria-hidden="true"></span><span>Mess Management</span>
+        </div>
+        <span id="messToggleIcon" style="font-size:16px;transition:.2s;transform:rotate(180deg);">▼</span>
+      </button>
+      <div id="messSubmenu" class="mess-submenu" style="display:flex;flex-direction:column;gap:4px;padding:8px 12px;margin-top:4px;">
+        <button class="screen-nav-btn" data-screen="dashboard" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Dashboard</button>
+        <button class="screen-nav-btn" data-screen="vendorDashboard" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Vendor Dashboard</button>
+        <button class="screen-nav-btn" data-screen="counter" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● RFID Counter</button>
+        <button class="screen-nav-btn" data-screen="users" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Users</button>
+        <button class="screen-nav-btn" data-screen="recharge" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Recharge</button>
+        <button class="screen-nav-btn" data-screen="cards" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Replace Card</button>
+        <button class="screen-nav-btn" data-screen="reports" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Reports</button>
+        <button class="screen-nav-btn" data-screen="settings" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Configurations</button>
+        <button class="screen-nav-btn" data-screen="accessControl" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Access Control</button>
+        <button class="screen-nav-btn" data-screen="docs" style="text-align:left;background:none;border:none;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-weight:600;font-size:13px;transition:.18s;">● Schema/API</button>
+      </div>
+    </div>
     <a href="image-url-generator.html" class="app-nav-item"><span class="app-nav-icon app-icon-image" aria-hidden="true"></span><span>Image URLs</span></a>
     <a href="whatsapp.html" class="app-nav-item"><span class="app-nav-icon app-icon-whatsapp" aria-hidden="true"></span><span>WhatsApp</span></a>
     <a href="excel-merger.html" class="app-nav-item"><span class="app-nav-icon app-icon-excel" aria-hidden="true"></span><span>Excel Merger</span></a>
@@ -204,37 +232,42 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute
 
 <header>
   <div class="brand">
-    <div class="seal">RF</div>
+    <div class="seal">MM</div>
     <div>
-      <h1>RFID Coupon Management</h1>
-      <div class="sub">Users, meal rates, recharge, RFID counter, offline queue, and reports</div>
+      <h1>Mess Management</h1>
+      <div class="sub"> <!--Users, meal rates, recharge, RFID counter, offline queue, and reports--></div>
     </div>
     <div class="top-actions">
       <button class="btn" id="installBtn" type="button" hidden>Install App</button>
-      <button class="btn" id="exportBtn" type="button">Export JSON</button>
-      <button class="btn danger" id="resetBtn" type="button">Reset Demo</button>
+      <button class="btn" id="changePasswordBtn" type="button">Change Password</button>
+      <button class="btn danger" id="logoutBtn" type="button">Logout</button>
+      <!-- <button class="btn" id="exportBtn" type="button">Export JSON</button> -->
+      <!-- <button class="btn danger" id="resetBtn" type="button">Reset Demo</button> -->
     </div>
   </div>
 </header>
 
 <main class="wrap">
   <nav class="tabs" id="tabs">
-    <button class="tab active" data-view="dashboard">Dashboard</button>
+    
+    <button class="tab" data-view="dashboard">Dashboard</button>
     <button class="tab" data-view="counter">RFID Counter</button>
     <button class="tab" data-view="users">Users</button>
-    <button class="tab" data-view="cards">RFID Cards</button>
     <button class="tab" data-view="recharge">Recharge</button>
-    <button class="tab" data-view="settings">Configurations</button>
+    <button class="tab" data-view="cards">Replace Card</button>
     <button class="tab" data-view="reports">Reports</button>
+    <button class="tab" data-view="settings">Configurations</button>
     <button class="tab" data-view="docs">Schema/API</button>
   </nav>
 
   <section class="view active" id="dashboard"></section>
+  <section class="view" id="vendorDashboard"></section>
   <section class="view" id="counter"></section>
   <section class="view" id="users"></section>
   <section class="view" id="cards"></section>
   <section class="view" id="recharge"></section>
   <section class="view" id="settings"></section>
+  <section class="view" id="accessControl"></section>
   <section class="view" id="reports"></section>
   <section class="view" id="docs"></section>
 </main>
@@ -246,6 +279,19 @@ const $ = id => document.getElementById(id);
 const DB_KEY = 'rfid-coupon-demo-v1';
 let deferredInstall = null;
 let state = loadState();
+
+// Hardcoded admin user - not stored in portalEmployees
+const ADMIN_USER = {
+  id: 'admin-001',
+  name: 'Srikanth',
+  mobile: '9281122104',
+  password: 'Sri@9293',
+  role: 'Admin',
+  branch: 'Head Office',
+  status: 'active',
+  isAdmin: true
+};
+
 let activeView = 'dashboard';
 let lastCounterResult = null;
 let toastTimer = null;
@@ -263,8 +309,15 @@ let dashboardDateTo = today();
 let dashboardPickerOpen = false;
 let dashboardDraftStart = null;
 let dashboardPickerMonth = today().slice(0,7) + '-01';
+let vendorDashboardDateFrom = today();
+let vendorDashboardDateTo = today();
+let vendorDashboardPickerOpen = false;
+let vendorDashboardDraftStart = null;
+let vendorDashboardPickerMonth = today().slice(0,7) + '-01';
+let currentEmployeeId = null;
 let consumptionReportFilters = {search:'', from:'', to:'', categoryIds:[], mealIds:[], counterIds:[], status:'', profit:'', pageSize:10};
 let consumptionReportPage = 1;
+let balanceReportFilters = {search:'', categoryIds:[], status:''};
 let reportPickerOpen = false;
 let reportDraftStart = null;
 let reportPickerMonth = today().slice(0,7) + '-01';
@@ -547,16 +600,28 @@ function seedState(){
     duplicateWindow:120,
     categories, meals, rates:rate, vendorRates:vendorRate, categorySettings, users,
     counters:[
-      {id:'CTR-1', name:'Counter 1', location:'Main Cafeteria', status:'active', assignedUserIds:[2]},
-      {id:'CTR-2', name:'Counter 2', location:'Annex', status:'active', assignedUserIds:[]}
+      {id:'CTR-1', name:'Counter 1', location:'Main Cafeteria', status:'active', assignedUserIds:[1, 4]},
+      {id:'CTR-2', name:'Counter 2', location:'Annex', status:'active', assignedUserIds:[2]},
+      {id:'CTR-3', name:'Counter 3', location:'Block A', status:'active', assignedUserIds:[1, 2]}
     ],
     cardHistory:[],
-    portalEmployees:[],
+    portalEmployees:[
+      {id:1, name:'Rajesh Kumar', mobile:'9000000001', branch:'Main Campus', role:'Mess Incharge', password:'12345678', status:'active'},
+      {id:2, name:'Priya Sharma', mobile:'9000000002', branch:'Block A', role:'Mess Incharge', password:'12345678', status:'active'},
+      {id:3, name:'Admin User', mobile:'9000000003', branch:'Head Office', role:'Admin', password:'12345678', status:'active'},
+      {id:4, name:'Mess Incharge', mobile:'9281122104', branch:'Main Campus', role:'Mess Incharge', password:'12345678', status:'active'}
+    ],
     recharges:[],
     transactions:[],
     offlineQueue:[],
     audit:[{at:nowISO(), actor:'system', action:'Seeded demo data'}],
-    notifications:[]
+    notifications:[],
+    accessControl:{
+      'Admin':{dashboard:{view:true,add:true,edit:true,delete:true},vendorDashboard:{view:true,add:true,edit:true,delete:true},counter:{view:true,add:true,edit:true,delete:true},users:{view:true,add:true,edit:true,delete:true},cards:{view:true,add:true,edit:true,delete:true},recharge:{view:true,add:true,edit:true,delete:true},settings:{view:true,add:true,edit:true,delete:true},accessControl:{view:true,add:true,edit:true,delete:true},reports:{view:true,add:true,edit:true,delete:true}},
+      'Mess Incharge':{dashboard:{view:false,add:false,edit:false,delete:false},vendorDashboard:{view:true,add:true,edit:true,delete:true},counter:{view:true,add:true,edit:true,delete:true},users:{view:false,add:false,edit:false,delete:false},cards:{view:false,add:false,edit:false,delete:false},recharge:{view:false,add:false,edit:false,delete:false},settings:{view:false,add:false,edit:false,delete:false},accessControl:{view:false,add:false,edit:false,delete:false},reports:{view:false,add:false,edit:false,delete:false}},
+      'Accountant':{dashboard:{view:true,add:true,edit:true,delete:true},vendorDashboard:{view:false,add:false,edit:false,delete:false},counter:{view:false,add:false,edit:false,delete:false},users:{view:true,add:true,edit:true,delete:true},cards:{view:true,add:true,edit:true,delete:true},recharge:{view:true,add:true,edit:true,delete:true},settings:{view:false,add:false,edit:false,delete:false},accessControl:{view:false,add:false,edit:false,delete:false},reports:{view:true,add:true,edit:true,delete:true}},
+      'Management':{dashboard:{view:true,add:true,edit:true,delete:true},vendorDashboard:{view:false,add:false,edit:false,delete:false},counter:{view:false,add:false,edit:false,delete:false},users:{view:false,add:false,edit:false,delete:false},cards:{view:true,add:true,edit:true,delete:true},recharge:{view:true,add:true,edit:true,delete:true},settings:{view:false,add:false,edit:false,delete:false},accessControl:{view:false,add:false,edit:false,delete:false},reports:{view:true,add:true,edit:true,delete:true}}
+    }
   };
 }
 function categoryName(id){ return (state.categories.find(c=>c.id===id)||{}).name || 'Unknown'; }
@@ -640,11 +705,14 @@ function portalEmployeeLabel(emp){
 }
 function counterOwnerName(id){
   const key = String(id || '');
-  if(key.startsWith('employee:')){
+  let emp = state.portalEmployees?.find(e=>String(e.id)===key);
+  if(!emp && key.startsWith('employee:')){
     const empId = key.slice('employee:'.length);
-    return (state.portalEmployees.find(e=>String(e.id)===empId)||{}).name || key;
+    emp = state.portalEmployees?.find(e=>String(e.id)===empId);
   }
-  return (state.users.find(u=>String(u.id)===key)||{}).name || key;
+  if(emp) return emp.name;
+  const user = state.users.find(u=>String(u.id)===key);
+  return user ? user.name : key;
 }
 function counterOwnerOptionsHTML(editCounter){
   const selected = (editCounter && editCounter.assignedUserIds || []).map(String);
@@ -690,6 +758,60 @@ function chooseDashboardDate(dateValue){
 }
 function dashboardRangePickerHTML(start, end){
   return `<div class="range-shell"><button class="range-trigger" id="dashboardRangeBtn" type="button" aria-haspopup="dialog" aria-expanded="${dashboardPickerOpen ? 'true' : 'false'}"><span aria-hidden="true">&#128197;</span><strong>${esc(rangeLabel(start, end))}</strong></button>${dashboardPickerOpen ? `<div class="range-popover" role="dialog" aria-label="Usage reports date range"><div class="range-presets"><strong>Choose a Period</strong>${[['today','Today'],['yesterday','Yesterday'],['this-week','This Week'],['last-week','Last Week'],['last-30','Last 30 Days'],['last-90','Last 90 Days']].map(([id,label])=>`<button type="button" data-range-preset="${id}">${label}</button>`).join('')}</div><div class="range-calendars">${calendarMonthHTML(dashboardPickerMonth, 0, start, end)}${calendarMonthHTML(dashboardPickerMonth, 1, start, end)}</div></div>` : ''}</div>`;
+}
+function setVendorDashboardRange(start, end){
+  vendorDashboardDateFrom = start <= end ? start : end;
+  vendorDashboardDateTo = start <= end ? end : start;
+  vendorDashboardDraftStart = null;
+}
+function applyVendorDashboardPreset(preset){
+  const t = today();
+  const d = new Date(t + 'T00:00:00');
+  const weekday = d.getDay();
+  if(preset === 'today') setVendorDashboardRange(t, t);
+  if(preset === 'yesterday'){ const y = addDays(t, -1); setVendorDashboardRange(y, y); }
+  if(preset === 'this-week') setVendorDashboardRange(addDays(t, -weekday), t);
+  if(preset === 'last-week') setVendorDashboardRange(addDays(t, -weekday - 7), addDays(t, -weekday - 1));
+  if(preset === 'last-30') setVendorDashboardRange(addDays(t, -29), t);
+  if(preset === 'last-90') setVendorDashboardRange(addDays(t, -89), t);
+  vendorDashboardPickerMonth = vendorDashboardDateFrom.slice(0,7) + '-01';
+}
+function chooseVendorDashboardDate(dateValue){
+  if(!vendorDashboardDraftStart || vendorDashboardDateFrom !== vendorDashboardDateTo){
+    vendorDashboardDraftStart = dateValue;
+    setVendorDashboardRange(dateValue, dateValue);
+    vendorDashboardDraftStart = dateValue;
+  }else{
+    setVendorDashboardRange(vendorDashboardDraftStart, dateValue);
+    vendorDashboardPickerOpen = false;
+  }
+}
+function vendorDashboardRangePickerHTML(start, end){
+  const pickerHTML = (monthOffset, calStart, calEnd) => {
+    const baseDate = new Date(vendorDashboardPickerMonth + 'T00:00:00');
+    const m = addMonths(dateISO(baseDate), monthOffset);
+    const [year, month] = m.split('-').map(Number);
+    const firstDay = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+    const cells = [];
+    const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    dow.forEach(dayName=>cells.push(`<div class="dow">${dayName}</div>`));
+    let cellDate = new Date(startDate);
+    while(cellDate.getMonth() !== month - 1 || cellDate.getDate() !== lastDay.getDate()){
+      const ds = dateISO(cellDate);
+      const inMonth = cellDate.getMonth() === month - 1;
+      const selected = ds >= Math.min(calStart, calEnd) && ds <= Math.max(calStart, calEnd);
+      const isStart = ds === calStart;
+      const isEnd = ds === calEnd;
+      const isToday = ds === today();
+      cells.push(`<button type="button" data-vendor-range-date="${ds}" class="day-cell ${!inMonth ? 'not-in-month' : ''} ${selected ? 'in-range' : ''} ${isStart || isEnd ? 'selected' : ''} ${isToday ? 'today' : ''}" ${!inMonth ? 'disabled' : ''}>${cellDate.getDate()}</button>`);
+      cellDate.setDate(cellDate.getDate() + 1);
+    }
+    return `<div class="range-month"><div class="range-month-head"><button class="icon-btn" type="button" data-vendor-range-shift="-1" style="width:32px;height:32px;padding:0;">←</button><select data-vendor-range-year="${monthOffset}" style="flex:1">${Array.from({length:10},(v,i)=>{const y=new Date().getFullYear()-5+i; return `<option value="${y}" ${y===year ? 'selected' : ''}>${y}</option>`}).join('')}</select><select data-vendor-range-month="${monthOffset}" style="flex:1">${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((m,i)=>`<option value="${i}" ${i===month-1 ? 'selected' : ''}>${m}</option>`).join('')}</select><button class="icon-btn" type="button" data-vendor-range-shift="1" style="width:32px;height:32px;padding:0;">→</button></div><div class="calendar-grid">${cells.join('')}</div></div>`;
+  };
+  return `<div class="range-shell"><button class="range-trigger" id="vendorDashboardRangeBtn" type="button" aria-haspopup="dialog" aria-expanded="${vendorDashboardPickerOpen ? 'true' : 'false'}"><span aria-hidden="true">&#128197;</span><strong>${esc(rangeLabel(start, end))}</strong></button>${vendorDashboardPickerOpen ? `<div class="range-popover" role="dialog" aria-label="Vendor dashboard date range"><div class="range-presets"><strong>Choose a Period</strong>${[['today','Today'],['yesterday','Yesterday'],['this-week','This Week'],['last-week','Last Week'],['last-30','Last 30 Days'],['last-90','Last 90 Days']].map(([id,label])=>`<button type="button" data-vendor-range-preset="${id}">${label}</button>`).join('')}</div><div class="range-calendars">${pickerHTML(0, start, end)}${pickerHTML(1, start, end)}</div></div>` : ''}</div>`;
 }
 function setReportRange(start, end){
   consumptionReportFilters.from = start <= end ? start : end;
@@ -783,7 +905,8 @@ function consumeRFID(rfid, counterId){
   expireRecharges();
   expireUserValidities();
   const clean = String(rfid||'').trim();
-  const user = state.users.find(u=>u.rfid.toLowerCase() === clean.toLowerCase());
+  let user = state.users.find(u=>u.rfid.toLowerCase() === clean.toLowerCase());
+  if(!user) user = state.users.find(u=>String(u.id) === clean || u.empNo?.toLowerCase() === clean.toLowerCase());
   const meal = activeMeal();
   const tx = {id:uid('TX'), at:nowISO(), rfid:clean, counterId, userId:user ? user.id : '', mealId:meal ? meal.id : '', amount:0, vendorAmount:0, status:'failed', reason:''};
   if(!navigator.onLine){
@@ -793,7 +916,7 @@ function consumeRFID(rfid, counterId){
     save();
     return {...tx, user, meal, display:'OFFLINE QUEUED', css:'blocked'};
   }
-  if(!user){ tx.reason = 'Unknown RFID'; state.transactions.unshift(tx); audit('Rejected unknown RFID '+clean); save(); return {...tx, user:null, meal, display:'UNKNOWN CARD', css:'rejected'}; }
+  if(!user){ tx.reason = 'Unknown ID or RFID'; state.transactions.unshift(tx); audit('Rejected unknown ID/RFID '+clean); save(); return {...tx, user:null, meal, display:'UNKNOWN CARD', css:'rejected'}; }
   if(user.status === 'blocked'){ tx.reason = 'Card blocked'; state.transactions.unshift(tx); audit('Rejected blocked card '+clean); save(); return {...tx, user, meal, display:'CARD BLOCKED', css:'blocked'}; }
   if(user.status !== 'active'){ tx.reason = 'Inactive user'; state.transactions.unshift(tx); save(); return {...tx, user, meal, display:'USER INACTIVE', css:'rejected'}; }
   if(isUserValidityExpired(user)){ zeroExpiredUserBalance(user); tx.reason = 'User validity expired'; state.transactions.unshift(tx); audit('Rejected expired user '+clean); save(); return {...tx, user, meal, display:'VALIDITY EXPIRED', css:'blocked'}; }
@@ -869,20 +992,281 @@ function consumeRechargeCoupon(userId, mealId){
   if(rec.remainingCouponsByMeal) rec.remainingCouponsByMeal[mealId] = recRemainingCoupons(rec, mealId) - 1;
   else rec.remainingCoupons = recRemainingCoupons(rec) - 1;
 }
+function updateNavButtonAccessControl(){
+  // Get current user's role
+  let employee = ADMIN_USER.id === currentEmployeeId ? ADMIN_USER : state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  const role = employee?.role || 'Unknown';
+
+  // Update visibility of navigation buttons based on access control
+  document.querySelectorAll('.screen-nav-btn').forEach(btn => {
+    const screen = btn.dataset.screen;
+    const hasAccess = state.accessControl?.[role]?.[screen]?.['view'] === true;
+
+    if(!hasAccess){
+      btn.style.display = 'none';
+    } else {
+      btn.style.display = '';
+    }
+  });
+}
+
 function render(){
-  expireRecharges();
-  expireUserValidities();
-  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id === activeView));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view === activeView));
-  renderDashboard(); renderCounter(); renderUsers(); renderCards(); renderRecharge(); renderSettings(); renderReports(); renderDocs();
+  try{
+    expireRecharges();
+    expireUserValidities();
+    document.querySelectorAll('.view').forEach(v=>{
+      const shouldBeActive = activeView && v.id === activeView;
+      v.classList.toggle('active', shouldBeActive);
+      if(shouldBeActive) v.style.display = 'block';
+      else v.style.display = 'none';
+    });
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', activeView && t.dataset.view === activeView));
+  }catch(error){
+    console.error('View toggle error:', error);
+  }
+  // Show/hide login modal based on authentication
+  if(!currentEmployeeId || activeView === 'login'){
+    document.body.classList.add('login-view');
+    document.title = 'Login - Mess Management';
+    window.location.hash = 'login';
+    activeView = 'login';
+    // Hide buttons when not authenticated
+    const changePasswordBtn = $('changePasswordBtn');
+    const logoutBtn = $('logoutBtn');
+    const installBtn = $('installBtn');
+    if(changePasswordBtn) changePasswordBtn.style.display = 'none';
+    if(logoutBtn) logoutBtn.style.display = 'none';
+    if(installBtn) installBtn.style.display = 'none';
+    renderAuthModal();
+    return;
+  }else{
+    document.body.classList.remove('login-view');
+    document.title = 'Mess Management';
+    // Remove login modal when authenticated
+    const authModal = document.getElementById('authModal');
+    if(authModal) authModal.remove();
+    // Show buttons when authenticated
+    const changePasswordBtn = $('changePasswordBtn');
+    const logoutBtn = $('logoutBtn');
+    if(changePasswordBtn) changePasswordBtn.style.display = '';
+    if(logoutBtn) logoutBtn.style.display = '';
+    // Update navigation button access control
+    updateNavButtonAccessControl();
+  }
+  // Update employee info in header
+  const employee = state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  const employeeInfo = document.querySelector('header .sub');
+  if(employeeInfo) employeeInfo.textContent = 'Logged in as: '+esc(employee?.name || 'Unknown')+' ('+esc(employee?.role || 'User')+')';
+  // Only render the active view (don't render anything if activeView is null)
+  if(!activeView) return;
+  if(activeView === 'dashboard') try{ renderDashboard(); }catch(e){ console.error('Dashboard error:', e); }
+  if(activeView === 'vendorDashboard') try{ renderVendorDashboard(); }catch(e){ console.error('Vendor Dashboard error:', e); }
+  if(activeView === 'counter') try{ renderCounter(); }catch(e){ console.error('Counter error:', e); }
+  if(activeView === 'users') try{ renderUsers(); }catch(e){ console.error('Users error:', e); }
+  if(activeView === 'cards') try{ renderCards(); }catch(e){ console.error('Cards error:', e); }
+  if(activeView === 'recharge') try{ renderRecharge(); }catch(e){ console.error('Recharge error:', e); }
+  if(activeView === 'settings') try{ renderSettings(); }catch(e){ console.error('Settings error:', e); }
+  if(activeView === 'accessControl') try{ renderAccessControl(); }catch(e){ console.error('Access Control error:', e); }
+  if(activeView === 'reports') try{ renderReports(); }catch(e){ console.error('Reports error:', e); }
+  if(activeView === 'docs') try{ renderDocs(); }catch(e){ console.error('Docs error:', e); }
+}
+function renderAuthModal(){
+  const loginError = window.systemLoginError || '';
+  const isLoginPage = document.body.classList.contains('login-view');
+  const modal = `<div class="modal-backdrop" id="authModal" style="position:fixed;inset:0;background:${isLoginPage ? 'transparent' : 'rgba(15,23,42,.58)'};display:grid;place-items:center;padding:18px;z-index:5000;">
+    <div class="modal" style="width:min(420px,100%);max-height:calc(100vh - 36px);overflow:auto;background:var(--panel);border:${isLoginPage ? 'none' : '1px solid var(--line)'};border-radius:14px;box-shadow:${isLoginPage ? '0 20px 60px rgba(0,0,0,.3)' : '0 30px 80px -30px rgba(0,0,0,.65)'};padding:28px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="width:60px;height:60px;border-radius:14px;display:grid;place-items:center;background:var(--accent);color:#fff;font-family:'JetBrains Mono';font-weight:900;font-size:22px;margin:0 auto 16px;line-height:1;">KS</div>
+        <h2 style="margin:0 0 8px;font-size:24px;font-family:'Fraunces',serif;">Mess Management</h2>
+        <p style="margin:0;color:var(--muted);font-size:13px;">Employee Portal Login</p>
+      </div>
+      <div style="display:grid;gap:14px;">
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Mobile Number</label>
+          <input id="authMobileInput" type="text" placeholder="Enter mobile number" style="width:100%;padding:10px 11px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--ink);font-size:14px;font-family:inherit;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Password</label>
+          <div style="position:relative;display:flex;align-items:center;">
+            <input id="authPasswordInput" type="password" placeholder="Enter password" style="width:100%;padding:10px 11px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--ink);font-size:14px;font-family:inherit;">
+            <button id="authPasswordToggle" type="button" style="position:absolute;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;display:flex;align-items:center;justify-content:center;">👁️</button>
+          </div>
+        </div>
+        ${loginError ? '<div style="color:#fff;font-weight:800;font-size:13px;padding:10px 12px;background:var(--danger);border-radius:8px;">'+esc(loginError)+'</div>' : ''}
+        <button id="authLoginBtn" class="btn primary" type="button" style="min-height:44px;margin-top:8px;">Login</button>
+      </div>
+    </div>
+  </div>`;
+  const existingModal = document.getElementById('authModal');
+  if(existingModal) existingModal.remove();
+  document.body.insertAdjacentHTML('beforeend', modal);
+
+  // Use setTimeout to ensure elements are in DOM before attaching handlers
+  setTimeout(()=>{
+    const loginBtn = document.getElementById('authLoginBtn');
+    const mobileInput = document.getElementById('authMobileInput');
+    const passwordInput = document.getElementById('authPasswordInput');
+    const passwordToggle = document.getElementById('authPasswordToggle');
+
+    if(!loginBtn || !mobileInput || !passwordInput){
+      console.error('Login form elements not found', {loginBtn, mobileInput, passwordInput});
+      return;
+    }
+
+    console.log('Login form elements found and attaching handlers');
+
+    // Password visibility toggle
+    if(passwordToggle){
+      let isPasswordVisible = false;
+      passwordToggle.onclick = (e)=>{
+        e.preventDefault();
+        isPasswordVisible = !isPasswordVisible;
+        passwordInput.type = isPasswordVisible ? 'text' : 'password';
+        passwordToggle.textContent = isPasswordVisible ? '🙈' : '👁️';
+      };
+    }
+
+    const handleLogin = ()=>{
+    const mobile = mobileInput.value.trim();
+    const password = passwordInput.value; // Don't trim password - it might contain spaces
+
+    console.log('Login attempt:', {
+      mobile,
+      passwordLength: password.length,
+      passwordValue: password,
+      employeeCount: state.portalEmployees.length
+    });
+
+    if(!mobile) {
+      window.systemLoginError = 'Please enter mobile number';
+      render();
+      return;
+    }
+    if(!password) {
+      window.systemLoginError = 'Please enter password';
+      render();
+      return;
+    }
+
+    // Check admin user first
+    let employee = null;
+    if(ADMIN_USER.mobile === mobile) {
+      employee = ADMIN_USER;
+      console.log('Found admin user:', ADMIN_USER.name);
+    }
+
+    // If not admin, check portal employees
+    if(!employee) {
+      employee = state.portalEmployees.find(e=>{
+        const match = e.mobile === mobile;
+        if(match) console.log('Found employee:', e.name, 'with mobile:', e.mobile);
+        return match;
+      });
+    }
+
+    if(!employee) {
+      console.log('Employee not found with mobile:', mobile);
+      console.log('Available mobiles:', [ADMIN_USER.mobile, ...state.portalEmployees.map(e=>e.mobile)]);
+      window.systemLoginError = 'Mobile number not found';
+      render();
+      return;
+    }
+
+    console.log('Employee found:', employee.name);
+    console.log('Stored password:', employee.password);
+    console.log('Entered password:', password);
+    console.log('Password match:', employee.password === password);
+    console.log('Stored password length:', employee.password.length);
+    console.log('Entered password length:', password.length);
+
+    if(employee.password !== password) {
+      window.systemLoginError = 'Invalid password';
+      render();
+      return;
+    }
+
+    console.log('Login successful for:', employee.name);
+    window.systemLoginError = null;
+    currentEmployeeId = employee.id;
+    activeView = 'dashboard';
+    window.location.hash = 'dashboard';
+    render();
+    };
+
+    loginBtn.onclick = handleLogin;
+    passwordInput.onkeypress = (e)=>{ if(e.key==='Enter') handleLogin(); };
+    mobileInput.onkeypress = (e)=>{ if(e.key==='Enter') passwordInput.focus(); };
+  }, 0);
+}
+function renderChangePasswordModal(){
+  const changePasswordError = window.changePasswordError || '';
+  const changePasswordSuccess = window.changePasswordSuccess || '';
+  const modal = `<div class="modal-backdrop" id="changePasswordModal" style="position:fixed;inset:0;background:rgba(15,23,42,.58);display:grid;place-items:center;padding:18px;z-index:5000;">
+    <div class="modal" style="width:min(420px,100%);max-height:calc(100vh - 36px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px -30px rgba(0,0,0,.65);padding:28px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <h2 style="margin:0;font-size:24px;font-family:'Fraunces',serif;">Change Password</h2>
+      </div>
+      <div style="display:grid;gap:14px;">
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Current Password</label>
+          <input id="currentPasswordInput" type="password" placeholder="Enter current password" style="width:100%;padding:10px 11px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--ink);font-size:14px;font-family:inherit;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">New Password</label>
+          <input id="newPasswordInput" type="password" placeholder="Enter new password" style="width:100%;padding:10px 11px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--ink);font-size:14px;font-family:inherit;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Confirm Password</label>
+          <input id="confirmPasswordInput" type="password" placeholder="Confirm new password" style="width:100%;padding:10px 11px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--ink);font-size:14px;font-family:inherit;">
+        </div>
+        ${changePasswordError ? '<div style="color:#fff;font-weight:800;font-size:13px;padding:10px 12px;background:var(--danger);border-radius:8px;">'+esc(changePasswordError)+'</div>' : ''}
+        ${changePasswordSuccess ? '<div style="color:#fff;font-weight:800;font-size:13px;padding:10px 12px;background:var(--accent-2);border-radius:8px;">'+esc(changePasswordSuccess)+'</div>' : ''}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button id="cancelChangePasswordBtn" class="btn" type="button" style="min-height:40px;">Cancel</button>
+          <button id="confirmChangePasswordBtn" class="btn primary" type="button" style="min-height:40px;">Change Password</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  const existingModal = document.getElementById('changePasswordModal');
+  if(existingModal) existingModal.remove();
+  document.body.insertAdjacentHTML('beforeend', modal);
+  setTimeout(()=>{
+    const cancelBtn = document.getElementById('cancelChangePasswordBtn');
+    const confirmBtn = document.getElementById('confirmChangePasswordBtn');
+    const currentPasswordInput = document.getElementById('currentPasswordInput');
+    const newPasswordInput = document.getElementById('newPasswordInput');
+    const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+    if(cancelBtn) cancelBtn.onclick = ()=>{ document.getElementById('changePasswordModal').remove(); window.changePasswordError = null; window.changePasswordSuccess = null; };
+    if(confirmBtn) confirmBtn.onclick = ()=>{
+      const current = currentPasswordInput.value;
+      const newPass = newPasswordInput.value;
+      const confirm = confirmPasswordInput.value;
+      if(!current) { window.changePasswordError = 'Please enter current password'; renderChangePasswordModal(); return; }
+      if(!newPass) { window.changePasswordError = 'Please enter new password'; renderChangePasswordModal(); return; }
+      if(!confirm) { window.changePasswordError = 'Please confirm new password'; renderChangePasswordModal(); return; }
+      const employee = state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+      if(!employee || employee.password !== current) { window.changePasswordError = 'Current password is incorrect'; renderChangePasswordModal(); return; }
+      if(newPass !== confirm) { window.changePasswordError = 'New passwords do not match'; renderChangePasswordModal(); return; }
+      if(newPass.length < 6) { window.changePasswordError = 'Password must be at least 6 characters'; renderChangePasswordModal(); return; }
+      employee.password = newPass;
+      save();
+      window.changePasswordError = null;
+      window.changePasswordSuccess = 'Password changed successfully!';
+      renderChangePasswordModal();
+      setTimeout(()=>{ document.getElementById('changePasswordModal').remove(); window.changePasswordSuccess = null; }, 2000);
+    };
+  }, 0);
 }
 function renderDashboard(){
-  const todayTx = state.transactions.filter(t=>t.at.slice(0,10) === today());
-  const approved = todayTx.filter(t=>t.status === 'approved');
+  try{
+    console.log('renderDashboard called, state.transactions:', state.transactions?.length);
+  }catch(e){}
   const from = dashboardDateFrom || today();
   const to = dashboardDateTo || from;
   const rangeStart = from <= to ? from : to;
   const rangeEnd = from <= to ? to : from;
+  const rangeLabel = rangeStart === rangeEnd ? `${rangeStart}` : `${rangeStart} to ${rangeEnd}`;
   const rangeApproved = state.transactions.filter(t=>t.status === 'approved' && t.at.slice(0,10) >= rangeStart && t.at.slice(0,10) <= rangeEnd);
   const categoryUsage = state.categories.map(c=>{
     const txs = rangeApproved.filter(t=>{ const u=state.users.find(x=>x.id===t.userId); return u && u.categoryId===c.id; });
@@ -906,41 +1290,165 @@ function renderDashboard(){
     locationMap[name].profit = locationMap[name].amount - locationMap[name].vendor;
   });
   const locationUsage = Object.values(locationMap).sort((a,b)=>b.count-a.count || b.amount-a.amount);
-  const collections = state.recharges.reduce((s,r)=>s+Number(r.amount||0),0);
+  const rangeCollections = state.recharges.filter(r=>r.at.slice(0,10) >= rangeStart && r.at.slice(0,10) <= rangeEnd).reduce((s,r)=>s+Number(r.amount||0),0);
   const rangeSales = rangeApproved.reduce((s,t)=>s+Number(t.amount||0),0);
   const rangeVendorCost = rangeApproved.reduce((s,t)=>s+txVendorAmount(t),0);
   const rangeProfit = rangeSales - rangeVendorCost;
-  const mealCards = state.meals.map(m=>`<div class="card span-3 metric"><div class="k">Today's ${esc(m.name)}</div><div class="v">${approved.filter(t=>t.mealId===m.id).length}</div></div>`).join('');
-  $('dashboard').innerHTML = `<div class="grid">
-    <div class="card span-3 metric"><div class="k">Total Users</div><div class="v">${state.users.length}</div></div>
-    <div class="card span-3 metric"><div class="k">Active Users</div><div class="v">${state.users.filter(u=>u.status==='active').length}</div></div>
-    <div class="card span-3 metric"><div class="k">Today's Consumption</div><div class="v">${approved.length}</div></div>
-    <div class="card span-3 metric"><div class="k">Collections</div><div class="v">${money(collections)}</div></div>
-    <div class="card span-3 metric"><div class="k">Range Sales</div><div class="v">${money(rangeSales)}</div></div>
-    <div class="card span-3 metric"><div class="k">Vendor Cost</div><div class="v">${money(rangeVendorCost)}</div></div>
-    <div class="card span-3 metric"><div class="k">Profit / Loss</div><div class="v ${profitClass(rangeProfit)}">${money(rangeProfit)}</div></div>
-    ${mealCards}
-    <div class="card span-6"><div class="section-title"><h2>Usage Reports</h2>${dashboardRangePickerHTML(rangeStart, rangeEnd)}</div><div class="report-grid"><div class="report-block"><h3>Category Usage</h3>${usageSummaryHTML(categoryUsage)}</div><div class="report-block"><h3>Meal Wise Usage</h3>${usageSummaryHTML(mealUsage)}</div><div class="report-block"><h3>Counter Location Usage</h3>${usageSummaryHTML(locationUsage)}</div></div></div>
-  </div>`;
-  $('dashboardRangeBtn').onclick = () => { dashboardPickerOpen = !dashboardPickerOpen; render(); };
-  document.querySelectorAll('[data-range-preset]').forEach(b=>b.onclick=()=>{ applyDashboardPreset(b.dataset.rangePreset); dashboardPickerOpen = false; render(); });
-  document.querySelectorAll('[data-range-date]').forEach(b=>b.onclick=()=>{ chooseDashboardDate(b.dataset.rangeDate); render(); });
-  document.querySelectorAll('[data-range-shift]').forEach(b=>b.onclick=()=>{ dashboardPickerMonth = addMonths(dashboardPickerMonth, Number(b.dataset.rangeShift)); render(); });
-  document.querySelectorAll('[data-range-year],[data-range-month]').forEach(s=>s.onchange=()=>{
-    const offset = Number(s.dataset.rangeYear || s.dataset.rangeMonth || 0);
-    const yearSelect = document.querySelector(`[data-range-year="${offset}"]`);
-    const monthSelect = document.querySelector(`[data-range-month="${offset}"]`);
-    const nextPanel = dateISO(new Date(Number(yearSelect.value), Number(monthSelect.value), 1));
-    dashboardPickerMonth = addMonths(nextPanel, -offset);
-    render();
+  const mealCards = state.meals.map(m=>{
+    const mealData = mealUsage.find(mu=>mu.name===m.name);
+    const count = mealData?.count || 0;
+    const amount = mealData?.amount || 0;
+    return `<div class="card span-3 metric"><div class="k">${rangeStart === rangeEnd ? 'Today' : 'Period'}'s ${esc(m.name)}</div><div style="display:flex;gap:12px;justify-content:space-between;align-items:center;"><div class="v">${count}</div><div class="v">${money(amount)}</div></div></div>`;
+  }).join('');
+  try{
+    $('dashboard').innerHTML = `<div class="grid">
+      <!-- <div class="card span-12"><div class="section-title"><h2>Period: ${rangeLabel}</h2>${dashboardRangePickerHTML(rangeStart, rangeEnd)}</div></div> -->
+      <div class="card span-3 metric"><div class="k">Total Users</div><div class="v">${state.users.length}</div></div>
+      <div class="card span-3 metric"><div class="k">Active Users</div><div class="v">${state.users.filter(u=>u.status==='active').length}</div></div>
+      <div class="card span-3 metric"><div class="k">Consumption</div><div style="display:flex;gap:12px;justify-content:space-between;align-items:center;"><div class="v">${rangeApproved.length}</div><div class="v">${money(rangeSales)}</div></div></div>
+      <div class="card span-3 metric"><div class="k">Collections</div><div class="v">${money(rangeCollections)}</div></div>
+      <div class="card span-3 metric"><div class="k">Vendor Cost</div><div class="v">${money(rangeVendorCost)}</div></div>
+      <div class="card span-3 metric"><div class="k">Profit / Loss</div><div class="v ${profitClass(rangeProfit)}">${money(rangeProfit)}</div></div>
+      <div class="card span-12"><div class="section-title"><h2>Usage Reports</h2></div><div class="report-grid"><div class="report-block"><h3>Category Usage</h3>${usageSummaryHTML(categoryUsage)}</div><div class="report-block"><h3>Meal Wise Usage</h3>${usageSummaryHTML(mealUsage)}</div><div class="report-block"><h3>Counter Location Usage</h3>${usageSummaryHTML(locationUsage)}</div></div></div>
+    </div>`;
+  }catch(error){
+    console.error('Dashboard render error:', error);
+    $('dashboard').innerHTML = '<div class="card"><h2>Dashboard Error</h2><p>Unable to load dashboard. Please try refreshing or toggling between screens.</p></div>';
+    return;
+  }
+  setTimeout(()=>{
+    if($('dashboardRangeBtn')) $('dashboardRangeBtn').onclick = () => { dashboardPickerOpen = !dashboardPickerOpen; render(); };
+    document.querySelectorAll('[data-range-preset]').forEach(b=>b.onclick=()=>{ applyDashboardPreset(b.dataset.rangePreset); dashboardPickerOpen = false; render(); });
+    document.querySelectorAll('[data-range-date]').forEach(b=>b.onclick=()=>{ chooseDashboardDate(b.dataset.rangeDate); render(); });
+    document.querySelectorAll('[data-range-shift]').forEach(b=>b.onclick=()=>{ dashboardPickerMonth = addMonths(dashboardPickerMonth, Number(b.dataset.rangeShift)); render(); });
+    document.querySelectorAll('[data-range-year],[data-range-month]').forEach(s=>s.onchange=()=>{
+      const offset = Number(s.dataset.rangeYear || s.dataset.rangeMonth || 0);
+      const yearSelect = document.querySelector(`[data-range-year="${offset}"]`);
+      const monthSelect = document.querySelector(`[data-range-month="${offset}"]`);
+      const nextPanel = dateISO(new Date(Number(yearSelect.value), Number(monthSelect.value), 1));
+      dashboardPickerMonth = addMonths(nextPanel, -offset);
+      render();
+    });
+  }, 0);
+}
+function renderVendorDashboard(){
+  if(!currentEmployeeId){
+    const employeeOptions = state.portalEmployees.map(e=>`<option value="${e.id}">${esc(e.name)} (${e.role})</option>`).join('');
+    const loginError = window.vendorLoginError || '';
+    $('vendorDashboard').innerHTML = `<div class="grid">
+      <div class="card span-6" style="padding:24px;text-align:center;">
+        <h2 style="margin-bottom:20px;">Employee Login</h2>
+        <div style="display:grid;gap:12px;">
+          <div><label style="display:block;margin-bottom:8px;text-align:left;">Select Employee:</label><select id="employeeSelect" style="width:100%;padding:10px;">${employeeOptions}</select></div>
+          <div><label style="display:block;margin-bottom:8px;text-align:left;">Password:</label><input id="passwordInput" type="password" placeholder="Enter password" style="width:100%;padding:10px;border:1px solid var(--line-strong);border-radius:9px;background:var(--panel-2);color:var(--ink);"></div>
+          ${loginError ? `<div style="color:var(--danger);font-weight:800;font-size:13px;padding:8px;background:rgba(185,28,28,0.1);border-radius:8px;">${esc(loginError)}</div>` : ''}
+          <button class="btn primary" id="loginBtn" type="button">Login</button>
+        </div>
+      </div>
+    </div>`;
+    setTimeout(()=>{
+      const loginBtn = $('loginBtn');
+      const employeeSelect = $('employeeSelect');
+      const passwordInput = $('passwordInput');
+      if(loginBtn) loginBtn.onclick = ()=>{
+        const empId = employeeSelect.value;
+        const password = passwordInput.value;
+        if(!empId) { window.vendorLoginError = 'Please select an employee'; render(); return; }
+        if(!password) { window.vendorLoginError = 'Please enter password'; render(); return; }
+        const employee = state.portalEmployees.find(e=>String(e.id)===String(empId));
+        if(!employee || employee.password !== password) { window.vendorLoginError = 'Invalid password'; render(); return; }
+        window.vendorLoginError = null;
+        currentEmployeeId = empId;
+        render();
+      };
+      if(passwordInput) passwordInput.onkeypress = (e)=>{ if(e.key==='Enter') loginBtn.click(); };
+    }, 0);
+    return;
+  }
+
+  // Get current user - check admin first, then portal employees
+  let employee = ADMIN_USER.id === currentEmployeeId ? ADMIN_USER : state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  const role = employee?.role || 'Unknown';
+
+  // Check access control
+  const hasAccess = state.accessControl?.[role]?.['vendorDashboard']?.['view'] === true;
+  if(!hasAccess){
+    $('vendorDashboard').innerHTML = `<div class="grid">
+      <div class="card span-12"><h2>Access Denied</h2><p>Your role (${esc(role)}) does not have access to the Vendor Dashboard.</p><button class="btn" id="logoutBtn">Change Employee</button></div>
+    </div>`;
+    setTimeout(()=>{ if($('logoutBtn')) $('logoutBtn').onclick = ()=>{ currentEmployeeId = null; render(); }; }, 0);
+    return;
+  }
+
+  // For Admin, show all counters. For others, show only assigned counters
+  let countersToShow = [];
+  if(role === 'Admin'){
+    countersToShow = state.counters;
+  } else {
+    countersToShow = state.counters.filter(c=>c.assignedUserIds.includes(Number(currentEmployeeId)) || c.assignedUserIds.includes(String(currentEmployeeId)));
+  }
+  const assignedCounterIds = countersToShow.map(c=>c.id);
+  if(!assignedCounterIds.length){
+    $('vendorDashboard').innerHTML = `<div class="grid">
+      <div class="card span-6"><h2>${esc(employee?.name || 'Unknown')}</h2><p>No counters assigned to you.</p><button class="btn" id="logoutBtn">Change Employee</button></div>
+    </div>`;
+    setTimeout(()=>{ if($('logoutBtn')) $('logoutBtn').onclick = ()=>{ currentEmployeeId = null; render(); }; }, 0);
+    return;
+  }
+
+  // Apply date range filter
+  const from = vendorDashboardDateFrom || today();
+  const to = vendorDashboardDateTo || from;
+  const rangeStart = from <= to ? from : to;
+  const rangeEnd = from <= to ? to : from;
+  const rangeLabel = rangeStart === rangeEnd ? `${rangeStart}` : `${rangeStart} to ${rangeEnd}`;
+  const rangeTx = state.transactions.filter(t=>t.status === 'approved' && t.at.slice(0,10) >= rangeStart && t.at.slice(0,10) <= rangeEnd && assignedCounterIds.includes(t.counterId));
+
+  const mealUsage = state.meals.map(m=>{
+    const txs = rangeTx.filter(t=>t.mealId===m.id);
+    const amount = txs.reduce((s,t)=>s+Number(txVendorAmount(t)||0),0);
+    return {name:m.name, count:txs.length, amount};
   });
+  const counterMap = {};
+  rangeTx.forEach(t=>{
+    const counter = state.counters.find(c=>c.id===t.counterId);
+    const name = counter ? counter.name : t.counterId;
+    counterMap[name] = counterMap[name] || {name, count:0, amount:0};
+    counterMap[name].count += 1;
+    counterMap[name].amount += Number(txVendorAmount(t) || 0);
+  });
+  const counterUsage = Object.values(counterMap).sort((a,b)=>b.count-a.count || b.amount-a.amount);
+  const totalVendorRevenue = rangeTx.reduce((s,t)=>s+Number(txVendorAmount(t)||0),0);
+  const mealCards = state.meals.map(m=>{
+    const mealData = mealUsage.find(mu=>mu.name===m.name);
+    const count = mealData?.count || 0;
+    const amount = mealData?.amount || 0;
+    return `<div class="card span-3 metric"><div class="k">${rangeStart === rangeEnd ? 'Today' : 'Period'}'s ${esc(m.name)}</div><div style="display:flex;gap:12px;justify-content:space-between;align-items:center;"><div class="v">${count}</div><div class="v">${money(amount)}</div></div></div>`;
+  }).join('');
+  try{
+    $('vendorDashboard').innerHTML = `<div class="grid">
+      <div class="card span-12"><div style="display:flex;justify-content:flex-end;gap:12px;">${vendorDashboardRangePickerHTML(rangeStart, rangeEnd)}</div></div>
+      <div class="card span-3 metric"><div class="k">Total Coupons & Revenue</div><div style="display:flex;gap:12px;justify-content:space-between;align-items:center;"><div class="v">${rangeTx.length}</div><div class="v">${money(totalVendorRevenue)}</div></div></div>
+      <div class="card span-12"><div class="section-title"><h2>Meal Wise Usage</h2></div>${usageSummaryHTML(mealUsage, true)}</div>
+      ${countersToShow.length > 1 ? `<div class="card span-12"><div class="section-title"><h2>Counter Wise Usage</h2></div>${usageSummaryHTML(counterUsage, true)}</div>` : ''}
+    </div>`;
+  }catch(error){
+    console.error('Vendor Dashboard render error:', error);
+    $('vendorDashboard').innerHTML = '<div class="card"><h2>Vendor Dashboard Error</h2><p>Unable to load vendor dashboard. Please try refreshing or toggling between screens.</p></div>';
+  }
+  setTimeout(()=>{
+    if($('vendorDashboardRangeBtn')) $('vendorDashboardRangeBtn').onclick = () => { vendorDashboardPickerOpen = !vendorDashboardPickerOpen; render(); };
+    document.querySelectorAll('[data-vendor-range-preset]').forEach(b=>b.onclick=()=>{ applyVendorDashboardPreset(b.dataset.vendorRangePreset); vendorDashboardPickerOpen = false; render(); });
+    document.querySelectorAll('[data-vendor-range-date]').forEach(b=>b.onclick=()=>{ chooseVendorDashboardDate(b.dataset.vendorRangeDate); render(); });
+    document.querySelectorAll('[data-vendor-range-shift]').forEach(b=>b.onclick=()=>{ vendorDashboardPickerMonth = addMonths(vendorDashboardPickerMonth, Number(b.dataset.vendorRangeShift)); render(); });
+  }, 0);
 }
 function renderCounter(){
   const result = lastCounterResult;
   const activeCounters = state.counters.filter(c=>c.status === 'active');
   $('counter').innerHTML = `<div class="grid">
     <div class="card counter-card ${counterMaximized ? 'maximized' : ''}" id="counterCard">
-      <div class="section-title"><h2>Full Screen RFID Counter</h2><button class="icon-btn" id="counterFullscreenBtn" type="button" title="${counterMaximized ? 'Exit full screen' : 'Maximize counter'}" aria-label="${counterMaximized ? 'Exit full screen' : 'Maximize counter'}">${counterMaximized ? '&#10005;' : '&#9974;'}</button></div>
+      <div class="section-title"><h2>Full Screen RFID Counter</h2><div style="display:flex;gap:8px;"><button class="btn" id="dashboardNavBtn" type="button">Dashboard</button><button class="icon-btn" id="counterFullscreenBtn" type="button" title="${counterMaximized ? 'Exit full screen' : 'Maximize counter'}" aria-label="${counterMaximized ? 'Exit full screen' : 'Maximize counter'}">${counterMaximized ? '&#10005;' : '&#9974;'}</button></div></div>
       <div class="counter-screen">
         <div class="result ${result ? result.css : ''}">
           <div>
@@ -950,7 +1458,7 @@ function renderCounter(){
           </div>
         </div>
         <div class="tap-box">
-          <div class="field full"><label>RFID Input</label><input id="rfidInput" placeholder="Tap card or type RFID, e.g. RF1001" autofocus></div>
+          <div class="field full"><label>Student ID / RFID Input</label><input id="rfidInput" placeholder="Scan card or enter Student ID / RFID (e.g. 1, STU-001, RF1001)" autofocus></div>
           <button class="btn primary" id="tapBtn" type="button" ${activeCounters.length ? '' : 'disabled'}>Process Tap</button>
           <div class="pill">Current meal: ${activeMeal() ? esc(activeMeal().name) : 'No active meal'}</div>
           <div class="field full"><label>Counter Device</label><select id="counterDevice">${activeCounters.map(c=>`<option value="${c.id}">${esc(c.name)} - ${esc(c.location)}</option>`).join('')}</select></div>
@@ -967,14 +1475,17 @@ function renderCounter(){
     const counter = state.counters.find(c=>c.id===$('counterDevice').value);
     $('counterAccessPill').textContent = 'Counter owner: ' + counterOwnerNames(counter);
   };
+  $('dashboardNavBtn').onclick = () => navigateTo('vendorDashboard');
   $('counterFullscreenBtn').onclick = () => toggleCounterFullscreen();
   $('tapBtn').onclick = () => {
     if(counterMaximized) preservingCounterFullscreen = true;
     lastCounterResult = consumeRFID($('rfidInput').value, $('counterDevice').value);
     speakRFIDResult(lastCounterResult);
+    $('rfidInput').value = '';
+    $('rfidInput').focus();
     renderCounterPreservingFullscreen();
   };
-  $('rfidInput').onkeydown = e => { if(e.key === 'Enter') $('tapBtn').click(); };
+  $('rfidInput').onkeydown = e => { if(e.key === 'Enter') { e.preventDefault(); $('tapBtn').click(); } };
 }
 async function renderCounterPreservingFullscreen(){
   const keepFullscreen = counterMaximized;
@@ -1069,6 +1580,18 @@ function filteredUsers(){
     const validity = userValidityStatus(u);
     const haystack = [userSearchTerms(u),u.department,u.branch,categoryName(u.categoryId),u.status,validity.label].join(' ').toLowerCase();
     return (!query || haystack.includes(query)) && (!category || u.categoryId === category) && (!status || validity.value === status);
+  });
+}
+function filteredBalanceUsers(){
+  const query = String(balanceReportFilters.search || '').toLowerCase();
+  const categoryIds = balanceReportFilters.categoryIds || [];
+  const status = balanceReportFilters.status || '';
+  return state.users.filter(u=>{
+    const validity = userValidityStatus(u);
+    const haystack = [userSearchTerms(u),u.department,u.branch,categoryName(u.categoryId),u.status,validity.label].join(' ').toLowerCase();
+    const matchesCategory = categoryIds.length === 0 || categoryIds.includes(u.categoryId);
+    const matchesStatus = !status || validity.value === status;
+    return (!query || haystack.includes(query)) && matchesCategory && matchesStatus;
   });
 }
 function userValidityStatus(user){
@@ -1268,16 +1791,17 @@ function renderSettings(){
   const editMeal = editingMealId && editingMealId !== 'new' ? state.meals.find(m=>m.id===editingMealId) : null;
   const editCounter = editingCounterId && editingCounterId !== 'new' ? state.counters.find(c=>c.id===editingCounterId) : null;
   const editCategorySetting = editingCategorySettingId && editingCategorySettingId !== 'new' ? state.categorySettings.find(s=>s.id===editingCategorySettingId) : null;
-  const editPortalEmployee = editingPortalEmployeeId && editingPortalEmployeeId !== 'new' ? state.portalEmployees.find(e=>e.id===editingPortalEmployeeId) : null;
+  const editPortalEmployee = editingPortalEmployeeId && editingPortalEmployeeId !== 'new' ? state.portalEmployees.find(e=>String(e.id)===String(editingPortalEmployeeId)) : null;
   const mealModal = editingMealId ? `<div class="modal-backdrop" id="mealModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mealModalTitle"><div class="modal-head"><h2 id="mealModalTitle">${editMeal ? 'Edit Meal' : 'Add Meal'}</h2><button class="icon-btn delete" id="closeMealModal" type="button" title="Close" aria-label="Close">&#10005;</button></div><div class="row"><div class="field full"><label>Meal Name</label><input id="mealNameInput" value="${esc(editMeal ? editMeal.name : '')}"></div><div class="field"><label>Start Time</label><input id="mealStartInput" type="time" value="${esc(editMeal ? editMeal.start : '07:00')}"></div><div class="field"><label>End Time</label><input id="mealEndInput" type="time" value="${esc(editMeal ? editMeal.end : '10:00')}"></div><div class="field full"><label>Status</label><select id="mealStatusInput"><option value="active">Active</option><option value="inactive">Inactive</option></select></div><div class="field full"><button class="btn primary" id="saveMeal">${editMeal ? 'Update Meal' : 'Add Meal'}</button><button class="btn" id="cancelMealEdit" type="button">Cancel</button></div></div></div></div>` : '';
   const categorySettingModal = editingCategorySettingId ? `<div class="modal-backdrop" id="categorySettingModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="categorySettingModalTitle"><div class="modal-head"><h2 id="categorySettingModalTitle">${editCategorySetting ? 'Edit Category Setting' : 'Add Category Setting'}</h2><button class="icon-btn delete" id="closeCategorySettingModal" type="button" title="Close" aria-label="Close">&#10005;</button></div><div class="row"><div class="field full"><label>Category</label><select id="categorySettingCategory">${state.categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div><div class="field"><label>Consumption Model</label><select id="categorySettingModel"><option value="wallet">Wallet Based</option><option value="coupon">Coupon Quantity Based</option></select></div><div class="field"><label>Duplicate Tap Window Seconds</label><input id="categorySettingDuplicate" type="number" min="0" value="${editCategorySetting ? Number(editCategorySetting.duplicateWindow || 0) : 0}"></div><div class="field"><label>Restrict RFID Once Per Meal Session</label><select id="categorySettingRestrict"><option value="no">No</option><option value="yes">Yes</option></select></div><div class="field"><label>Status</label><select id="categorySettingStatus"><option value="active">Active</option><option value="inactive">Inactive</option></select></div><div class="field full"><button class="btn primary" id="saveCategorySetting">${editCategorySetting ? 'Update Setting' : 'Add Setting'}</button><button class="btn" id="cancelCategorySettingEdit" type="button">Cancel</button></div></div></div></div>` : '';
   const portalEmployeeModal = editingPortalEmployeeId ? `<div class="modal-backdrop" id="portalEmployeeModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="portalEmployeeModalTitle"><div class="modal-head"><h2 id="portalEmployeeModalTitle">${editPortalEmployee ? 'Edit Portal Employee' : 'Add Portal Employee'}</h2><button class="icon-btn delete" id="closePortalEmployeeModal" type="button" title="Close" aria-label="Close">&#10005;</button></div><div class="row"><div class="field full"><label>Name</label><input id="portalEmployeeName" value="${esc(editPortalEmployee ? editPortalEmployee.name : '')}"></div><div class="field"><label>Mobile Number</label><input id="portalEmployeeMobile" inputmode="tel" value="${esc(editPortalEmployee ? editPortalEmployee.mobile : '')}"></div><div class="field"><label>Role</label><select id="portalEmployeeRole">${['Admin','Accountant','Mess Incharge','Management'].map(role=>`<option value="${role}">${role}</option>`).join('')}</select></div><div class="field full"><label>Branch Name</label><input id="portalEmployeeBranch" value="${esc(editPortalEmployee ? editPortalEmployee.branch : '')}"></div><div class="field full"><button class="btn primary" id="savePortalEmployee">${editPortalEmployee ? 'Update Employee' : 'Add Employee'}</button><button class="btn" id="cancelPortalEmployeeEdit" type="button">Cancel</button></div></div></div></div>` : '';
-  const counterModal = editingCounterId ? `<div class="modal-backdrop" id="counterModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="counterModalTitle"><div class="modal-head"><h2 id="counterModalTitle">${editCounter ? 'Edit Counter Device' : 'Add Counter Device'}</h2><button class="icon-btn delete" id="closeCounterModal" type="button" title="Close" aria-label="Close">&#10005;</button></div><div class="row"><div class="field full"><label>Device ID</label><input id="counterIdInput" value="${esc(editCounter ? editCounter.id : uid('CTR'))}" ${editCounter ? 'readonly' : ''}></div><div class="field full"><label>Counter Name</label><input id="counterNameInput" value="${esc(editCounter ? editCounter.name : '')}"></div><div class="field full"><label>Location</label><input id="counterLocationInput" value="${esc(editCounter ? editCounter.location : '')}"></div><div class="field full"><label>Status</label><select id="counterStatusInput"><option value="active">Active</option><option value="inactive">Inactive</option></select></div><div class="field full"><label>Counter Owner / Operator</label><select id="counterUsersInput" multiple size="6">${counterOwnerOptionsHTML(editCounter)}</select></div><div class="field full"><button class="btn primary" id="saveCounter">${editCounter ? 'Update Counter' : 'Add Counter'}</button><button class="btn" id="cancelCounterEdit" type="button">Cancel</button></div></div></div></div>` : '';
+  const selectedOwnerIds = editCounter && editCounter.assignedUserIds || [];
+  const counterModal = editingCounterId ? `<div class="modal-backdrop" id="counterModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="counterModalTitle"><div class="modal-head"><h2 id="counterModalTitle">${editCounter ? 'Edit Counter Device' : 'Add Counter Device'}</h2><button class="icon-btn delete" id="closeCounterModal" type="button" title="Close" aria-label="Close">&#10005;</button></div><div class="row"><div class="field full"><label>Device ID</label><input id="counterIdInput" value="${esc(editCounter ? editCounter.id : uid('CTR'))}" ${editCounter ? 'readonly' : ''}></div><div class="field full"><label>Counter Name</label><input id="counterNameInput" value="${esc(editCounter ? editCounter.name : '')}"></div><div class="field full"><label>Location</label><input id="counterLocationInput" value="${esc(editCounter ? editCounter.location : '')}"></div><div class="field full"><label>Status</label><select id="counterStatusInput"><option value="active">Active</option><option value="inactive">Inactive</option></select></div><div class="field full"><label>Counter Owner / Operator</label><input id="counterOwnerSearch" placeholder="Search portal employees..."><div id="counterOwnerList" style="margin-top:10px;border:1px solid var(--line);border-radius:9px;max-height:200px;overflow-y:auto;"></div></div><div class="field full"><button class="btn primary" id="saveCounter">${editCounter ? 'Update Counter' : 'Add Counter'}</button><button class="btn" id="cancelCounterEdit" type="button">Cancel</button></div></div></div></div>` : '';
   $('settings').innerHTML = `<div class="grid">
+    <div class="card"><div class="section-title"><h2>Meal Timings & Category Rates</h2><button class="icon-btn good" id="addMealBtn" type="button" title="Add meal" aria-label="Add meal">&#43;</button></div><div class="table-wrap"><table><thead><tr><th>Meal</th><th>Timing</th>${state.categories.map(c=>`<th>${esc(c.name)}</th>`).join('')}<th>Actions</th></tr></thead><tbody>${state.meals.map(m=>`<tr><td><strong>${esc(m.name)}</strong><br><span class="pill">${esc(m.status)}</span></td><td>${m.start} to ${m.end}</td>${state.categories.map(c=>`<td><div class="rate-pair"><label>Charge</label><input data-rate="${m.id}:${c.id}" type="number" value="${rateFor({categoryId:c.id},m.id)}"><label>Vendor</label><input data-vendor-rate="${m.id}:${c.id}" type="number" value="${vendorRateFor({categoryId:c.id},m.id)}"></div></td>`).join('')}<td><div class="icon-actions"><button class="icon-btn edit" data-edit-meal="${m.id}" title="Edit meal" aria-label="Edit meal">&#9998;</button><button class="icon-btn delete" data-delete-meal="${m.id}" title="Delete meal" aria-label="Delete meal">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div><p><button class="btn primary" id="saveRates">Save Rates</button></p></div>
     <div class="card"><div class="section-title"><h2>System Settings</h2><button class="icon-btn good" id="addCategorySettingBtn" type="button" title="Add category setting" aria-label="Add category setting">&#43;</button></div><div class="table-wrap"><table><thead><tr><th>Category</th><th>Model</th><th>Duplicate Window</th><th>Meal Session</th><th>Status</th><th>Actions</th></tr></thead><tbody>${state.categorySettings.map(s=>`<tr><td><strong>${esc(categoryName(s.categoryId))}</strong></td><td>${s.model === 'coupon' ? 'Coupon Quantity Based' : 'Wallet Based'}</td><td>${Number(s.duplicateWindow || 0)}s</td><td>${s.restrictMealSession ? 'Restrict once' : 'Allow repeat'}</td><td><span class="status-${s.status === 'active' ? 'active' : 'inactive'}">${esc(s.status)}</span></td><td><div class="icon-actions"><button class="icon-btn edit" data-edit-category-setting="${s.id}" title="Edit category setting" aria-label="Edit category setting">&#9998;</button><button class="icon-btn delete" data-delete-category-setting="${s.id}" title="Delete category setting" aria-label="Delete category setting">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div></div>
     <div class="card span-6"><div class="section-title"><h2>Portal Employees</h2><button class="icon-btn good" id="addPortalEmployeeBtn" type="button" title="Add portal employee" aria-label="Add portal employee">&#43;</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Mobile / Username</th><th>Role</th><th>Branch</th><th>Actions</th></tr></thead><tbody>${(state.portalEmployees || []).map(e=>`<tr><td><strong>${esc(e.name)}</strong><br><span class="mono">${esc(e.id)}</span></td><td>${esc(e.mobile)}</td><td>${esc(e.role)}</td><td>${esc(e.branch || '-')}</td><td><div class="icon-actions"><button class="icon-btn edit" data-edit-portal-employee="${e.id}" title="Edit employee" aria-label="Edit employee">&#9998;</button><button class="icon-btn delete" data-delete-portal-employee="${e.id}" title="Delete employee" aria-label="Delete employee">&#128465;</button></div></td></tr>`).join('') || '<tr><td colspan="5">No portal employees added</td></tr>'}</tbody></table></div></div>
     <div class="card span-6"><div class="section-title"><h2>Counter Device Management</h2><button class="icon-btn good" id="addCounterBtn" type="button" title="Add counter device" aria-label="Add counter device">&#43;</button></div><div class="table-wrap"><table><thead><tr><th>Device</th><th>Location</th><th>Status</th><th>Counter Owner</th><th>Actions</th></tr></thead><tbody>${state.counters.map(c=>`<tr><td><strong>${esc(c.name)}</strong><br><span class="mono">${esc(c.id)}</span></td><td>${esc(c.location)}</td><td><span class="status-${c.status === 'active' ? 'active' : 'inactive'}">${esc(c.status)}</span></td><td>${esc(counterOwnerNames(c))}</td><td><div class="icon-actions"><button class="icon-btn edit" data-edit-counter="${c.id}" title="Edit counter" aria-label="Edit counter">&#9998;</button><button class="icon-btn delete" data-delete-counter="${c.id}" title="Delete counter" aria-label="Delete counter">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div></div>
-    <div class="card"><div class="section-title"><h2>Meal Timings & Category Rates</h2><button class="icon-btn good" id="addMealBtn" type="button" title="Add meal" aria-label="Add meal">&#43;</button></div><div class="table-wrap"><table><thead><tr><th>Meal</th><th>Timing</th>${state.categories.map(c=>`<th>${esc(c.name)}</th>`).join('')}<th>Actions</th></tr></thead><tbody>${state.meals.map(m=>`<tr><td><strong>${esc(m.name)}</strong><br><span class="pill">${esc(m.status)}</span></td><td>${m.start} to ${m.end}</td>${state.categories.map(c=>`<td><div class="rate-pair"><label>Charge</label><input data-rate="${m.id}:${c.id}" type="number" value="${rateFor({categoryId:c.id},m.id)}"><label>Vendor</label><input data-vendor-rate="${m.id}:${c.id}" type="number" value="${vendorRateFor({categoryId:c.id},m.id)}"></div></td>`).join('')}<td><div class="icon-actions"><button class="icon-btn edit" data-edit-meal="${m.id}" title="Edit meal" aria-label="Edit meal">&#9998;</button><button class="icon-btn delete" data-delete-meal="${m.id}" title="Delete meal" aria-label="Delete meal">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div><p><button class="btn primary" id="saveRates">Save Rates</button></p></div>
   </div>${mealModal}${categorySettingModal}${portalEmployeeModal}${counterModal}`;
   if(editingMealId) $('mealStatusInput').value = editMeal ? editMeal.status : 'active';
   if(editingCategorySettingId){
@@ -1391,24 +1915,57 @@ function renderSettings(){
     save(); toast('Portal employee deleted');
   });
   $('addCounterBtn').onclick = () => { editingCounterId = 'new'; render(); };
-  if(editingCounterId) $('saveCounter').onclick = () => {
-    const id = $('counterIdInput').value.trim();
-    const name = $('counterNameInput').value.trim();
-    if(!id || !name) return toast('Device ID and counter name are required');
-    const payload = {id, name, location:$('counterLocationInput').value.trim(), status:$('counterStatusInput').value, assignedUserIds:selectedValues($('counterUsersInput'))};
-    if(editCounter){
-      Object.assign(editCounter, payload);
-      editingCounterId = null;
-      audit('Updated counter '+payload.name);
-    }else{
-      if(state.counters.some(c=>c.id.toLowerCase() === id.toLowerCase())) return toast('Counter Device ID already exists');
-      state.counters.push(payload);
-      editingCounterId = null;
-      audit('Added counter '+payload.name);
-    }
-    save(); toast('Counter saved');
-  };
   if(editingCounterId){
+    let selectedCounterOwners = new Set(selectedOwnerIds);
+    function drawCounterOwnerList(){
+      const query = $('counterOwnerSearch').value.toLowerCase();
+      if(!query){
+        $('counterOwnerList').innerHTML = '';
+        return;
+      }
+      const filtered = (state.portalEmployees || []).filter(e =>
+        e.name.toLowerCase().includes(query) ||
+        e.mobile.toLowerCase().includes(query) ||
+        e.role.toLowerCase().includes(query) ||
+        e.branch?.toLowerCase().includes(query)
+      );
+      const listHTML = filtered.map(e => `
+        <label style="padding:12px;border-bottom:1px solid var(--line);display:block;cursor:pointer;background:var(--panel-2);" data-owner-id="${e.id}">
+          <input type="checkbox" class="counterOwnerCheckbox" value="${e.id}" ${selectedCounterOwners.has(e.id) ? 'checked' : ''} style="cursor:pointer;margin-right:10px;vertical-align:top;">
+          <div style="display:inline-block;vertical-align:top;">
+            <div style="font-weight:700;color:var(--ink);margin-bottom:2px;">${esc(e.name)}</div>
+            <div style="font-size:12px;color:var(--muted);">${esc(e.role)} / ${esc(e.branch || '-')}</div>
+          </div>
+        </label>
+      `).join('');
+      $('counterOwnerList').innerHTML = listHTML || '<div style="padding:12px;color:var(--muted);text-align:center;">No employees found</div>';
+      document.querySelectorAll('.counterOwnerCheckbox').forEach(cb => {
+        cb.onchange = () => {
+          if(cb.checked) selectedCounterOwners.add(cb.value);
+          else selectedCounterOwners.delete(cb.value);
+        };
+        cb.parentElement.onclick = (e) => { if(e.target !== cb) cb.click(); };
+      });
+    }
+    $('counterOwnerSearch').oninput = drawCounterOwnerList;
+
+    $('saveCounter').onclick = () => {
+      const id = $('counterIdInput').value.trim();
+      const name = $('counterNameInput').value.trim();
+      if(!id || !name) return toast('Device ID and counter name are required');
+      const payload = {id, name, location:$('counterLocationInput').value.trim(), status:$('counterStatusInput').value, assignedUserIds:Array.from(selectedCounterOwners)};
+      if(editCounter){
+        Object.assign(editCounter, payload);
+        editingCounterId = null;
+        audit('Updated counter '+payload.name);
+      }else{
+        if(state.counters.some(c=>c.id.toLowerCase() === id.toLowerCase())) return toast('Counter Device ID already exists');
+        state.counters.push(payload);
+        editingCounterId = null;
+        audit('Added counter '+payload.name);
+      }
+      save(); toast('Counter saved');
+    };
     $('cancelCounterEdit').onclick = () => { editingCounterId = null; render(); };
     $('closeCounterModal').onclick = () => { editingCounterId = null; render(); };
   }
@@ -1421,6 +1978,73 @@ function renderSettings(){
     audit('Deleted counter '+counter.name); save(); toast('Counter deleted');
   });
 }
+function renderAccessControl(){
+  const roles = ['Admin','Mess Incharge','Accountant','Management'];
+  const screens = [
+    {id:'dashboard',name:'Dashboard'},
+    {id:'vendorDashboard',name:'Vendor Dashboard'},
+    {id:'counter',name:'RFID Counter'},
+    {id:'users',name:'Users'},
+    {id:'cards',name:'Replace Card'},
+    {id:'recharge',name:'Recharge'},
+    {id:'settings',name:'Configurations'},
+    {id:'accessControl',name:'Access Control'},
+    {id:'reports',name:'Reports'}
+  ];
+  const ac = state.accessControl || {};
+  const permissionButtons = (role, screen) => {
+    const perms = ac[role]?.[screen.id] || {view:false,add:false,edit:false,delete:false};
+    return `<div style="display:flex;gap:4px;"><button data-perm="${role}:${screen.id}:view" style="min-height:32px;padding:6px 8px;font-size:11px;flex:1;background:${perms.view?'#22c55e':'#ef4444'} !important;border:none !important;color:#fff !important;font-weight:600;cursor:pointer;border-radius:6px;">${perms.view?'✓V':'V'}</button><button data-perm="${role}:${screen.id}:add" style="min-height:32px;padding:6px 8px;font-size:11px;flex:1;background:${perms.add?'#22c55e':'#ef4444'} !important;border:none !important;color:#fff !important;font-weight:600;cursor:pointer;border-radius:6px;">${perms.add?'✓A':'A'}</button><button data-perm="${role}:${screen.id}:edit" style="min-height:32px;padding:6px 8px;font-size:11px;flex:1;background:${perms.edit?'#22c55e':'#ef4444'} !important;border:none !important;color:#fff !important;font-weight:600;cursor:pointer;border-radius:6px;">${perms.edit?'✓E':'E'}</button><button data-perm="${role}:${screen.id}:delete" style="min-height:32px;padding:6px 8px;font-size:11px;flex:1;background:${perms.delete?'#22c55e':'#ef4444'} !important;border:none !important;color:#fff !important;font-weight:600;cursor:pointer;border-radius:6px;">${perms.delete?'✓D':'D'}</button></div>`;
+  };
+  $('accessControl').innerHTML = `<div class="grid">
+    <div class="card"><div class="section-title"><h2>Role-Based Access Control</h2><p style="color:var(--muted);font-size:13px;margin:8px 0 0;">🟢=Enabled (Green), 🔴=Disabled (Red) | V=View, A=Add, E=Edit, D=Delete</p></div>
+    <div class="table-wrap"><table style="font-size:12px;"><thead><tr><th style="width:150px;">Screen</th><th style="text-align:center;">Actions</th>${roles.map(r=>`<th>${r}</th>`).join('')}</tr></thead><tbody>${screens.map(s=>`<tr><td style="font-weight:600;">${s.name}</td><td style="text-align:center;white-space:nowrap;"><button class="btn" data-select-all="${s.id}" style="padding:4px 8px;font-size:11px;margin-right:4px;">Select All</button><button class="btn" data-clear="${s.id}" style="padding:4px 8px;font-size:11px;background:#ff6b6b;border:none;color:#fff;">Clear</button></td>${roles.map(r=>`<td>${permissionButtons(r,s)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    <button class="btn primary" id="saveAccessControl" style="margin-top:16px;">Save Access Control Settings</button>
+    </div>
+  </div>`;
+  setTimeout(()=>{
+    document.querySelectorAll('[data-perm]').forEach(b=>{
+      b.onclick = (e)=>{
+        e.preventDefault();
+        const [role,screenId,permission] = b.dataset.perm.split(':');
+        state.accessControl = state.accessControl || {};
+        state.accessControl[role] = state.accessControl[role] || {};
+        state.accessControl[role][screenId] = state.accessControl[role][screenId] || {view:false,add:false,edit:false,delete:false};
+        state.accessControl[role][screenId][permission] = !state.accessControl[role][screenId][permission];
+        render();
+      };
+    });
+    document.querySelectorAll('[data-select-all]').forEach(b=>{
+      b.onclick = (e)=>{
+        e.preventDefault();
+        const screenId = b.dataset.selectAll;
+        state.accessControl = state.accessControl || {};
+        roles.forEach(role=>{
+          state.accessControl[role] = state.accessControl[role] || {};
+          state.accessControl[role][screenId] = {view:true,add:true,edit:true,delete:true};
+        });
+        render();
+      };
+    });
+    document.querySelectorAll('[data-clear]').forEach(b=>{
+      b.onclick = (e)=>{
+        e.preventDefault();
+        const screenId = b.dataset.clear;
+        state.accessControl = state.accessControl || {};
+        roles.forEach(role=>{
+          state.accessControl[role] = state.accessControl[role] || {};
+          state.accessControl[role][screenId] = {view:false,add:false,edit:false,delete:false};
+        });
+        render();
+      };
+    });
+    const saveBtn = $('saveAccessControl');
+    if(saveBtn) saveBtn.onclick = ()=>{
+      save();
+      toast('Access control settings saved');
+    };
+  }, 0);
+}
 function renderReports(){
   const filteredTx = filteredConsumptionTransactions();
   const totalPages = Math.max(1, Math.ceil(filteredTx.length / Number(consumptionReportFilters.pageSize || 10)));
@@ -1430,10 +2054,15 @@ function renderReports(){
   const balanceHeaders = state.meals.map(m=>`<th>${esc(m.name)} Coupons</th>`).join('');
   $('reports').innerHTML = `<div class="grid">
     <div class="card"><div class="section-title"><h2>Consumption Report</h2>${reportRangePickerHTML()}<div class="icon-actions"><button class="btn" id="exportTx">Export Filtered CSV</button><button class="btn" id="exportRecharge">Export Recharge CSV</button><button class="btn" id="syncOffline">Sync Offline Queue (${state.offlineQueue.length})</button></div></div><div class="toolbar"><input id="reportSearch" placeholder="Search RFID, name, student ID, TX, reason" value="${esc(consumptionReportFilters.search)}"><select id="reportCategory" multiple size="${Math.min(Math.max(state.categories.length, 2), 5)}">${state.categories.map(c=>`<option value="${c.id}" ${(consumptionReportFilters.categoryIds || []).includes(c.id)?'selected':''}>${esc(c.name)}</option>`).join('')}</select><select id="reportMeal" multiple size="${Math.min(Math.max(state.meals.length, 2), 5)}">${state.meals.map(m=>`<option value="${m.id}" ${(consumptionReportFilters.mealIds || []).includes(m.id)?'selected':''}>${esc(m.name)}</option>`).join('')}</select><select id="reportCounter" multiple size="${Math.min(Math.max(state.counters.length, 2), 5)}">${state.counters.map(c=>`<option value="${c.id}" ${(consumptionReportFilters.counterIds || []).includes(c.id)?'selected':''}>${esc(c.name)} - ${esc(c.location)}</option>`).join('')}</select><select id="reportStatus"><option value="">All Status</option>${['approved','failed'].map(s=>`<option value="${s}" ${consumptionReportFilters.status===s?'selected':''}>${esc(s)}</option>`).join('')}</select><select id="reportProfit"><option value="">All P/L</option><option value="profit" ${consumptionReportFilters.profit==='profit'?'selected':''}>Profit</option><option value="loss" ${consumptionReportFilters.profit==='loss'?'selected':''}>Loss</option><option value="even" ${consumptionReportFilters.profit==='even'?'selected':''}>No P/L</option></select><select id="reportPageSize">${[10,25,50,100].map(n=>`<option value="${n}" ${Number(consumptionReportFilters.pageSize)===n?'selected':''}>${n} rows</option>`).join('')}</select><button class="btn" id="clearReportFilters" type="button">Clear Filters</button></div>${transactionTable(pageRows)}<div class="pager"><span class="meta">Showing ${filteredTx.length ? start + 1 : 0}-${Math.min(start + Number(consumptionReportFilters.pageSize || 10), filteredTx.length)} of ${filteredTx.length}</span><div class="icon-actions"><button class="btn" id="reportPrev" type="button" ${consumptionReportPage <= 1 ? 'disabled' : ''}>Previous</button><span class="pill">Page ${consumptionReportPage} of ${totalPages}</span><button class="btn" id="reportNext" type="button" ${consumptionReportPage >= totalPages ? 'disabled' : ''}>Next</button></div></div></div>
-    <div class="card span-6"><div class="section-title"><h2>Balance Report</h2><button class="btn" id="exportBalance" type="button">Export Balance CSV</button></div><div class="table-wrap"><table><thead><tr><th>User</th><th>RFID</th><th>Category</th><th>Status</th><th>Expiry</th><th>Unused Wallet</th>${balanceHeaders}<th>Total Coupons</th></tr></thead><tbody>${state.users.map(balanceReportRowHTML).join('')}</tbody></table></div></div>
+    <div class="card span-6"><div class="section-title"><h2>Balance Report</h2><button class="btn" id="exportBalance" type="button">Export Balance CSV</button></div><div class="toolbar"><input id="balanceSearch" placeholder="Search RFID, name, student ID" value="${esc(balanceReportFilters.search)}"><select id="balanceCategory" multiple size="${Math.min(Math.max(state.categories.length, 2), 5)}">${state.categories.map(c=>`<option value="${c.id}" ${(balanceReportFilters.categoryIds || []).includes(c.id)?'selected':''}>${esc(c.name)}</option>`).join('')}</select><select id="balanceStatus"><option value="">All Status</option><option value="active" ${balanceReportFilters.status==='active'?'selected':''}>Active</option><option value="blocked" ${balanceReportFilters.status==='blocked'?'selected':''}>Blocked</option><option value="inactive" ${balanceReportFilters.status==='inactive'?'selected':''}>Inactive</option><option value="expired" ${balanceReportFilters.status==='expired'?'selected':''}>Expired</option></select><button class="btn" id="clearBalanceFilters" type="button">Clear Filters</button></div><div class="table-wrap"><table><thead><tr><th>User</th><th>RFID</th><th>Category</th><th>Status</th><th>Expiry</th><th>Unused Wallet</th>${balanceHeaders}<th>Total Coupons</th></tr></thead><tbody>${filteredBalanceUsers().map(balanceReportRowHTML).join('')}</tbody></table></div></div>
     <div class="card span-6"><h2>Audit Log</h2><div class="list">${state.audit.slice(0,20).map(a=>`<div class="list-item"><span>${esc(a.action)}</span><span>${new Date(a.at).toLocaleString()}</span></div>`).join('')}</div></div>
   </div>`;
   bindConsumptionReportFilters();
+  // Bind balance report filters
+  if($('balanceSearch')) $('balanceSearch').oninput = () => { balanceReportFilters.search = $('balanceSearch').value; render(); };
+  if($('balanceCategory')) $('balanceCategory').onchange = () => { balanceReportFilters.categoryIds = selectedValues($('balanceCategory')); render(); };
+  if($('balanceStatus')) $('balanceStatus').onchange = () => { balanceReportFilters.status = $('balanceStatus').value; render(); };
+  if($('clearBalanceFilters')) $('clearBalanceFilters').onclick = () => { balanceReportFilters = {search:'', categoryIds:[], status:''}; render(); };
   $('exportTx').onclick = () => rowsToCSV([['TX','Date','User','RFID','Category','Meal','Counter','Amount','Vendor Amount','Profit / Loss','Status','Reason']].concat(filteredConsumptionTransactions().map(t=>{
     const amount = Number(t.amount || 0);
     const vendor = txVendorAmount(t);
@@ -1441,7 +2070,7 @@ function renderReports(){
     return [t.id,t.at,t.userId,t.rfid,categoryName(user.categoryId),mealName(t.mealId),counterLocation(t.counterId),amount,vendor,amount - vendor,t.status,t.reason];
   })), 'consumption-report.csv');
   $('exportRecharge').onclick = () => rowsToCSV(rechargeCouponExportRows(state.recharges), 'recharge-report.csv');
-  $('exportBalance').onclick = () => rowsToCSV(balanceReportCSVRows(), 'balance-report.csv');
+  $('exportBalance').onclick = () => rowsToCSV([['User ID','Name','RFID','Employee/Student No.','Mobile','Email','Category','Status','Expiry','Unused Wallet'].concat(state.meals.map(m=>m.name+' Coupons')).concat(['Total Coupons'])].concat(filteredBalanceUsers().map(u=>[u.id,u.name,u.rfid,u.empNo,u.mobile,u.email,categoryName(u.categoryId),userValidityStatus(u).label,u.cardExpiryDate,Number(u.wallet || 0)].concat(state.meals.map(m=>Number((u.coupons || {})[m.id] || 0))).concat([userCouponTotal(u)]))), 'balance-report.csv');
   $('syncOffline').onclick = () => { state.transactions.unshift(...state.offlineQueue.map(q=>({...q, reason:'Synced from local queue'}))); state.offlineQueue=[]; audit('Synced offline queue'); save(); toast('Offline queue synced'); };
 }
 function userCouponTotal(user){
@@ -1515,10 +2144,46 @@ function bindConsumptionReportFilters(){
   $('reportNext').onclick = () => { consumptionReportPage++; renderReports(); };
 }
 function renderDocs(){
+  const dbTables = [
+    {name:'users', desc:'Students/Employees with RFID, wallet, coupons, validity dates'},
+    {name:'categories', desc:'User categories (Student, Employee, Contractor, Guest, Visitor)'},
+    {name:'category_settings', desc:'Per-category config: model (wallet/coupon), duplicate window, session restriction'},
+    {name:'meals', desc:'Meal types with start/end times (Breakfast, Lunch, Snacks, Dinner)'},
+    {name:'meal_rates', desc:'Charge rates per meal per category'},
+    {name:'vendor_rates', desc:'Vendor/cost rates per meal per category'},
+    {name:'recharges', desc:'Wallet/coupon recharge transactions with selected meals, validity dates'},
+    {name:'transactions', desc:'RFID consumption records with approval/rejection status and reason'},
+    {name:'counter_devices', desc:'RFID counter machines at various locations'},
+    {name:'counter_assignments', desc:'Portal employees assigned to counter devices'},
+    {name:'portal_employees', desc:'Staff managing counters (Admin, Accountant, Mess Incharge, Management)'},
+    {name:'card_history', desc:'RFID card replacements with reason (lost, damaged, renewal)'},
+    {name:'offline_queue', desc:'Queued RFID transactions when device is offline'},
+    {name:'audit_logs', desc:'Complete audit trail of all system actions'}
+  ];
+  const apiEndpoints = [
+    {path:'/api/auth', methods:'POST', desc:'User login/logout with session management'},
+    {path:'/api/users', methods:'GET, POST, PUT, DELETE', desc:'User CRUD with search by ID/RFID/empNo/name'},
+    {path:'/api/users/bulk-upload', methods:'POST', desc:'Bulk import users from CSV'},
+    {path:'/api/categories', methods:'GET, POST, PUT', desc:'User category management'},
+    {path:'/api/category-settings', methods:'GET, POST, PUT, DELETE', desc:'Per-category config (model, duplicate window, session restriction)'},
+    {path:'/api/meals', methods:'GET, POST, PUT, DELETE', desc:'Meal CRUD with timings'},
+    {path:'/api/rates', methods:'GET, PUT', desc:'Update meal rates and vendor rates'},
+    {path:'/api/recharges', methods:'GET, POST, PUT, DELETE', desc:'Recharge with multi-meal coupon selection'},
+    {path:'/api/transactions', methods:'GET, POST', desc:'RFID consumption records and filtering'},
+    {path:'/api/rfid-scan', methods:'POST', desc:'Process RFID/Student ID tap with approval/rejection logic'},
+    {path:'/api/counters', methods:'GET, POST, PUT, DELETE', desc:'Counter device CRUD with portal employee assignment'},
+    {path:'/api/portal-employees', methods:'GET, POST, PUT, DELETE', desc:'Portal staff management (Admin, Accountant, etc.)'},
+    {path:'/api/card-history', methods:'GET, POST', desc:'RFID card replacement history'},
+    {path:'/api/reports', methods:'GET', desc:'Consumption, balance, location, category, meal usage reports'},
+    {path:'/api/dashboard', methods:'GET', desc:'Summary metrics and date-range analytics'},
+    {path:'/api/offline-queue', methods:'GET, POST', desc:'Sync queued transactions when back online'},
+    {path:'/api/audit', methods:'GET', desc:'Audit log with pagination'}
+  ];
   $('docs').innerHTML = `<div class="grid">
-    <div class="card span-6"><h2>Database Schema Blueprint</h2><div class="list">${['users','categories','rfid_cards','meal_types','coupon_rates','wallet_transactions','coupon_balances','recharge_transactions','meal_transactions','counter_devices','notification_logs','audit_logs','settings','roles','permissions','user_roles'].map(t=>`<div class="list-item"><code>${t}</code><span>indexed, auditable</span></div>`).join('')}</div></div>
-    <div class="card span-6"><h2>REST API Blueprint</h2><div class="table-wrap"><table><thead><tr><th>Module</th><th>Endpoints</th></tr></thead><tbody>${['auth','users','categories','meals','coupons','wallet','recharge','rfid-consumption','reports','dashboard','settings','notifications'].map(m=>`<tr><td><code>/api/${m}</code></td><td>GET, POST, PUT, DELETE where applicable</td></tr>`).join('')}</tbody></table></div></div>
-    <div class="card"><h2>Implementation Note</h2><p>This PWA is a functional browser prototype. For production, move persistence and RFID consumption into Laravel 12 services, MySQL migrations, JWT protected API routes, queues for notifications, and server-side duplicate protection.</p></div>
+    <div class="card"><h2>Database Schema Blueprint</h2><div class="list">${dbTables.map(t=>`<div class="list-item"><code>${t.name}</code><span>${t.desc}</span></div>`).join('')}</div></div>
+    <div class="card"><h2>REST API Blueprint</h2><div class="table-wrap"><table><thead><tr><th>Endpoint</th><th>Methods</th><th>Purpose</th></tr></thead><tbody>${apiEndpoints.map(e=>`<tr><td><code>${e.path}</code></td><td><small>${e.methods}</small></td><td><small>${e.desc}</small></td></tr>`).join('')}</tbody></table></div></div>
+    <div class="card"><h2>Key Features & Flow</h2><div style="line-height:1.8;font-size:13px;"><strong>User Recharge Flow:</strong> Select user → Set wallet amount + optional multi-select meals → System deducts from recharge on RFID tap<br><strong>RFID Approval Logic:</strong> Lookup by RFID/Student ID/empNo → Check user status → Validate meal window → Check coupon/wallet balance → Deduct and approve/reject<br><strong>Coupon Validation:</strong> For coupon-mode categories, only allow meals selected in active recharge<br><strong>Offline Support:</strong> Queue transactions locally, sync when reconnected<br><strong>Portal Employees:</strong> Assigned to counters for operational access</div></div>
+    <div class="card"><h2>Implementation Note</h2><p>This PWA is a functional browser prototype. For production, migrate to Laravel 12 with MySQL backend, implement JWT authentication, add queue workers for notifications, enforce server-side duplicate protection and transaction locks, and enable role-based access control for portal employees.</p></div>
   </div>`;
 }
 function transactionTable(rows){
@@ -1530,11 +2195,11 @@ function transactionTable(rows){
     return `<tr><td>${new Date(t.at).toLocaleString()}</td><td>${esc(user.name || t.userId || '-')}</td><td>${esc(t.rfid)}</td><td>${esc(categoryName(user.categoryId))}</td><td>${esc(mealName(t.mealId))}</td><td>${esc(counterLocation(t.counterId))}</td><td>${money(amount)}</td><td>${money(vendor)}</td><td><span class="${profitClass(profit)}">${money(profit)}</span></td><td>${esc(t.status)}</td><td>${esc(t.reason)}</td></tr>`;
   }).join('') || `<tr><td colspan="11">No transactions found</td></tr>`}</tbody></table></div>`;
 }
-function usageSummaryHTML(rows){
+function usageSummaryHTML(rows, hideVendorProfit=false){
   const data = rows.length ? rows : [{name:'No data', count:0, amount:0, vendor:0, profit:0}];
   return `<div class="summary-rows">${data.map(r=>{
     const profit = Number(r.profit || 0);
-    return `<div class="summary-row"><strong>${esc(r.name)}</strong><div class="summary-meta"><span>${Number(r.count||0)} used</span><span>Sale ${money(r.amount)}</span></div><div class="summary-meta"><span>Vendor ${money(r.vendor)}</span><span class="${profitClass(profit)}">P/L ${money(profit)}</span></div></div>`;
+    return `<div class="summary-row"><strong>${esc(r.name)}</strong><div class="summary-meta"><span>${Number(r.count||0)} used</span><span>Sale ${money(r.amount)}</span></div>${!hideVendorProfit ? `<div class="summary-meta"><span>Vendor ${money(r.vendor)}</span><span class="${profitClass(profit)}">P/L ${money(profit)}</span></div>` : ''}</div>`;
   }).join('')}</div>`;
 }
 function filteredRecharges(){
@@ -1568,8 +2233,88 @@ function rechargeTable(){
   return `<div class="table-wrap"><table><thead><tr><th>Receipt</th><th>User</th><th>Amount</th><th>Coupons</th><th>Validity</th><th>Balance After</th><th>Date</th><th>Action</th></tr></thead><tbody>${state.recharges.map(r=>`<tr><td>${r.id}</td><td>${esc((state.users.find(u=>u.id===r.userId)||{}).name)}</td><td>${money(r.amount)}<br><span class="pill">left ${money(recRemainingAmount(r))}</span></td><td>${esc(rechargeCouponDetail(r))}<br><span class="pill">total left ${recRemainingCoupons(r)}</span></td><td>${r.validTill ? esc(r.validTill) : 'No expiry'}<br><span class="pill">${r.expired ? 'expired' : 'active'}</span></td><td>${money(r.afterWallet)}</td><td>${new Date(r.at).toLocaleString()}${r.editedAt ? '<br><span class="pill">edited</span>' : ''}</td><td><div class="icon-actions"><button class="icon-btn edit" data-edit-recharge="${r.id}" title="Edit recharge" aria-label="Edit recharge">&#9998;</button><button class="icon-btn delete" data-delete-recharge="${r.id}" title="Delete recharge" aria-label="Delete recharge">&#128465;</button></div></td></tr>`).join('')}</tbody></table></div>`;
 }
 
-$('tabs').onclick = e => { const b = e.target.closest('.tab'); if(!b) return; activeView = b.dataset.view; render(); };
-$('resetBtn').onclick = () => { if(confirm('Reset all demo RFID data?')){ localStorage.removeItem(DB_KEY); state = seedState(); activeView='dashboard'; save(); } };
+function navigateTo(view){
+  // Require authentication to navigate to protected screens
+  if(!currentEmployeeId && view !== 'login'){
+    window.location.hash = 'login';
+    render();
+    return;
+  }
+  console.log('Navigating to:', view);
+  activeView = view;
+  window.location.hash = view;
+  // Update sidebar active state
+  document.querySelectorAll('.screen-nav-btn').forEach(btn => {
+    if(btn.dataset.screen === view){
+      btn.style.background = 'rgba(22,163,74,.3)';
+      btn.style.color = '#fff';
+    } else {
+      btn.style.background = 'none';
+      btn.style.color = 'rgba(255,255,255,.7)';
+    }
+  });
+  setTimeout(()=>render(), 10);
+}
+// Hide the horizontal tabs since we have sidebar navigation
+$('tabs').style.display = 'none';
+
+// Handle Mess Management toggle
+let messMenuOpen = true; // Menu is expanded by default
+const messToggleBtn = $('messToggleBtn');
+const messSubmenu = $('messSubmenu');
+const messToggleIcon = $('messToggleIcon');
+
+if(messToggleBtn){
+  messToggleBtn.onclick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    messMenuOpen = !messMenuOpen;
+    messSubmenu.style.display = messMenuOpen ? 'flex' : 'none';
+    messToggleIcon.style.transform = messMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    console.log('Menu toggled:', messMenuOpen);
+  };
+}
+
+// Handle mobile sidebar toggle
+const sidebarToggleBtn = $('sidebarToggleBtn');
+const appSidebar = document.querySelector('.app-sidebar');
+if(sidebarToggleBtn && appSidebar){
+  sidebarToggleBtn.onclick = (e) => {
+    e.preventDefault();
+    appSidebar.classList.toggle('mobile-open');
+  };
+}
+
+// Handle sidebar screen navigation
+document.querySelectorAll('.screen-nav-btn').forEach(btn => {
+  btn.onclick = (e) => {
+    e.preventDefault();
+    const screen = btn.dataset.screen;
+    navigateTo(screen);
+    // Update active state
+    document.querySelectorAll('.screen-nav-btn').forEach(b => {
+      b.style.background = b.dataset.screen === screen ? 'rgba(22,163,74,.3)' : 'none';
+      b.style.color = b.dataset.screen === screen ? '#fff' : 'rgba(255,255,255,.7)';
+    });
+    // Close sidebar on mobile after navigation
+    if(window.innerWidth <= 760){
+      appSidebar.classList.remove('mobile-open');
+    }
+  };
+  // Set initial active state
+  if(btn.dataset.screen === activeView){
+    btn.style.background = 'rgba(22,163,74,.3)';
+    btn.style.color = '#fff';
+  }
+});
+
+// Original tab click handler (backup)
+if($('tabs')) $('tabs').onclick = e => { const b = e.target.closest('.tab'); if(!b) return; navigateTo(b.dataset.view); };
+const changePasswordBtn = $('changePasswordBtn');
+if(changePasswordBtn) changePasswordBtn.onclick = () => { renderChangePasswordModal(); };
+const logoutBtn = $('logoutBtn');
+if(logoutBtn) logoutBtn.onclick = () => { currentEmployeeId = null; window.systemLoginError = null; activeView = 'login'; window.location.hash = 'login'; render(); };
+$('resetBtn').onclick = () => { if(confirm('Reset all demo RFID data?')){ localStorage.removeItem(DB_KEY); state = seedState(); navigateTo('dashboard'); save(); } };
 $('exportBtn').onclick = () => {
   const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -1585,10 +2330,114 @@ document.addEventListener('keydown', e=>{
     render();
   }
 });
+window.addEventListener('hashchange', ()=>{
+  const hash = window.location.hash.slice(1);
+  const validScreens = ['login','dashboard','vendorDashboard','counter','users','cards','recharge','settings','accessControl','reports','docs'];
+
+  // Allow login screen for unauthenticated users
+  if(hash === 'login'){
+    activeView = 'login';
+    render();
+    return;
+  }
+
+  // Require authentication to navigate to protected screens
+  if(!currentEmployeeId && hash && hash !== 'login'){
+    window.location.hash = 'login';
+    render();
+    return;
+  }
+
+  if(hash && validScreens.includes(hash)){
+    activeView = hash;
+    render();
+  } else if(!hash && currentEmployeeId){
+    // Redirect to dashboard if no hash but authenticated
+    activeView = 'dashboard';
+    window.location.hash = 'dashboard';
+    render();
+  } else if(!hash && !currentEmployeeId){
+    // Redirect to login if no hash and not authenticated
+    window.location.hash = 'login';
+    activeView = 'login';
+    render();
+  } else if(!validScreens.includes(hash)){
+    // Invalid route - redirect to login if not authenticated, dashboard if authenticated
+    if(!currentEmployeeId){
+      window.location.hash = 'login';
+    } else {
+      window.location.hash = 'dashboard';
+    }
+  }
+});
+
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>navigator.serviceWorker.register('rfid-sw.js').catch(()=>{}));
 }
-render();
+
+const initialHash = window.location.hash.slice(1);
+const validScreens = ['login','dashboard','vendorDashboard','counter','users','cards','recharge','settings','reports','docs'];
+
+if(initialHash === 'login'){
+  activeView = 'login';
+} else if(currentEmployeeId && initialHash && validScreens.includes(initialHash)){
+  activeView = initialHash;
+} else if(!currentEmployeeId){
+  // Not authenticated - go to login
+  window.location.hash = 'login';
+  activeView = 'login';
+} else if(currentEmployeeId && !initialHash){
+  // Authenticated but no hash - go to dashboard
+  window.location.hash = 'dashboard';
+  activeView = 'dashboard';
+} else if(!validScreens.includes(initialHash)){
+  // Invalid route
+  if(!currentEmployeeId){
+    window.location.hash = 'login';
+    activeView = 'login';
+  } else {
+    window.location.hash = 'dashboard';
+    activeView = 'dashboard';
+  }
+}
+console.log('Initial state - activeView:', activeView, 'state.users:', state?.users?.length, 'dashboard element exists:', !!$('dashboard'));
+// Force initial render
+try{
+  document.querySelectorAll('.view').forEach(v=>{
+    v.classList.toggle('active', v.id === activeView);
+    v.style.display = v.id === activeView ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view === activeView));
+  console.log('Initial view toggle complete');
+}catch(e){
+  console.error('View toggle error:', e);
+}
+// Only render if activeView is selected (don't render by default)
+if(activeView){
+  render();
+} else {
+  console.log('No view selected - menu is collapsed');
+}
+
+// Force re-render if content is empty (only if a view is selected)
+setTimeout(()=>{
+  if(activeView){
+    const activeViewElement = $(activeView);
+    if(activeViewElement && !activeViewElement.innerHTML.trim()){
+      console.warn('Active view is empty, force rendering:', activeView);
+      if(activeView === 'dashboard') renderDashboard();
+      else if(activeView === 'vendorDashboard') renderVendorDashboard();
+      else if(activeView === 'counter') renderCounter();
+      else if(activeView === 'users') renderUsers();
+      else if(activeView === 'cards') renderCards();
+      else if(activeView === 'recharge') renderRecharge();
+      else if(activeView === 'settings') renderSettings();
+      else if(activeView === 'accessControl') renderAccessControl();
+      else if(activeView === 'reports') renderReports();
+      else if(activeView === 'docs') renderDocs();
+    }
+  }
+}, 200);
 </script>
 </body>
 </html>
