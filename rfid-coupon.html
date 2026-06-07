@@ -2285,10 +2285,12 @@ if(messToggleBtn){
   messToggleBtn.onclick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    messMenuOpen = !messMenuOpen;
-    messSubmenu.style.display = messMenuOpen ? 'flex' : 'none';
-    messToggleIcon.style.transform = messMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-    console.log('Menu toggled:', messMenuOpen);
+    // Redirect to login page when Mess Management is clicked
+    currentEmployeeId = null;
+    window.systemLoginError = null;
+    activeView = 'login';
+    window.location.hash = 'login';
+    render();
   };
 }
 
