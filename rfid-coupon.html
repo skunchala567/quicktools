@@ -43,7 +43,7 @@
 html,body{margin:0}
 body{
   min-height:100vh;
-  padding-left:232px;
+  padding-left:0;
   background:var(--bg);
   color:var(--ink);
   font-family:"Inter Tight",system-ui,sans-serif;
@@ -56,8 +56,8 @@ body.login-view{
 body.login-view header,body.login-view .app-sidebar,body.login-view main{
   display:none;
 }
-#changePasswordBtn,#logoutBtn,#installBtn{display:none;}
-.app-sidebar,#sidebarToggleBtn{display:none;}
+#installBtn{display:none;}
+.app-sidebar,#sidebarToggleBtn{display:none!important;}
 button,input,select,textarea{font-family:inherit}
 h1,h2,h3{font-family:"Fraunces",serif;letter-spacing:0}
 code,.mono,.pill,.nav-icon{font-family:"JetBrains Mono",monospace}
@@ -181,14 +181,18 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute
 .loss{color:var(--danger);font-weight:900}
 .hidden{display:none!important}
 .view{display:none}.view.active{display:block}
-.toast{position:fixed;left:calc(50% + 116px);bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.2s;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:9999;font-weight:900;box-shadow:var(--shadow)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.2s;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:9999;font-weight:900;box-shadow:var(--shadow)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:1100px){.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}.counter-screen{grid-template-columns:1fr}.report-grid{grid-template-columns:1fr}}
 .hamburger-btn{display:none;background:none;border:none;color:var(--ink);font-size:24px;cursor:pointer;padding:8px}
-@media(max-width:760px){body{padding-left:0;padding-top:72px;font-size:14px}.hamburger-btn{display:block;position:fixed;top:12px;left:12px;z-index:1001}.app-sidebar{inset:0 auto 0 0;width:240px;height:auto;padding:12px 10px;flex-direction:column;align-items:flex-start;border-right:2px solid var(--accent-2);border-bottom:0;overflow-y:auto;max-height:0;opacity:0;transition:.3s;z-index:999;position:fixed;top:72px;left:0;pointer-events:none}.app-sidebar.mobile-open{max-height:calc(100vh - 72px);opacity:1;pointer-events:auto}.app-navbar-logo{min-width:max-content;font-size:13px}.app-nav-links{display:flex;gap:4px;flex-direction:column;width:100%}.app-nav-item{min-width:max-content;padding:12px;font-size:13px}.app-nav-icon{width:24px;height:24px}.mess-submenu{flex-direction:column!important;gap:8px!important;width:100%}.screen-nav-btn{width:calc(100% - 24px)!important;padding:10px 12px!important;font-size:13px!important}.app-shell-footer{margin-top:0;padding-top:0;border-top:0;margin-left:auto;min-width:118px}header,.wrap{padding-left:12px;padding-right:12px}.wrap{padding-top:14px;gap:12px}.brand{align-items:flex-start}.seal{width:42px;height:42px;border-radius:11px}h1{font-size:25px}.sub{font-size:13px}.top-actions{width:100%;margin-left:0}.tabs{gap:6px}.tab{padding:8px 10px;font-size:13px}.grid{gap:10px}.card{padding:12px;border-radius:10px}.card h2,.card h3{font-size:19px}.metric .k{font-size:11px}.metric .v{font-size:24px}.section-title{align-items:flex-start;flex-direction:column}.range-shell{width:100%;margin-left:0}.range-trigger{min-width:0}.range-popover{position:static;width:100%;min-width:0;margin-top:8px;grid-template-columns:1fr}.range-presets{border-right:0;border-bottom:1px solid var(--line)}.range-calendars{grid-template-columns:1fr}.range-month{border-right:0;border-bottom:1px solid var(--line)}.row{grid-template-columns:1fr}.field,.field.third{grid-column:1/-1}input,select,textarea{font-size:13px;padding:9px 10px}.btn{min-height:36px;padding:8px 10px;font-size:13px}.icon-btn{width:34px;height:34px}.table-wrap{border-radius:9px}table{font-size:12px;min-width:640px}th,td{padding:8px}.pill{font-size:10px;padding:3px 7px}.list-item{padding:9px;font-size:13px}.summary-row{padding:9px}.summary-row strong{font-size:14px}.summary-meta{font-size:12px}.counter-screen{min-height:auto;gap:10px}.tap-box{padding:12px}.result{min-height:190px;min-height:5cm;padding:22px 16px}.result .big{font-size:40px}.result .small{font-size:15px}.toast{left:50%;width:calc(100% - 24px);text-align:center}}
+@media(max-width:760px){body{padding-left:0;padding-top:0;font-size:14px}.app-sidebar,#sidebarToggleBtn{display:none!important}header,.wrap{padding-left:12px;padding-right:12px}.wrap{padding-top:14px;gap:12px}.brand{align-items:flex-start}.seal{width:42px;height:42px;border-radius:11px}h1{font-size:25px}.sub{font-size:13px}.top-actions{width:100%;margin-left:0}.tabs{gap:6px}.tab{padding:8px 10px;font-size:13px}.grid{gap:10px}.card{padding:12px;border-radius:10px}.card h2,.card h3{font-size:19px}.metric .k{font-size:11px}.metric .v{font-size:24px}.section-title{align-items:flex-start;flex-direction:column}.range-shell{width:100%;margin-left:0}.range-trigger{min-width:0}.range-popover{position:static;width:100%;min-width:0;margin-top:8px;grid-template-columns:1fr}.range-presets{border-right:0;border-bottom:1px solid var(--line)}.range-calendars{grid-template-columns:1fr}.range-month{border-right:0;border-bottom:1px solid var(--line)}.row{grid-template-columns:1fr}.field,.field.third{grid-column:1/-1}input,select,textarea{font-size:13px;padding:9px 10px}.btn{min-height:36px;padding:8px 10px;font-size:13px}.icon-btn{width:34px;height:34px}.table-wrap{border-radius:9px}table{font-size:12px;min-width:640px}th,td{padding:8px}.pill{font-size:10px;padding:3px 7px}.list-item{padding:9px;font-size:13px}.summary-row{padding:9px}.summary-row strong{font-size:14px}.summary-meta{font-size:12px}.counter-screen{min-height:auto;gap:10px}.tap-box{padding:12px}.result{min-height:190px;min-height:5cm;padding:22px 16px}.result .big{font-size:40px}.result .small{font-size:15px}.toast{left:50%;width:calc(100% - 24px);text-align:center}}
 </style>
 <link rel="stylesheet" href="base-theme.css">
 <style>
+body{padding-left:0!important}
+.app-sidebar,#sidebarToggleBtn{display:none!important}
+#changePasswordBtn,#logoutBtn{display:inline-flex}
+#installBtn:not([hidden]){display:inline-flex}
 .result.rejected, .result.blocked, .result.rejected *, .result.blocked *{color:#fff!important}
 .result.rejected .pill, .result.blocked .pill{color:#fff!important;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}
 </style>
@@ -251,14 +255,15 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute
 
 <main class="wrap">
   <nav class="tabs" id="tabs">
-    
     <button class="tab" data-view="dashboard">Dashboard</button>
+    <button class="tab" data-view="vendorDashboard">Vendor Dashboard</button>
     <button class="tab" data-view="counter">RFID Counter</button>
     <button class="tab" data-view="users">Users</button>
     <button class="tab" data-view="recharge">Recharge</button>
     <button class="tab" data-view="cards">Replace Card</button>
     <button class="tab" data-view="reports">Reports</button>
     <button class="tab" data-view="settings">Configurations</button>
+    <button class="tab" data-view="accessControl">Access Control</button>
     <button class="tab" data-view="docs">Schema/API</button>
   </nav>
 
@@ -1004,9 +1009,9 @@ function updateNavButtonAccessControl(){
   }
   const role = employee?.role || 'Unknown';
 
-  // Update visibility of navigation buttons based on access control
-  document.querySelectorAll('.screen-nav-btn').forEach(btn => {
-    const screen = btn.dataset.screen;
+  // Update visibility of top navigation buttons based on access control
+  document.querySelectorAll('.tab').forEach(btn => {
+    const screen = btn.dataset.view;
     // For admin users, show all screens. For others, check access control
     let hasAccess = role === 'Admin' ? true : (state.accessControl?.[role]?.[screen]?.['view'] === true);
 
@@ -1015,7 +1020,7 @@ function updateNavButtonAccessControl(){
       hasAccess = false;
     }
 
-    btn.style.display = hasAccess ? '' : 'none';
+    btn.hidden = !hasAccess;
   });
 }
 
@@ -1040,15 +1045,11 @@ function render(){
     window.location.hash = 'login';
     activeView = 'login';
     // Hide all UI elements when not authenticated
-    const sidebarToggleBtn = $('sidebarToggleBtn');
-    const appSidebar = document.querySelector('.app-sidebar');
     const changePasswordBtn = $('changePasswordBtn');
     const logoutBtn = $('logoutBtn');
     const installBtn = $('installBtn');
-    if(sidebarToggleBtn) sidebarToggleBtn.style.display = 'none';
-    if(appSidebar) appSidebar.style.display = 'none';
-    if(changePasswordBtn) changePasswordBtn.style.display = 'none';
-    if(logoutBtn) logoutBtn.style.display = 'none';
+    if(changePasswordBtn) changePasswordBtn.style.setProperty('display', 'none', 'important');
+    if(logoutBtn) logoutBtn.style.setProperty('display', 'none', 'important');
     if(installBtn) installBtn.style.display = 'none';
     renderAuthModal();
     return;
@@ -1058,15 +1059,11 @@ function render(){
     // Remove login modal when authenticated
     const authModal = document.getElementById('authModal');
     if(authModal) authModal.remove();
-    // Show sidebar and buttons when authenticated
-    const sidebarToggleBtn = $('sidebarToggleBtn');
-    const appSidebar = document.querySelector('.app-sidebar');
+    // Show header action buttons when authenticated
     const changePasswordBtn = $('changePasswordBtn');
     const logoutBtn = $('logoutBtn');
-    if(sidebarToggleBtn) sidebarToggleBtn.style.removeProperty('display');
-    if(appSidebar) appSidebar.style.removeProperty('display');
-    if(changePasswordBtn) changePasswordBtn.style.removeProperty('display');
-    if(logoutBtn) logoutBtn.style.removeProperty('display');
+    if(changePasswordBtn) changePasswordBtn.style.setProperty('display', 'inline-flex', 'important');
+    if(logoutBtn) logoutBtn.style.setProperty('display', 'inline-flex', 'important');
     // Update navigation button access control
     updateNavButtonAccessControl();
   }
@@ -2260,81 +2257,16 @@ function navigateTo(view){
   console.log('Navigating to:', view);
   activeView = view;
   window.location.hash = view;
-  // Update sidebar active state
-  document.querySelectorAll('.screen-nav-btn').forEach(btn => {
-    if(btn.dataset.screen === view){
-      btn.style.background = 'rgba(22,163,74,.3)';
-      btn.style.color = '#fff';
-    } else {
-      btn.style.background = 'none';
-      btn.style.color = 'rgba(255,255,255,.7)';
-    }
-  });
   setTimeout(()=>render(), 10);
 }
-// Hide the horizontal tabs since we have sidebar navigation
-$('tabs').style.display = 'none';
 
-// Handle Mess Management toggle
-let messMenuOpen = true; // Menu is expanded by default
-const messToggleBtn = $('messToggleBtn');
-const messSubmenu = $('messSubmenu');
-const messToggleIcon = $('messToggleIcon');
-
-if(messToggleBtn){
-  messToggleBtn.onclick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Redirect to login page when Mess Management is clicked
-    currentEmployeeId = null;
-    window.systemLoginError = null;
-    activeView = 'login';
-    window.location.hash = 'login';
-    render();
-  };
-}
-
-// Handle mobile sidebar toggle
-const sidebarToggleBtn = $('sidebarToggleBtn');
-const appSidebar = document.querySelector('.app-sidebar');
-if(sidebarToggleBtn && appSidebar){
-  sidebarToggleBtn.onclick = (e) => {
-    e.preventDefault();
-    appSidebar.classList.toggle('mobile-open');
-  };
-}
-
-// Handle sidebar screen navigation
-document.querySelectorAll('.screen-nav-btn').forEach(btn => {
-  btn.onclick = (e) => {
-    e.preventDefault();
-    const screen = btn.dataset.screen;
-    navigateTo(screen);
-    // Update active state
-    document.querySelectorAll('.screen-nav-btn').forEach(b => {
-      b.style.background = b.dataset.screen === screen ? 'rgba(22,163,74,.3)' : 'none';
-      b.style.color = b.dataset.screen === screen ? '#fff' : 'rgba(255,255,255,.7)';
-    });
-    // Close sidebar on mobile after navigation
-    if(window.innerWidth <= 760){
-      appSidebar.classList.remove('mobile-open');
-    }
-  };
-  // Set initial active state
-  if(btn.dataset.screen === activeView){
-    btn.style.background = 'rgba(22,163,74,.3)';
-    btn.style.color = '#fff';
-  }
-});
-
-// Original tab click handler (backup)
 if($('tabs')) $('tabs').onclick = e => { const b = e.target.closest('.tab'); if(!b) return; navigateTo(b.dataset.view); };
 const changePasswordBtn = $('changePasswordBtn');
 if(changePasswordBtn) changePasswordBtn.onclick = () => { renderChangePasswordModal(); };
 const logoutBtn = $('logoutBtn');
 if(logoutBtn) logoutBtn.onclick = () => { currentEmployeeId = null; window.systemLoginError = null; activeView = 'login'; window.location.hash = 'login'; render(); };
-$('resetBtn').onclick = () => { if(confirm('Reset all demo RFID data?')){ localStorage.removeItem(DB_KEY); state = seedState(); navigateTo('dashboard'); save(); } };
-$('exportBtn').onclick = () => {
+if($('resetBtn')) $('resetBtn').onclick = () => { if(confirm('Reset all demo RFID data?')){ localStorage.removeItem(DB_KEY); state = seedState(); navigateTo('dashboard'); save(); } };
+if($('exportBtn')) $('exportBtn').onclick = () => {
   const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href=url; a.download='rfid-coupon-data.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
