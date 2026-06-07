@@ -1039,10 +1039,14 @@ function render(){
     document.title = 'Login - Mess Management';
     window.location.hash = 'login';
     activeView = 'login';
-    // Hide buttons when not authenticated
+    // Hide all UI elements when not authenticated
+    const sidebarToggleBtn = $('sidebarToggleBtn');
+    const appSidebar = document.querySelector('.app-sidebar');
     const changePasswordBtn = $('changePasswordBtn');
     const logoutBtn = $('logoutBtn');
     const installBtn = $('installBtn');
+    if(sidebarToggleBtn) sidebarToggleBtn.style.display = 'none';
+    if(appSidebar) appSidebar.style.display = 'none';
     if(changePasswordBtn) changePasswordBtn.style.display = 'none';
     if(logoutBtn) logoutBtn.style.display = 'none';
     if(installBtn) installBtn.style.display = 'none';
@@ -1380,11 +1384,11 @@ function renderVendorDashboard(){
   }
 
   // Get current user - check admin first, then portal employees
-  let employee = ADMIN_USER.id === currentEmployeeId ? ADMIN_USER : state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  let employee = String(ADMIN_USER.id) === String(currentEmployeeId) ? ADMIN_USER : state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
   const role = employee?.role || 'Unknown';
 
-  // Check access control
-  const hasAccess = state.accessControl?.[role]?.['vendorDashboard']?.['view'] === true;
+  // Check access control - Admin always has access to vendor dashboard
+  const hasAccess = role === 'Admin' ? true : (state.accessControl?.[role]?.['vendorDashboard']?.['view'] === true);
   if(!hasAccess){
     $('vendorDashboard').innerHTML = `<div class="grid">
       <div class="card span-12"><h2>Access Denied</h2><p>Your role (${esc(role)}) does not have access to the Vendor Dashboard.</p><button class="btn" id="logoutBtn">Change Employee</button></div>
@@ -2425,12 +2429,9 @@ try{
 }catch(e){
   console.error('View toggle error:', e);
 }
-// Only render if activeView is selected (don't render by default)
-if(activeView){
-  render();
-} else {
-  console.log('No view selected - menu is collapsed');
-}
+// Always call render on initial page load to show login or authenticated view
+console.log('Initial page load - activeView:', activeView, 'currentEmployeeId:', currentEmployeeId);
+render();
 
 // Force re-render if content is empty (only if a view is selected)
 setTimeout(()=>{
