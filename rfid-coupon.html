@@ -284,6 +284,7 @@ body{padding-left:0!important}
 <script>
 const $ = id => document.getElementById(id);
 const DB_KEY = 'rfid-coupon-demo-v1';
+const AUTH_KEY = 'rfid-coupon-auth-employee';
 let deferredInstall = null;
 let state = loadState();
 
@@ -321,7 +322,7 @@ let vendorDashboardDateTo = today();
 let vendorDashboardPickerOpen = false;
 let vendorDashboardDraftStart = null;
 let vendorDashboardPickerMonth = today().slice(0,7) + '-01';
-let currentEmployeeId = null;
+let currentEmployeeId = loadAuthEmployeeId();
 let consumptionReportFilters = {search:'', from:'', to:'', categoryIds:[], mealIds:[], counterIds:[], status:'', profit:'', pageSize:10};
 let consumptionReportPage = 1;
 let balanceReportFilters = {search:'', categoryIds:[], status:''};
@@ -351,6 +352,22 @@ function toast(msg){
   toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
 }
 function save(){ localStorage.setItem(DB_KEY, JSON.stringify(state)); render(); }
+function findEmployeeById(id){
+  const key = String(id || '');
+  if(String(ADMIN_USER.id) === key) return ADMIN_USER;
+  return state.portalEmployees.find(e=>String(e.id)===key) || null;
+}
+function loadAuthEmployeeId(){
+  try{ return localStorage.getItem(AUTH_KEY) || null; }catch(error){ return null; }
+}
+function setAuthEmployee(id){
+  currentEmployeeId = id;
+  try{ localStorage.setItem(AUTH_KEY, String(id)); }catch(error){}
+}
+function clearAuthEmployee(){
+  currentEmployeeId = null;
+  try{ localStorage.removeItem(AUTH_KEY); }catch(error){}
+}
 function loadState(){
   try{
     const saved = localStorage.getItem(DB_KEY);
@@ -1001,12 +1018,7 @@ function consumeRechargeCoupon(userId, mealId){
 }
 function updateNavButtonAccessControl(){
   // Get current user's role
-  let employee = null;
-  if(String(ADMIN_USER.id) === String(currentEmployeeId)){
-    employee = ADMIN_USER;
-  } else {
-    employee = state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
-  }
+  const employee = findEmployeeById(currentEmployeeId);
   const role = employee?.role || 'Unknown';
 
   // Update visibility of top navigation buttons based on access control
@@ -1039,6 +1051,12 @@ function render(){
     console.error('View toggle error:', error);
   }
   // Show/hide login modal based on authentication
+  const signedInEmployee = findEmployeeById(currentEmployeeId);
+  if(currentEmployeeId && !signedInEmployee) clearAuthEmployee();
+  if(currentEmployeeId && activeView === 'login'){
+    activeView = 'dashboard';
+    window.location.hash = 'dashboard';
+  }
   if(!currentEmployeeId || activeView === 'login'){
     document.body.classList.add('login-view');
     document.title = 'Login - Mess Management';
@@ -1068,7 +1086,7 @@ function render(){
     updateNavButtonAccessControl();
   }
   // Update employee info in header
-  const employee = state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  const employee = findEmployeeById(currentEmployeeId);
   const employeeInfo = document.querySelector('header .sub');
   if(employeeInfo) employeeInfo.textContent = 'Logged in as: '+esc(employee?.name || 'Unknown')+' ('+esc(employee?.role || 'User')+')';
   // Only render the active view (don't render anything if activeView is null)
@@ -1201,7 +1219,7 @@ function renderAuthModal(){
 
     console.log('Login successful for:', employee.name);
     window.systemLoginError = null;
-    currentEmployeeId = employee.id;
+    setAuthEmployee(employee.id);
     activeView = 'dashboard';
     window.location.hash = 'dashboard';
     render();
@@ -1372,7 +1390,7 @@ function renderVendorDashboard(){
         const employee = state.portalEmployees.find(e=>String(e.id)===String(empId));
         if(!employee || employee.password !== password) { window.vendorLoginError = 'Invalid password'; render(); return; }
         window.vendorLoginError = null;
-        currentEmployeeId = empId;
+        setAuthEmployee(empId);
         render();
       };
       if(passwordInput) passwordInput.onkeypress = (e)=>{ if(e.key==='Enter') loginBtn.click(); };
@@ -1381,7 +1399,7 @@ function renderVendorDashboard(){
   }
 
   // Get current user - check admin first, then portal employees
-  let employee = String(ADMIN_USER.id) === String(currentEmployeeId) ? ADMIN_USER : state.portalEmployees.find(e=>String(e.id)===String(currentEmployeeId));
+  let employee = findEmployeeById(currentEmployeeId);
   const role = employee?.role || 'Unknown';
 
   // Check access control - Admin always has access to vendor dashboard
@@ -1390,7 +1408,7 @@ function renderVendorDashboard(){
     $('vendorDashboard').innerHTML = `<div class="grid">
       <div class="card span-12"><h2>Access Denied</h2><p>Your role (${esc(role)}) does not have access to the Vendor Dashboard.</p><button class="btn" id="logoutBtn">Change Employee</button></div>
     </div>`;
-    setTimeout(()=>{ if($('logoutBtn')) $('logoutBtn').onclick = ()=>{ currentEmployeeId = null; render(); }; }, 0);
+    setTimeout(()=>{ if($('logoutBtn')) $('logoutBtn').onclick = ()=>{ clearAuthEmployee(); activeView = 'login'; window.location.hash = 'login'; render(); }; }, 0);
     return;
   }
 
@@ -1406,7 +1424,7 @@ function renderVendorDashboard(){
     $('vendorDashboard').innerHTML = `<div class="grid">
       <div class="card span-6"><h2>${esc(employee?.name || 'Unknown')}</h2><p>No counters assigned to you.</p><button class="btn" id="logoutBtn">Change Employee</button></div>
     </div>`;
-    setTimeout(()=>{ if($('logoutBtn')) $('logoutBtn').onclick = ()=>{ currentEmployeeId = null; render(); }; }, 0);
+    setTimeout(()=>{ if($('logoutBtn')) $('logoutBtn').onclick = ()=>{ clearAuthEmployee(); activeView = 'login'; window.location.hash = 'login'; render(); }; }, 0);
     return;
   }
 
@@ -2264,7 +2282,7 @@ if($('tabs')) $('tabs').onclick = e => { const b = e.target.closest('.tab'); if(
 const changePasswordBtn = $('changePasswordBtn');
 if(changePasswordBtn) changePasswordBtn.onclick = () => { renderChangePasswordModal(); };
 const logoutBtn = $('logoutBtn');
-if(logoutBtn) logoutBtn.onclick = () => { currentEmployeeId = null; window.systemLoginError = null; activeView = 'login'; window.location.hash = 'login'; render(); };
+if(logoutBtn) logoutBtn.onclick = () => { clearAuthEmployee(); window.systemLoginError = null; activeView = 'login'; window.location.hash = 'login'; render(); };
 if($('resetBtn')) $('resetBtn').onclick = () => { if(confirm('Reset all demo RFID data?')){ localStorage.removeItem(DB_KEY); state = seedState(); navigateTo('dashboard'); save(); } };
 if($('exportBtn')) $('exportBtn').onclick = () => {
   const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
@@ -2285,9 +2303,9 @@ window.addEventListener('hashchange', ()=>{
   const hash = window.location.hash.slice(1);
   const validScreens = ['login','dashboard','vendorDashboard','counter','users','cards','recharge','settings','accessControl','reports','docs'];
 
-  // Allow login screen for unauthenticated users
   if(hash === 'login'){
-    activeView = 'login';
+    activeView = currentEmployeeId ? 'dashboard' : 'login';
+    if(currentEmployeeId) window.location.hash = 'dashboard';
     render();
     return;
   }
@@ -2327,10 +2345,11 @@ if('serviceWorker' in navigator){
 }
 
 const initialHash = window.location.hash.slice(1);
-const validScreens = ['login','dashboard','vendorDashboard','counter','users','cards','recharge','settings','reports','docs'];
+const validScreens = ['login','dashboard','vendorDashboard','counter','users','cards','recharge','settings','accessControl','reports','docs'];
 
 if(initialHash === 'login'){
-  activeView = 'login';
+  activeView = currentEmployeeId ? 'dashboard' : 'login';
+  if(currentEmployeeId) window.location.hash = 'dashboard';
 } else if(currentEmployeeId && initialHash && validScreens.includes(initialHash)){
   activeView = initialHash;
 } else if(!currentEmployeeId){
