@@ -193,8 +193,8 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute
 <script src="base-theme.js"></script>
 </head>
 <body>
-<button id="sidebarToggleBtn" class="hamburger-btn" aria-label="Toggle navigation menu">☰</button>
-<aside class="app-sidebar" aria-label="Creator Studio apps">
+<button id="sidebarToggleBtn" class="hamburger-btn" aria-label="Toggle navigation menu" style="display:none;">☰</button>
+<aside class="app-sidebar" aria-label="Creator Studio apps" style="display:none;">
   <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">KS</span><span>Tools</span></a>
   <nav class="app-nav-links">
     <a href="index.html" class="app-nav-item"><span class="app-nav-icon app-icon-cert" aria-hidden="true"></span><span>Certificates</span></a>
@@ -1052,9 +1052,13 @@ function render(){
     // Remove login modal when authenticated
     const authModal = document.getElementById('authModal');
     if(authModal) authModal.remove();
-    // Show buttons when authenticated
+    // Show sidebar and buttons when authenticated
+    const sidebarToggleBtn = $('sidebarToggleBtn');
+    const appSidebar = document.querySelector('.app-sidebar');
     const changePasswordBtn = $('changePasswordBtn');
     const logoutBtn = $('logoutBtn');
+    if(sidebarToggleBtn) sidebarToggleBtn.style.display = '';
+    if(appSidebar) appSidebar.style.display = '';
     if(changePasswordBtn) changePasswordBtn.style.display = '';
     if(logoutBtn) logoutBtn.style.display = '';
     // Update navigation button access control
