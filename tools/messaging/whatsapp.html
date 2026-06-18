@@ -1,90 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Creator Studio - WhatsApp Dashboard</title>
+<title>WhatsApp Dashboard - Creator Studio</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-/* ===== APP SHELL SIDEBAR ===== */
-.app-sidebar {
-  display: none;
-    display: none;
-  }
-.app-sidebar {
-  display: none;
-  position: fixed;
-  inset: 0 auto 0 0;
-  width: 232px;
-  z-index: 1000;
-  background: linear-gradient(180deg, #075E54 0%, #054741 100%);
-  border-right: 2px solid #25D366;
-  box-shadow: 2px 0 16px rgba(0,0,0,0.18);
-  padding: 18px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-.app-navbar-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 0 10px;
-  color: #25D366;
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: .7px;
-.app-logo-mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: #25D366;
-  color: #075E54;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0;
-}
-.app-nav-links {
-  display: grid;
-  gap: 4px;
-}
-.app-nav-item {
-  min-height: 44px;
-  padding: 9px 12px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: #dff5e8;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-.app-nav-icon {
-  width: 22px;
-  flex: none;
-  text-align: center;
-  font-size: 17px;
-}
-.app-nav-item:hover {
-  background: rgba(255,255,255,0.1);
-  color: #25D366;
-}
-.app-nav-item.active {
-  background: rgba(37,211,102,0.22);
-  color: #fff;
-  font-weight: 700;
-}
-
 :root {
   --green-dark: #075E54;
   --green-mid: #128C7E;
@@ -94,18 +19,40 @@
   --chat-bg: #e5ddd5;
   --radius: 18px;
   --shadow: 0 4px 24px rgba(0,0,0,0.09);
+  --ink: #222;
+  --text-muted: #888;
+}
+
+[data-theme="light"] {
+  --green-dark: #075E54;
+  --green-mid: #128C7E;
+  --green-light: #25D366;
+  --bg: #f0f2f5;
+  --card-bg: #ffffff;
+  --chat-bg: #e5ddd5;
+  --ink: #222;
+  --text-muted: #888;
+}
+
+[data-theme="dark"] {
+  --green-dark: #054741;
+  --green-mid: #0d7d71;
+  --green-light: #1fa652;
+  --bg: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --chat-bg: #3a3a3a;
+  --ink: #e0e0e0;
+  --text-muted: #aaa;
 }
 
 * { box-sizing: border-box; }
 
 body {
-  background:
-    radial-gradient(1200px 600px at 85% -10%, #faf8f4 0%, transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, #f0ede6 0%, transparent 55%),
-  #f5f3f0;
+  background: var(--bg);
   font-family: 'Inter Tight', 'Segoe UI', Arial, sans-serif;
-  padding: 24px 16px 24px 248px;
-  color: #222;
+  padding: 24px 16px;
+  color: var(--ink);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h3 {
@@ -119,26 +66,28 @@ h3 {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   margin-bottom: 20px;
-  background: linear-gradient(180deg, rgba(255,253,248,0.95) 0%, rgba(250,248,244,0.95) 100%);
+  background: var(--card-bg);
   backdrop-filter: blur(10px);
+  color: var(--ink);
 }
 
 .preview-box {
-  background: linear-gradient(180deg, rgba(255,253,248,0.92) 0%, rgba(245,243,240,0.92) 100%);
+  background: var(--card-bg);
   padding: 20px;
   border-radius: var(--radius);
   position: sticky;
-  top: 80px;
+  top: 20px;
   border: 1px solid rgba(176,132,49,0.1);
   backdrop-filter: blur(10px);
 }
 
 .chat {
-  background: rgba(255,255,255,0.9);
+  background: var(--chat-bg);
   padding: 16px;
   border-radius: 14px;
   margin-bottom: 16px;
   border: 1px solid rgba(176,132,49,0.08);
+  color: var(--ink);
 }
 
 #livePreviewImage {
@@ -186,16 +135,18 @@ h3 {
 
 /* Form controls styling */
 .form-control, .form-select {
-  background: rgba(255,255,255,0.85) !important;
+  background: var(--card-bg) !important;
   border: 1px solid rgba(176,132,49,0.2) !important;
   border-radius: 10px !important;
+  color: var(--ink) !important;
 }
 .form-control:focus, .form-select:focus {
   border-color: #25D366 !important;
   box-shadow: 0 0 0 0.2rem rgba(37,211,102,0.15) !important;
+  color: var(--ink) !important;
 }
 .form-label {
-  color: #333;
+  color: var(--ink);
 }
 
 /* Status table */
@@ -204,7 +155,7 @@ h3 {
   overflow-y: auto;
   border-radius: 12px;
   border: 1px solid rgba(176,132,49,0.15);
-  background: rgba(255,255,255,0.85);
+  background: var(--card-bg);
 }
 
 #statusTable thead th {
@@ -220,6 +171,7 @@ h3 {
 
 #statusTable tbody tr {
   transition: background 0.2s;
+  color: var(--ink);
 }
 
 #statusTable tbody tr:hover {
@@ -231,6 +183,7 @@ h3 {
   font-size: 13px;
   vertical-align: middle;
   border-bottom: 1px solid rgba(176,132,49,0.08);
+  color: var(--ink);
 }
 
 .badge-sending {
@@ -334,14 +287,49 @@ h3 {
   margin-top: 10px;
 }
 
-.cloudinary-badge {
-  background: #eef4ff;
-  border: 1px solid #c9d9f7;
-  color: #2057c7;
+/* Header */
+header {
+  background: var(--card-bg);
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(176,132,49,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -24px -16px 24px -16px;
+  border-radius: 0;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: var(--ink);
+}
+
+header .sub {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.app-theme-toggle {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(176,132,49,0.2);
   border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 13px;
-  margin-bottom: 18px;
+  background: rgba(37,211,102,0.1);
+  color: var(--green-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.2s;
+}
+
+.app-theme-toggle:hover {
+  border-color: var(--green-light);
+  transform: translateY(-1px);
+  background: rgba(37,211,102,0.2);
 }
 
 /* HISTORY PANEL */
@@ -350,7 +338,7 @@ h3 {
   top: 0; right: 0;
   width: 380px;
   height: 100vh;
-  background: #f0f2f5;
+  background: var(--card-bg);
   box-shadow: -6px 0 30px rgba(0,0,0,0.15);
   z-index: 9999;
   display: flex;
@@ -390,7 +378,7 @@ h3 {
 #historyPanelHeader .close-btn:hover { background: rgba(255,255,255,0.28); }
 
 #historyStats {
-  background: #075E54;
+  background: var(--green-dark);
   padding: 10px 20px 14px;
   display: flex;
   gap: 12px;
@@ -428,7 +416,6 @@ h3 {
 #historyFeed::-webkit-scrollbar { width: 4px; }
 #historyFeed::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
-/* WhatsApp-style bubble */
 .bubble-wrap {
   display: flex;
   flex-direction: column;
@@ -467,18 +454,18 @@ h3 {
 }
 .bubble-mobile {
   font-size: 11px;
-  color: #888;
+  color: var(--text-muted);
   margin-bottom: 6px;
 }
 .bubble-school {
   font-size: 12px;
-  color: #555;
+  color: var(--text-muted);
   margin-bottom: 5px;
   font-style: italic;
 }
 .bubble-msg {
   font-size: 13px;
-  color: #222;
+  color: var(--ink);
   line-height: 1.5;
   word-break: break-word;
 }
@@ -491,7 +478,7 @@ h3 {
 }
 .bubble-time {
   font-size: 10px;
-  color: #999;
+  color: var(--text-muted);
 }
 .bubble-tick {
   font-size: 13px;
@@ -507,7 +494,7 @@ h3 {
 
 #historyEmpty {
   text-align: center;
-  color: #aaa;
+  color: var(--text-muted);
   font-size: 14px;
   margin-top: 60px;
 }
@@ -557,15 +544,15 @@ h3 {
 }
 #historyOverlay.show { display: block; }
 
-
-/* â”€â”€â”€ BULK CAMPAIGN CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* BULK CAMPAIGN CARD */
 .bulk-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 14px 16px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   border-left: 4px solid var(--green-light);
   animation: bubbleIn 0.3s ease;
+  color: var(--ink);
 }
 .bulk-card-header {
   display: flex;
@@ -584,7 +571,7 @@ h3 {
 }
 .bulk-sub {
   font-size: 11px;
-  color: #888;
+  color: var(--text-muted);
   margin-top: 1px;
 }
 .bulk-stats {
@@ -602,7 +589,7 @@ h3 {
 .bsb-sent  { background: #d1f5e0; }
 .bsb-fail  { background: #fde8ea; }
 .bsn { font-size: 20px; font-weight: 800; line-height: 1; }
-.bsl { font-size: 10px; margin-top: 2px; font-weight: 600; color: #555; }
+.bsl { font-size: 10px; margin-top: 2px; font-weight: 600; color: var(--ink); }
 .bsb-sent .bsn { color: #0a6634; }
 .bsb-fail .bsn { color: #b02a37; }
 .bulk-progress-wrap {
@@ -621,21 +608,13 @@ h3 {
 
 @media (max-width: 760px) {
   body { padding: 88px 16px 24px; }
-.app-sidebar {
-  display: none;
-    inset: 0 0 auto 0;
-    width: 100%;
-    height: 72px;
-    padding: 8px 10px;
-    flex-direction: row;
-    align-items: center;
-    border-right: 0;
-    border-bottom: 2px solid #25D366;
-    overflow-x: auto;
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin: -24px -16px 24px -16px;
   }
-  .app-navbar-logo { min-width: max-content; }
-  .app-nav-links { display: flex; gap: 4px; }
-  .app-nav-item { min-width: max-content; }
+}
 
 </style>
 <link rel="stylesheet" href="../../core/base-theme.css">
@@ -644,23 +623,15 @@ h3 {
 
 <body>
 
-<!-- App Shell Navigation -->
-<aside class="app-sidebar" aria-label="Creator Studio apps">
-  <a href="index.html" class="app-navbar-logo"><span class="app-logo-mark">KS</span><span>Tools</span></a>
-  <nav class="app-nav-links">
-    <a href="index.html" class="app-nav-item"><span class="app-nav-icon app-icon-cert" aria-hidden="true"></span><span>Certificates</span></a>
-    <a href="rfid-coupon.html" class="app-nav-item"><span class="app-nav-icon app-icon-rfid" aria-hidden="true"></span><span>Mess Management</span></a>
-    <a href="image-url-generator.html" class="app-nav-item"><span class="app-nav-icon app-icon-image" aria-hidden="true"></span><span>Image URLs</span></a>
-    <a href="whatsapp.html" class="app-nav-item active"><span class="app-nav-icon app-icon-whatsapp" aria-hidden="true"></span><span>WhatsApp</span></a>
-    <a href="excel-merger.html" class="app-nav-item"><span class="app-nav-icon app-icon-excel" aria-hidden="true"></span><span>Excel Merger</span></a>
-  </nav>
-  <div class="app-shell-footer">
-    <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme">
-      <span class="app-theme-icon" data-theme-icon aria-hidden="true">L</span>
-      <span data-theme-label>Light mode</span>
-    </button>
+<header>
+  <div style="flex: 1;">
+    <h1>WhatsApp Dashboard</h1>
+    <p class="sub">Send bulk WhatsApp messages directly</p>
   </div>
-</aside>
+  <button class="app-theme-toggle" data-theme-toggle type="button" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
+    <span data-theme-icon aria-hidden="true">🌙</span>
+  </button>
+</header>
 
 <div class="container-fluid">
 <div class="row">
@@ -668,15 +639,6 @@ h3 {
 <!-- LEFT PANEL -->
 <div class="col-md-8">
 <div class="card p-4">
-
-</header>
-
-  <h3 class="mb-1">WhatsApp Dashboard</h3>
-  <p class="text-muted small mb-3"></p>
-
- <!--  <div class="cloudinary-badge">
-    Cloudinary Upload Preset: <b>whatsapp</b>
-  </div>-->
 
   <div class="row g-3">
 
@@ -800,7 +762,7 @@ h3 {
     <h5 style="color:var(--green-dark)" class="mb-3">WhatsApp Preview</h5>
     <div class="chat">
       <img id="livePreviewImage">
-      <div style="font-size:11px;color:#888;margin-bottom:4px">From: <span id="previewSender" style="font-weight:600;color:var(--green-dark)">Digital Caampus</span></div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">From: <span id="previewSender" style="font-weight:600;color:var(--green-dark)">Digital Caampus</span></div>
       <b id="previewName">Message To</b>
       <hr class="my-2">
       <div id="previewSchool" class="text-muted small">School Name</div>
@@ -876,8 +838,6 @@ function updateSchoolDropdown(){
   document.getElementById('previewSchool').innerText = sel.value || 'School Name';
 }
 
-// Init school dropdown immediately (script is at bottom of body, DOM is ready)
-
 const CLOUD_NAME = 'dgofcde5i';
 const UPLOAD_PRESET = 'whatsapp';
 
@@ -891,11 +851,7 @@ let isPaused = false;
 let isStopped = false;
 let pauseResolve = null;
 
-// â”€â”€â”€ LIVE PREVIEW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-
-
-// â”€â”€â”€ MODE TOGGLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// MODE TOGGLE
 function toggleMode(){
   const mode = document.getElementById('modeSelect').value;
   document.getElementById('singleSection').classList.toggle('hidden', mode !== 'single');
@@ -903,8 +859,7 @@ function toggleMode(){
   document.getElementById('statusTableCard').classList.toggle('hidden', mode !== 'bulk');
 }
 
-// â”€â”€â”€ IMAGE UPLOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
+// IMAGE UPLOAD
 async function uploadImageToCloudinary(){
   const file = document.getElementById('imageFile').files[0];
   if(!file){ alert('Please select image first'); return; }
@@ -951,8 +906,7 @@ function clearImageUpload(){
   setUploadStatus('secondary','No image uploaded');
 }
 
-// â”€â”€â”€ EXCEL UPLOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
+// EXCEL UPLOAD
 function handleExcel(e){
   const file = e.target.files[0];
   const reader = new FileReader();
@@ -967,7 +921,7 @@ function handleExcel(e){
       let mobile = String(row.mobile || row.Mobile || row.phone || row.Phone || '').trim();
       mobile = mobile.replace(/\.0$/, '').replace(/\D/g, '');
       if(mobile.length === 10) mobile = '91' + mobile;
-      if(mobile) contacts.push({name: name || '', mobile});  // name is optional
+      if(mobile) contacts.push({name: name || '', mobile});
     });
     renderContacts();
     buildStatusTable();
@@ -987,7 +941,7 @@ function clearExcelUpload(){
   document.getElementById('statusTableBody').innerHTML = '';
 }
 
-// â”€â”€â”€ STATUS TABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// STATUS TABLE
 function buildStatusTable(){
   const tbody = document.getElementById('statusTableBody');
   tbody.innerHTML = contacts.map((c, i) => `
@@ -1013,7 +967,6 @@ function setRowStatus(index, status){
     stopped: `<span class="badge-paused">Stopped</span>`,
   };
   cell.innerHTML = map[status] || status;
-  // scroll into view
   const row = document.getElementById(`row-${index}`);
   if(row) row.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
@@ -1023,7 +976,7 @@ function updateSummary(){
     `${sentCount} sent - ${failedCount} failed`;
 }
 
-// â”€â”€â”€ PROGRESS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// PROGRESS
 function updateProgress(current, total, name, status){
   const pct = total > 0 ? Math.round((current/total)*100) : 0;
   document.getElementById('progressBar').style.width = pct + '%';
@@ -1035,7 +988,7 @@ function updateProgress(current, total, name, status){
   updateSummary();
 }
 
-// â”€â”€â”€ PAUSE / STOP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// PAUSE / STOP
 function togglePause(){
   if(isPaused){
     isPaused = false;
@@ -1065,17 +1018,13 @@ function waitIfPaused(){
   });
 }
 
-// â”€â”€â”€ SCHOOL DROPDOWN DATA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-// â”€â”€â”€ SEND â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// SEND
 async function sendMessages(){
-  // Validate Message To
   if(!document.getElementById('messageTo').value.trim()){
     alert('"Message To" is mandatory. Please fill it in before sending.');
     document.getElementById('messageTo').focus();
     return;
   }
-  // If API key not yet provided, show modal first
   if(!document.getElementById('apiKey').value){
     requireApiKey();
     return;
@@ -1102,10 +1051,8 @@ async function sendMessages(){
     return;
   }
 
-  // Bulk
   if(contacts.length === 0){ alert('Please upload an Excel file with contacts.'); return; }
 
-  // Reset state
   sentCount = 0;
   failedCount = 0;
   isStopped = false;
@@ -1126,7 +1073,6 @@ async function sendMessages(){
       break;
     }
 
-    // Check pause
     if(isPaused){
       setRowStatus(i, 'paused');
       await waitIfPaused();
@@ -1150,7 +1096,6 @@ async function sendMessages(){
     if(i < total - 1 && !isStopped) await sleep(3000);
   }
 
-  // Add bulk campaign summary card to history
   addBulkCampaignToHistory({
     campaignName: document.getElementById('campaignName').value,
     school: document.getElementById('schoolName').value,
@@ -1171,7 +1116,7 @@ async function sendMessages(){
   document.getElementById('sendBtn').disabled = false;
 }
 
-// â”€â”€â”€ API CALL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// API CALL
 async function sendSingle(contact){
   const payload = {
     apiKey: document.getElementById('apiKey').value,
@@ -1207,12 +1152,10 @@ async function sendSingle(contact){
   }
 }
 
-
-// â”€â”€â”€ API KEY MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// API KEY MODAL
 let _pendingSend = false;
 
 function requireApiKey(){
-  // Show modal, clear previous input & error
   document.getElementById('apiKeyInput').value = '';
   document.getElementById('apiKeyError').innerText = '';
   document.getElementById('apiKeyInput').type = 'password';
@@ -1246,19 +1189,16 @@ function confirmApiKey(){
     document.getElementById('apiKeyInput').focus();
     return;
   }
-  // Store in hidden field and proceed
   document.getElementById('apiKey').value = key;
   document.getElementById('apiKeyModal').style.display = 'none';
   _pendingSend = false;
   sendMessages();
 }
 
-// Close modal on backdrop click
-
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-// â”€â”€â”€ HISTORY PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-let sentHistory = [];   // { name, mobile, school, message, imageUrl, status, time }
+// HISTORY PANEL
+let sentHistory = [];
 
 function openHistoryPanel(){
   document.getElementById('historyPanel').classList.add('open');
@@ -1268,10 +1208,6 @@ function closeHistoryPanel(){
   document.getElementById('historyPanel').classList.remove('open');
   document.getElementById('historyOverlay').classList.remove('show');
 }
-
-// sentHistory entries:
-//   type:'single' => { type, name, mobile, school, message, imageUrl, status, time }
-//   type:'bulk'   => { type, campaignName, school, message, imageUrl, total, sent, failed, stopped, time }
 
 function addToHistory(name, mobile, school, message, imageUrl, status){
   const now = new Date();
@@ -1304,7 +1240,7 @@ function renderSingleBubble(entry, idx){
       <div class="bubble-name">${entry.name}</div>
       <div class="bubble-mobile">${entry.mobile}</div>
       ${entry.school ? `<div class="bubble-school">${entry.school}</div>` : ''}
-      <div class="bubble-msg">${entry.message || '<em style="color:#aaa">No message</em>'}</div>
+      <div class="bubble-msg">${entry.message || '<em style="color:var(--text-muted)">No message</em>'}</div>
       <div class="bubble-footer">
         <span class="bubble-status-badge ${isSent ? 'status-sent-badge' : 'status-fail-badge'}">
           ${isSent ? 'Sent' : 'Failed'}
@@ -1336,7 +1272,7 @@ function renderBulkCard(entry, idx){
       </div>
       ${entry.imageUrl ? `<img class="bubble-img" src="${entry.imageUrl}" onerror="this.style.display='none'" style="margin-bottom:10px">` : ''}
       ${entry.school ? `<div class="bubble-school" style="margin-bottom:6px">${entry.school}</div>` : ''}
-      <div class="bubble-msg" style="margin-bottom:12px">${entry.message || '<em style="color:#aaa">No message</em>'}</div>
+      <div class="bubble-msg" style="margin-bottom:12px">${entry.message || '<em style="color:var(--text-muted)">No message</em>'}</div>
       <div class="bulk-stats">
         <div class="bulk-stat-box bsb-total">
           <div class="bsn">${entry.total}</div><div class="bsl">Total</div>
@@ -1351,7 +1287,7 @@ function renderBulkCard(entry, idx){
       <div class="bulk-progress-wrap">
         <div class="bulk-progress-bar" style="width:${pct}%"></div>
       </div>
-      <div style="text-align:right;font-size:10px;color:#888;margin-top:3px">${pct}% delivered</div>
+      <div style="text-align:right;font-size:10px;color:var(--text-muted);margin-top:3px">${pct}% delivered</div>
     </div>
   `;
   feed.prepend(div);
@@ -1359,7 +1295,6 @@ function renderBulkCard(entry, idx){
 }
 
 function updateHistoryStats(){
-  // Count individual singles + bulk totals
   let totalMsgs = 0, successMsgs = 0, failMsgs = 0;
   sentHistory.forEach(e => {
     if(e.type === 'single'){
@@ -1388,9 +1323,8 @@ window.onload = function(){
   document.getElementById('schoolName').addEventListener('change', function(){
     document.getElementById('previewSchool').innerText = this.value || 'School Name';
   });
-  const messageField =
-  document.getElementById('messageText');
-  
+  const messageField = document.getElementById('messageText');
+
   messageField.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); return false; }});
   messageField.addEventListener('input', function(){
     this.value = this.value.replace(/[\r\n]+/g,' ');
@@ -1418,10 +1352,10 @@ window.onload = function(){
 };
 </script>
 
-<!-- â”€â”€â”€ HISTORY OVERLAY â”€â”€â”€ -->
+<!-- HISTORY OVERLAY -->
 <div id="historyOverlay" onclick="closeHistoryPanel()"></div>
 
-<!-- â”€â”€â”€ HISTORY SIDE PANEL â”€â”€â”€ -->
+<!-- HISTORY SIDE PANEL -->
 <div id="historyPanel">
   <div id="historyPanelHeader">
     <h5>Sent Messages History</h5>
@@ -1446,16 +1380,15 @@ window.onload = function(){
   </div>
 </div>
 
-<!-- â”€â”€â”€ FLOATING BUTTON â”€â”€â”€ -->
+<!-- FLOATING BUTTON -->
 <button id="historyToggleBtn" onclick="openHistoryPanel()">
   Sent History <span id="historyBadge">0</span>
 </button>
 
-
-<!-- Hidden API Key store (never shown in form) -->
+<!-- Hidden API Key store -->
 <input type="hidden" id="apiKey">
 
-<!-- â”€â”€â”€ API KEY MODAL â”€â”€â”€ -->
+<!-- API KEY MODAL -->
 <div id="apiKeyModal" style="
   display:none;
   position:fixed;
@@ -1466,33 +1399,34 @@ window.onload = function(){
   justify-content:center;
 ">
   <div style="
-    background:white;
+    background:var(--card-bg);
     border-radius:20px;
     padding:32px 28px;
     width:360px;
     max-width:90vw;
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
     animation: modalIn 0.25s ease;
+    color: var(--ink);
   ">
     <div style="text-align:center;margin-bottom:20px">
       <div style="font-size:20px;margin-bottom:8px;font-weight:700">API</div>
-      <h5 style="font-weight:800;color:#075E54;margin:0">Authentication Required</h5>
-      <p style="color:#888;font-size:13px;margin-top:6px">Enter your API key to authorize sending</p>
+      <h5 style="font-weight:800;color:var(--green-dark);margin:0">Authentication Required</h5>
+      <p style="color:var(--text-muted);font-size:13px;margin-top:6px">Enter your API key to authorize sending</p>
     </div>
 
-    <label style="font-weight:600;font-size:13px;color:#333;display:block;margin-bottom:6px">API Key</label>
+    <label style="font-weight:600;font-size:13px;color:var(--ink);display:block;margin-bottom:6px">API Key</label>
     <div style="position:relative;margin-bottom:6px">
       <input
         type="password"
         id="apiKeyInput"
         class="form-control"
         placeholder="Enter your API key"
-        style="padding-right:44px;border-radius:10px;border:2px solid #e0e0e0;font-size:14px"
+        style="padding-right:44px;border-radius:10px;border:2px solid rgba(176,132,49,0.2);font-size:14px;background:var(--card-bg);color:var(--ink)"
         onkeydown="if(event.key==='Enter') confirmApiKey()"
       >
       <button onclick="toggleApiKeyVisibility()" style="
         position:absolute;right:10px;top:50%;transform:translateY(-50%);
-        background:none;border:none;cursor:pointer;font-size:18px;color:#888;
+        background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-muted);
         padding:0;line-height:1;
       " id="eyeBtn" title="Show/Hide">Show</button>
     </div>
@@ -1500,10 +1434,10 @@ window.onload = function(){
 
     <div style="display:flex;gap:10px">
       <button onclick="closeApiKeyModal()" style="
-        flex:1;padding:11px;border-radius:10px;border:2px solid #e0e0e0;
-        background:white;font-weight:600;font-size:14px;cursor:pointer;color:#555;
+        flex:1;padding:11px;border-radius:10px;border:2px solid rgba(176,132,49,0.2);
+        background:var(--card-bg);font-weight:600;font-size:14px;cursor:pointer;color:var(--ink);
         transition:background 0.2s
-      " onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+      " onmouseover="this.style.background='rgba(176,132,49,0.1)'" onmouseout="this.style.background='var(--card-bg)'">
         Cancel
       </button>
       <button onclick="confirmApiKey()" style="
@@ -1524,7 +1458,6 @@ window.onload = function(){
   to   { opacity:1; transform:scale(1) translateY(0); }
 }
 </style>
-
 
 </body>
 </html>
