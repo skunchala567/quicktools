@@ -1,1310 +1,701 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QR Code Generator - Creator Studio</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<style>
-:root {
-  --bg-primary: linear-gradient(135deg, #0d0e10 0%, #16181c 100%);
-  --bg-secondary: #16181c;
-  --text-primary: #e8e9eb;
-  --text-secondary: #9ba2ab;
-  --text-accent: #c6ff3d;
-  --border-color: #262a30;
-  --card-hover-shadow: 0 0 20px rgba(198, 255, 61, 0.15);
-  --success: #4ade80;
-  --error: #ff6b6b;
-  --warning: #fbbf24;
-}
-
-body.light-mode {
-  --bg-primary: linear-gradient(135deg, #f5f3f0 0%, #eae3d4 100%);
-  --bg-secondary: #fffdf8;
-  --text-primary: #1a1714;
-  --text-secondary: #7d7160;
-  --text-accent: #b08431;
-  --border-color: #d8cdb8;
-  --card-hover-shadow: 0 0 20px rgba(176, 132, 49, 0.15);
-}
-
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-
-body {
-  font-family: 'Inter Tight', system-ui, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-  padding: 40px 20px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 60px;
-  position: relative;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  transition: all 0.3s ease;
-  padding: 0;
-}
-
-.theme-toggle:hover {
-  border-color: var(--text-accent);
-  box-shadow: 0 0 10px rgba(198, 255, 61, 0.1);
-}
-
-h1 {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 48px;
-  font-weight: 500;
-  margin: 0 0 10px;
-  color: var(--text-accent);
-}
-
-.subtitle {
-  font-size: 16px;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.tabs {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 40px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 16px;
-}
-
-.tab-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  padding: 8px 16px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -18px;
-}
-
-.tab-btn.active {
-  color: var(--text-accent);
-  border-bottom-color: var(--text-accent);
-}
-
-.tab-btn:hover {
-  color: var(--text-primary);
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 24px;
-}
-
-.panel {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
-  transition: all 0.3s ease;
-}
-
-.panel:hover {
-  box-shadow: var(--card-hover-shadow);
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-input[type="text"],
-input[type="file"],
-input[type="color"],
-input[type="number"],
-select,
-textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-
-input[type="text"]:focus,
-input[type="file"]:focus,
-input[type="color"]:focus,
-input[type="number"]:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--text-accent);
-  box-shadow: 0 0 0 2px rgba(198, 255, 61, 0.1);
-}
-
-.drop-zone {
-  border: 2px dashed var(--border-color);
-  border-radius: 8px;
-  padding: 32px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.drop-zone:hover,
-.drop-zone.drag-over {
-  border-color: var(--text-accent);
-  background: rgba(198, 255, 61, 0.05);
-}
-
-.drop-zone-text {
-  color: var(--text-secondary);
-  font-size: 14px;
-  margin: 0;
-}
-
-.drop-zone-icon {
-  font-size: 32px;
-  margin-bottom: 12px;
-}
-
-.button-group {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.btn {
-  padding: 10px 20px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--text-primary);
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
-  flex: 1;
-}
-
-.btn:hover {
-  border-color: var(--text-accent);
-  color: var(--text-accent);
-}
-
-.btn.primary {
-  background: var(--text-accent);
-  color: #0d0e10;
-  border-color: var(--text-accent);
-}
-
-.btn.primary:hover {
-  opacity: 0.9;
-}
-
-.btn.success {
-  background: var(--success);
-  color: #fff;
-  border-color: var(--success);
-}
-
-.btn.danger {
-  background: var(--error);
-  color: #fff;
-  border-color: var(--error);
-}
-
-.preview-area {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  min-height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.qr-card {
-  max-width: 300px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.qr-card-header {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  background: linear-gradient(135deg, var(--border-color), var(--bg-secondary));
-}
-
-.qr-card-body {
-  padding: 16px;
-  text-align: center;
-}
-
-.qr-code {
-  width: 180px;
-  height: 180px;
-  margin: 16px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.qr-code canvas {
-  width: 100%;
-  height: 100%;
-}
-
-.qr-card-footer {
-  padding: 12px;
-  border-top: 1px solid var(--border-color);
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.color-picker-container {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.color-picker-container input[type="color"] {
-  width: 60px;
-  height: 40px;
-  cursor: pointer;
-}
-
-.toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px 20px;
-  color: var(--text-primary);
-  z-index: 9999;
-  animation: slideUp 0.3s ease;
-  max-width: 400px;
-}
-
-.toast.success {
-  border-left: 4px solid var(--success);
-}
-
-.toast.error {
-  border-left: 4px solid var(--error);
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.grid-preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-}
-
-.bulk-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.stat-box {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--text-accent);
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-@media (max-width: 980px) {
-  .grid-2 {
-    grid-template-columns: 1fr;
-  }
-
-  .bulk-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 760px) {
-  body {
-    padding: 20px 16px;
-  }
-
-  header {
-    margin-bottom: 40px;
-  }
-
-  h1 {
-    font-size: 32px;
-  }
-
-  .tabs {
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 20px;
-  }
-
-  .tab-btn {
-    border-bottom: none;
-    border-left: 2px solid transparent;
-    margin-left: -20px;
-    margin-bottom: 0;
-    padding-left: 20px;
-  }
-
-  .tab-btn.active {
-    border-left-color: var(--text-accent);
-    border-bottom: none;
-  }
-
-  .bulk-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .grid-preview {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
-
-<link rel="stylesheet" href="../../core/base-theme.css">
-<script src="../../core/base-theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0d0e10;
+      --bg-card: #16181c;
+      --text: #e8e9eb;
+      --text-secondary: #9ba2ab;
+      --accent: #c6ff3d;
+      --border: #262a30;
+      --success: #4ade80;
+    }
+
+    body.light-mode {
+      --bg: #ffffff;
+      --bg-card: #f8f8f8;
+      --text: #1a1714;
+      --text-secondary: #7d7160;
+      --accent: #0085cc;
+      --border: #e0e0e0;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(198, 255, 61, 0.1);
+    }
+
+    h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 42px;
+      font-weight: 500;
+      margin: 0 0 10px;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+      margin: 0 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="number"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="url"]:focus,
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 8px rgba(198, 255, 61, 0.2);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0d0e10;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      padding: 10px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #0d0e10;
+    }
+
+    .option-btn:hover {
+      border-color: var(--accent);
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .color-option {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.active {
+      border-color: var(--text);
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .slider-container {
+      margin-bottom: 20px;
+    }
+
+    .slider-value {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .preview-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .qr-preview {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .preview-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .template-card {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--bg);
+    }
+
+    .template-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .template-preview {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .template-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .template-desc {
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .recent-codes {
+      margin-top: 30px;
+    }
+
+    .code-item {
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+    }
+
+    .code-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .code-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .code-url {
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: 'Courier New', monospace;
+    }
+
+    .code-time {
+      color: var(--text-secondary);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .options-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .color-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<div class="container">
   <header>
     <button class="theme-toggle" data-theme-toggle type="button" title="Toggle light/dark mode"><span data-theme-icon>🌙</span></button>
-    <h1>QR Code Generator</h1>
+    <h1>QR Generator</h1>
     <p class="subtitle">Create professional, branded QR codes individually or in bulk</p>
   </header>
 
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="single">Single QR</button>
-    <button class="tab-btn" data-tab="bulk">Bulk Generator</button>
-    <button class="tab-btn" data-tab="history">History</button>
-    <button class="tab-btn" data-tab="settings">Settings</button>
-  </div>
-
-  <!-- Single QR Tab -->
-  <div id="single" class="tab-content active">
-    <div class="grid-2">
-      <div class="panel">
-        <h2 style="margin-top: 0; color: var(--text-accent);">QR Configuration</h2>
-
-        <div class="form-group">
-          <label>URL *</label>
-          <input type="text" id="singleUrl" placeholder="https://example.com" required>
+  <div class="container">
+    <div class="main-grid">
+      <!-- LEFT PANEL: Controls -->
+      <div>
+        <!-- URL Input Section -->
+        <div class="section">
+          <div class="input-group">
+            <label for="urlInput">Enter a URL</label>
+            <input type="url" id="urlInput" placeholder="example.com or https://yourlink.com" />
+          </div>
+          <button class="btn btn-primary" id="generateBtn">Generate</button>
         </div>
 
-        <div class="form-group">
-          <label>Label</label>
-          <input type="text" id="singleLabel" placeholder="Optional label for the QR code">
-        </div>
+        <!-- Customize Section -->
+        <div class="section" style="margin-top: 20px;">
+          <div class="section-title">Customize</div>
 
-        <div class="form-group">
-          <label>QR Size</label>
-          <input type="number" id="singleSize" min="100" max="500" value="200">
-        </div>
+          <!-- Entity Frame -->
+          <div class="input-group">
+            <label>Entity Frame</label>
+            <div class="options-grid">
+              <button class="option-btn active" data-frame="none">None</button>
+              <button class="option-btn" data-frame="psqr">PSQR</button>
+              <button class="option-btn" data-frame="dfs">DFS</button>
+            </div>
+          </div>
 
-        <div class="form-group">
-          <label>Error Correction Level</label>
-          <select id="singleErrorLevel">
-            <option value="L">Low</option>
-            <option value="M" selected>Medium</option>
-            <option value="Q">Quartile</option>
-            <option value="H">High</option>
-          </select>
-        </div>
+          <!-- Size Slider -->
+          <div class="slider-container">
+            <div class="slider-value">
+              <span>Size</span>
+              <span id="sizeValue">200px</span>
+            </div>
+            <input type="range" id="sizeSlider" min="52" max="320" value="200" />
+          </div>
 
-        <div class="form-group">
-          <label>Foreground Color</label>
-          <div class="color-picker-container">
-            <input type="color" id="singleFgColor" value="#000000">
-            <span id="singleFgColorText">#000000</span>
+          <!-- Corner Radius -->
+          <div class="slider-container">
+            <div class="slider-value">
+              <span>Corner Radius</span>
+              <span id="radiusValue">0px</span>
+            </div>
+            <input type="range" id="radiusSlider" min="0" max="34" value="0" />
+          </div>
+
+          <!-- Foreground Color -->
+          <div class="input-group">
+            <label>Foreground</label>
+            <div style="display: flex; gap: 10px;">
+              <input type="color" id="fgColor" value="#000000" style="width: 50px; padding: 4px;" />
+              <input type="text" id="fgColorHex" placeholder="#000000" value="#000000" />
+            </div>
+          </div>
+
+          <!-- Background Color -->
+          <div class="input-group">
+            <label>Background</label>
+            <div style="display: flex; gap: 10px;">
+              <input type="color" id="bgColor" value="#ffffff" style="width: 50px; padding: 4px;" />
+              <input type="text" id="bgColorHex" placeholder="#ffffff" value="#ffffff" />
+            </div>
+          </div>
+
+          <!-- Error Correction -->
+          <div class="input-group">
+            <label>Error Correction</label>
+            <div class="options-grid">
+              <button class="option-btn" data-error="L">Low</button>
+              <button class="option-btn active" data-error="M">Medium</button>
+              <button class="option-btn" data-error="Q">Quartile</button>
+              <button class="option-btn" data-error="H">High</button>
+            </div>
+          </div>
+
+          <!-- Center Logo -->
+          <div class="input-group">
+            <label for="logoInput">Center Logo</label>
+            <input type="file" id="logoInput" accept="image/*" />
+            <p style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">Upload a logo (PNG, JPG, SVG)</p>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Background Color</label>
-          <div class="color-picker-container">
-            <input type="color" id="singleBgColor" value="#ffffff">
-            <span id="singleBgColorText">#ffffff</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Header Image</label>
-          <div class="drop-zone" id="singleHeaderDrop">
-            <div class="drop-zone-icon">📸</div>
-            <p class="drop-zone-text">Drag and drop or click to upload</p>
-            <p class="drop-zone-text" style="font-size: 12px; color: var(--text-secondary);">PNG, JPG, WebP</p>
-            <input type="file" id="singleHeaderFile" accept="image/png,image/jpeg,image/webp" style="display: none;">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Frame Style</label>
-          <select id="singleFrameStyle">
-            <option value="simple">Simple Frame</option>
-            <option value="rounded">Rounded Frame</option>
-            <option value="modern">Modern Frame</option>
-            <option value="corporate">Corporate Frame</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Frame Color</label>
-          <div class="color-picker-container">
-            <input type="color" id="singleFrameColor" value="#cccccc">
-            <span id="singleFrameColorText">#cccccc</span>
-          </div>
-        </div>
-
-        <div class="button-group">
-          <button class="btn primary" id="generateSingleBtn">Generate QR</button>
-          <button class="btn" id="resetSingleBtn">Reset</button>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2 style="margin-top: 0; color: var(--text-accent);">Preview</h2>
-        <div class="preview-area" id="singlePreviewArea">
-          <p style="color: var(--text-secondary);">QR code will appear here</p>
-        </div>
-
-        <div class="button-group" style="margin-top: 16px;">
-          <button class="btn success" id="downloadPngBtn" disabled>Download PNG</button>
-          <button class="btn success" id="downloadPdfBtn" disabled>Download PDF</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bulk QR Tab -->
-  <div id="bulk" class="tab-content">
-    <div class="grid-2">
-      <div class="panel">
-        <h2 style="margin-top: 0; color: var(--text-accent);">Bulk Upload</h2>
-
-        <div class="form-group">
-          <label>CSV File *</label>
-          <div class="drop-zone" id="bulkCsvDrop">
-            <div class="drop-zone-icon">📄</div>
-            <p class="drop-zone-text">Drag and drop or click to upload CSV</p>
-            <p class="drop-zone-text" style="font-size: 12px; color: var(--text-secondary);">Format: Name, URL</p>
-            <input type="file" id="bulkCsvFile" accept=".csv" style="display: none;">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Header Image *</label>
-          <div class="drop-zone" id="bulkHeaderDrop">
-            <div class="drop-zone-icon">🖼️</div>
-            <p class="drop-zone-text">Drag and drop or click to upload</p>
-            <p class="drop-zone-text" style="font-size: 12px; color: var(--text-secondary);">PNG, JPG, WebP</p>
-            <input type="file" id="bulkHeaderFile" accept="image/png,image/jpeg,image/webp" style="display: none;">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Frame Style</label>
-          <select id="bulkFrameStyle">
-            <option value="simple">Simple Frame</option>
-            <option value="rounded">Rounded Frame</option>
-            <option value="modern">Modern Frame</option>
-            <option value="corporate">Corporate Frame</option>
-          </select>
-        </div>
-
-        <div class="button-group">
-          <button class="btn primary" id="generateBulkBtn" disabled>Generate QRs</button>
-          <button class="btn" id="resetBulkBtn">Reset</button>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2 style="margin-top: 0; color: var(--text-accent);">Statistics</h2>
-        <div class="bulk-stats">
-          <div class="stat-box">
-            <div class="stat-value" id="totalRecords">0</div>
-            <div class="stat-label">Total</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value" id="validRecords">0</div>
-            <div class="stat-label">Valid</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value" id="invalidRecords">0</div>
-            <div class="stat-label">Invalid</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value" id="generatedCount">0</div>
-            <div class="stat-label">Generated</div>
+        <!-- Branded Templates Section -->
+        <div class="section" style="margin-top: 20px;">
+          <div class="section-title">Branded Templates</div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin: 0 0 16px;">Business ready styles — apply them in one tap on the generator.</p>
+          <div class="template-grid">
+            <div class="template-card" data-template="midnight">
+              <div class="template-preview" style="background: #1a1a2e; color: #16f4d0;">■</div>
+              <div class="template-name">Midnight</div>
+              <div class="template-desc">High contrast dark</div>
+            </div>
+            <div class="template-card" data-template="ocean">
+              <div class="template-preview" style="background: #0066cc; color: #00d4ff;">■</div>
+              <div class="template-name">Ocean</div>
+              <div class="template-desc">Cool and professional</div>
+            </div>
+            <div class="template-card" data-template="sunset">
+              <div class="template-preview" style="background: #ff6b6b; color: #ffd93d;">■</div>
+              <div class="template-name">Sunset</div>
+              <div class="template-desc">Warm and vibrant</div>
+            </div>
+            <div class="template-card" data-template="forest">
+              <div class="template-preview" style="background: #2d5016; color: #c6ff3d;">■</div>
+              <div class="template-name">Forest</div>
+              <div class="template-desc">Natural and earthy</div>
+            </div>
+            <div class="template-card" data-template="violet">
+              <div class="template-preview" style="background: #6d28d9; color: #c084fc;">■</div>
+              <div class="template-name">Violet Pop</div>
+              <div class="template-desc">Bold and modern</div>
+            </div>
+            <div class="template-card" data-template="monochrome">
+              <div class="template-preview" style="background: #000000; color: #ffffff;">■</div>
+              <div class="template-name">Mono Ink</div>
+              <div class="template-desc">Classic and clean</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="bulkPreviewArea" style="display: none;">
-      <div class="panel">
-        <h2 style="margin-top: 0; color: var(--text-accent);">Preview & Export</h2>
-
-        <div class="form-group">
-          <label>Search</label>
-          <input type="text" id="bulkSearch" placeholder="Search by name...">
+      <!-- RIGHT PANEL: Preview -->
+      <div>
+        <div class="section" style="min-height: 400px;">
+          <div class="preview-container">
+            <div id="qrPreview">
+              <p class="preview-text">Your QR code preview will appear<br>here once you generate it.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button class="btn btn-primary" id="downloadBtn" style="flex: 1;">Download PNG</button>
+            <button class="btn btn-primary" id="copySvgBtn" style="flex: 1;">Copy SVG</button>
+          </div>
         </div>
 
-        <div class="grid-preview" id="bulkGridPreview"></div>
-
-        <div class="button-group" style="margin-top: 20px;">
-          <button class="btn success" id="downloadZipPngBtn" disabled>ZIP (PNG)</button>
-          <button class="btn success" id="downloadZipPdfBtn" disabled>ZIP (PDF)</button>
-          <button class="btn success" id="downloadCombinedPdfBtn" disabled>Combined PDF</button>
+        <!-- Recent Codes -->
+        <div class="section" style="margin-top: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div class="section-title" style="margin: 0;">Recent codes</div>
+            <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 12px;">Clear</button>
+          </div>
+          <div id="recentCodes">
+            <p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 20px 0;">No codes generated yet</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- History Tab -->
-  <div id="history" class="tab-content">
-    <div class="panel">
-      <h2 style="margin-top: 0; color: var(--text-accent);">QR History</h2>
+  <link rel="stylesheet" href="../../core/base-theme.css">
+  <script src="../../core/base-theme.js"></script>
 
-      <div class="form-group">
-        <label>Search History</label>
-        <input type="text" id="historySearch" placeholder="Search by URL or label...">
-      </div>
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const copySvgBtn = document.getElementById('copySvgBtn');
+    const qrPreview = document.getElementById('qrPreview');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const radiusSlider = document.getElementById('radiusSlider');
+    const fgColor = document.getElementById('fgColor');
+    const bgColor = document.getElementById('bgColor');
+    const fgColorHex = document.getElementById('fgColorHex');
+    const bgColorHex = document.getElementById('bgColorHex');
+    const sizeValue = document.getElementById('sizeValue');
+    const radiusValue = document.getElementById('radiusValue');
+    const recentCodesDiv = document.getElementById('recentCodes');
+    const logoInput = document.getElementById('logoInput');
 
-      <div id="historyList" style="min-height: 300px;">
-        <p style="color: var(--text-secondary); text-align: center;">No history yet. Generate your first QR code!</p>
-      </div>
+    let currentQRCode = null;
+    let recentCodes = JSON.parse(localStorage.getItem('recentQRCodes') || '[]');
 
-      <div class="button-group" style="margin-top: 20px;">
-        <button class="btn danger" id="clearHistoryBtn">Clear All History</button>
-      </div>
-    </div>
-  </div>
+    // Initialize
+    updateRecentCodes();
 
-  <!-- Settings Tab -->
-  <div id="settings" class="tab-content">
-    <div class="panel" style="max-width: 600px;">
-      <h2 style="margin-top: 0; color: var(--text-accent);">Default Settings</h2>
+    // Event Listeners
+    generateBtn.addEventListener('click', generateQRCode);
+    urlInput.addEventListener('keypress', (e) => e.key === 'Enter' && generateQRCode());
 
-      <div class="form-group">
-        <label>Default QR Size</label>
-        <input type="number" id="defaultSize" min="100" max="500" value="200">
-      </div>
-
-      <div class="form-group">
-        <label>Default Frame Style</label>
-        <select id="defaultFrameStyle">
-          <option value="simple">Simple Frame</option>
-          <option value="rounded">Rounded Frame</option>
-          <option value="modern">Modern Frame</option>
-          <option value="corporate">Corporate Frame</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Default Export Format</label>
-        <select id="defaultExportFormat">
-          <option value="png">PNG</option>
-          <option value="pdf">PDF</option>
-        </select>
-      </div>
-
-      <div class="button-group">
-        <button class="btn primary" id="saveSettingsBtn">Save Settings</button>
-        <button class="btn" id="resetSettingsBtn">Reset to Defaults</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// Initialize application
-const app = {
-  singleData: {},
-  bulkData: {},
-  bulkRecords: [],
-  history: JSON.parse(localStorage.getItem('qrHistory') || '[]'),
-  settings: JSON.parse(localStorage.getItem('qrSettings') || '{}'),
-
-  init() {
-    this.loadSettings();
-    this.setupEventListeners();
-    this.renderHistory();
-  },
-
-  setupEventListeners() {
-    // Tab switching
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+    sizeSlider.addEventListener('input', (e) => {
+      sizeValue.textContent = e.target.value + 'px';
     });
 
-    // Single QR
-    document.getElementById('generateSingleBtn').addEventListener('click', () => this.generateSingle());
-    document.getElementById('resetSingleBtn').addEventListener('click', () => this.resetSingle());
-    document.getElementById('downloadPngBtn').addEventListener('click', () => this.downloadSinglePng());
-    document.getElementById('downloadPdfBtn').addEventListener('click', () => this.downloadSinglePdf());
-
-    // Color pickers
-    document.getElementById('singleFgColor').addEventListener('change', (e) => {
-      document.getElementById('singleFgColorText').textContent = e.target.value.toUpperCase();
-      if (this.singleData.url) this.generateSingle();
-    });
-    document.getElementById('singleBgColor').addEventListener('change', (e) => {
-      document.getElementById('singleBgColorText').textContent = e.target.value.toUpperCase();
-      if (this.singleData.url) this.generateSingle();
-    });
-    document.getElementById('singleFrameColor').addEventListener('change', (e) => {
-      document.getElementById('singleFrameColorText').textContent = e.target.value.toUpperCase();
-      if (this.singleData.url) this.generateSingle();
-    });
-    document.getElementById('singleFrameStyle').addEventListener('change', (e) => {
-      if (this.singleData.url) this.generateSingle();
+    radiusSlider.addEventListener('input', (e) => {
+      radiusValue.textContent = e.target.value + 'px';
     });
 
-    // Bulk QR
-    document.getElementById('generateBulkBtn').addEventListener('click', () => this.generateBulk());
-    document.getElementById('resetBulkBtn').addEventListener('click', () => this.resetBulk());
-    document.getElementById('bulkSearch').addEventListener('input', (e) => this.filterBulkPreview(e.target.value));
-    document.getElementById('downloadZipPngBtn').addEventListener('click', () => this.downloadBulkZip('png'));
-    document.getElementById('downloadZipPdfBtn').addEventListener('click', () => this.downloadBulkZip('pdf'));
-    document.getElementById('downloadCombinedPdfBtn').addEventListener('click', () => this.downloadCombinedPdf());
-
-    // File uploads
-    this.setupDropZone('singleHeaderDrop', 'singleHeaderFile', (file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.singleData.headerImage = e.target.result;
-        this.showToast('Header image uploaded');
-      };
-      reader.readAsDataURL(file);
+    fgColor.addEventListener('input', (e) => {
+      fgColorHex.value = e.target.value;
     });
 
-    this.setupDropZone('bulkHeaderDrop', 'bulkHeaderFile', (file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.bulkData.headerImage = e.target.result;
-        this.showToast('Header image uploaded');
-      };
-      reader.readAsDataURL(file);
+    fgColorHex.addEventListener('input', (e) => {
+      fgColor.value = e.target.value;
     });
 
-    this.setupDropZone('bulkCsvDrop', 'bulkCsvFile', (file) => this.parseCsv(file));
-
-    // History
-    document.getElementById('historySearch').addEventListener('input', (e) => this.filterHistory(e.target.value));
-    document.getElementById('clearHistoryBtn').addEventListener('click', () => this.clearHistory());
-
-    // Settings
-    document.getElementById('saveSettingsBtn').addEventListener('click', () => this.saveSettings());
-    document.getElementById('resetSettingsBtn').addEventListener('click', () => this.resetSettings());
-  },
-
-  setupDropZone(dropId, inputId, callback) {
-    const drop = document.getElementById(dropId);
-    const input = document.getElementById(inputId);
-
-    drop.addEventListener('click', () => input.click());
-    input.addEventListener('change', (e) => {
-      if (e.target.files[0]) callback(e.target.files[0]);
+    bgColor.addEventListener('input', (e) => {
+      bgColorHex.value = e.target.value;
     });
 
-    drop.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      drop.classList.add('drag-over');
+    bgColorHex.addEventListener('input', (e) => {
+      bgColor.value = e.target.value;
     });
-    drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
-    drop.addEventListener('drop', (e) => {
-      e.preventDefault();
-      drop.classList.remove('drag-over');
-      if (e.dataTransfer.files[0]) callback(e.dataTransfer.files[0]);
+
+    // Template Selection
+    document.querySelectorAll('[data-template]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const templates = {
+          midnight: { fg: '#16f4d0', bg: '#1a1a2e' },
+          ocean: { fg: '#00d4ff', bg: '#0066cc' },
+          sunset: { fg: '#ffd93d', bg: '#ff6b6b' },
+          forest: { fg: '#c6ff3d', bg: '#2d5016' },
+          violet: { fg: '#c084fc', bg: '#6d28d9' },
+          monochrome: { fg: '#ffffff', bg: '#000000' }
+        };
+        const template = templates[btn.dataset.template];
+        fgColor.value = template.fg;
+        fgColorHex.value = template.fg;
+        bgColor.value = template.bg;
+        bgColorHex.value = template.bg;
+      });
     });
-  },
 
-  switchTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById(tab).classList.add('active');
-    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-  },
+    // Frame Selection
+    document.querySelectorAll('[data-frame]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-frame]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
 
-  generateSingle() {
-    const url = document.getElementById('singleUrl').value.trim();
-    if (!url) {
-      this.showToast('Please enter a URL', 'error');
-      return;
-    }
+    // Error Correction Selection
+    document.querySelectorAll('[data-error]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-error]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
 
-    try {
-      new URL(url);
-    } catch {
-      this.showToast('Invalid URL', 'error');
-      return;
-    }
-
-    const label = document.getElementById('singleLabel').value || 'QR Code';
-    const size = parseInt(document.getElementById('singleSize').value);
-    const errorLevel = document.getElementById('singleErrorLevel').value;
-    const fgColor = document.getElementById('singleFgColor').value;
-    const bgColor = document.getElementById('singleBgColor').value;
-
-    this.singleData = { url, label, size, errorLevel, fgColor, bgColor };
-
-    const preview = document.getElementById('singlePreviewArea');
-    preview.innerHTML = '';
-
-    try {
-      const frameColor = document.getElementById('singleFrameColor').value;
-      const frameStyle = document.getElementById('singleFrameStyle').value;
-
-      // Create the complete card container
-      const card = document.createElement('div');
-      card.style.cssText = `
-        max-width: 380px;
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      `;
-
-      // Header Image
-      if (this.singleData.headerImage) {
-        const headerImg = document.createElement('img');
-        headerImg.src = this.singleData.headerImage;
-        headerImg.style.cssText = `
-          width: 100%;
-          height: 150px;
-          object-fit: cover;
-          display: block;
-        `;
-        card.appendChild(headerImg);
+    function generateQRCode() {
+      const url = urlInput.value.trim();
+      if (!url) {
+        alert('Please enter a URL');
+        return;
       }
 
-      // Card Body with QR Code
-      const bodyDiv = document.createElement('div');
-      bodyDiv.style.cssText = `
-        padding: 20px;
-        text-align: center;
-      `;
+      const size = parseInt(sizeSlider.value);
+      const fg = fgColor.value;
+      const bg = bgColor.value;
 
-      // Apply frame style
-      const getFrameStyle = (style, color) => {
-        const borderRadius = style === 'simple' ? '0px' :
-                           style === 'rounded' ? '16px' :
-                           style === 'modern' ? '20px' :
-                           style === 'corporate' ? '8px' : '12px';
+      // Clear previous QR
+      qrPreview.innerHTML = '';
 
-        const padding = style === 'corporate' ? '12px' : '16px';
-        const border = style === 'modern' ? `3px solid ${color}` : `2px solid ${color}`;
-
-        return `
-          padding: ${padding};
-          border-radius: ${borderRadius};
-          border: ${border};
-          background: var(--bg-primary);
-          display: inline-block;
-          margin: 16px auto;
-        `;
-      };
-
-      // Create QR frame container
-      const qrFrame = document.createElement('div');
-      qrFrame.style.cssText = getFrameStyle(frameStyle, frameColor);
-
-      // Create QR div that will hold the canvas
-      const qrDiv = document.createElement('div');
-      qrDiv.id = 'qrcode-single-' + Date.now();
-      qrDiv.style.cssText = `
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      `;
-      qrFrame.appendChild(qrDiv);
-
-      bodyDiv.appendChild(qrFrame);
-
-      // Add label below QR code
-      const title = document.createElement('p');
-      title.textContent = label;
-      title.style.cssText = `
-        margin: 16px 0 0 0;
-        font-weight: 600;
-        color: var(--text-primary);
-        font-size: 14px;
-      `;
-      bodyDiv.appendChild(title);
-
-      card.appendChild(bodyDiv);
-
-      // Append card to preview
-      preview.style.cssText = `
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 500px;
-      `;
-      preview.appendChild(card);
-
-      // Initialize QRCode with the element as first parameter
-      new QRCode(qrDiv, {
+      // Generate new QR
+      currentQRCode = new QRCode(qrPreview, {
         text: url,
         width: size,
         height: size,
-        colorDark: fgColor,
-        colorLight: bgColor,
-        correctLevel: QRCode.CorrectLevel[errorLevel]
+        colorDark: fg,
+        colorLight: bg,
+        correctLevel: QRCode.CorrectLevel.M
       });
 
-      // Store reference to card for download
-      this.singleData.qrElement = card;
+      // Add to recent codes
+      const codeData = { url, timestamp: new Date().toLocaleTimeString() };
+      recentCodes.unshift(codeData);
+      recentCodes = recentCodes.slice(0, 5);
+      localStorage.setItem('recentQRCodes', JSON.stringify(recentCodes));
+      updateRecentCodes();
 
-      document.getElementById('downloadPngBtn').disabled = false;
-      document.getElementById('downloadPdfBtn').disabled = false;
-      this.showToast('QR code generated successfully');
-
-      // Save to history
-      this.addToHistory({ url, label, timestamp: new Date().toISOString() });
-    } catch (error) {
-      console.error('QR Code Error:', error);
-      this.showToast('Error: ' + (error.message || 'Failed to generate QR code'), 'error');
-      preview.innerHTML = '<p style="color: var(--error); text-align: center;">Error generating QR code</p>';
+      // Enable download button
+      downloadBtn.disabled = false;
+      copySvgBtn.disabled = false;
     }
-  },
 
-  parseCsv(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const csv = e.target.result;
-      const lines = csv.split('\n');
-      this.bulkRecords = [];
-
-      let valid = 0, invalid = 0;
-
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
-
-        const [name, url] = line.split(',').map(s => s.trim());
-        if (!name || !url) {
-          invalid++;
-          continue;
-        }
-
-        try {
-          new URL(url);
-          this.bulkRecords.push({ name, url, id: Math.random().toString(36).substr(2, 9) });
-          valid++;
-        } catch {
-          invalid++;
-        }
+    function updateRecentCodes() {
+      if (recentCodes.length === 0) {
+        recentCodesDiv.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 20px 0;">No codes generated yet</p>';
+        return;
       }
 
-      document.getElementById('totalRecords').textContent = lines.length - 1;
-      document.getElementById('validRecords').textContent = valid;
-      document.getElementById('invalidRecords').textContent = invalid;
-      document.getElementById('generateBulkBtn').disabled = valid === 0;
-
-      this.showToast(`CSV processed: ${valid} valid, ${invalid} invalid`);
-    };
-    reader.readAsText(file);
-  },
-
-  generateBulk() {
-    if (!this.bulkData.headerImage) {
-      this.showToast('Please upload a header image', 'error');
-      return;
-    }
-
-    if (this.bulkRecords.length === 0) {
-      this.showToast('Please upload a CSV file first', 'error');
-      return;
-    }
-
-    document.getElementById('bulkGridPreview').innerHTML = '';
-    this.bulkData.qrCards = [];
-
-    let generated = 0;
-
-    this.bulkRecords.forEach((record, index) => {
-      try {
-        const card = {
-          name: record.name,
-          url: record.url,
-          id: record.id
-        };
-        this.bulkData.qrCards.push(card);
-
-        const cardEl = document.createElement('div');
-        cardEl.className = 'qr-card';
-        cardEl.id = `card-${record.id}`;
-
-        const img = document.createElement('img');
-        img.className = 'qr-card-header';
-        img.src = this.bulkData.headerImage;
-        img.alt = 'Header';
-
-        const bodyDiv = document.createElement('div');
-        bodyDiv.className = 'qr-card-body';
-
-        const qrDiv = document.createElement('div');
-        qrDiv.className = 'qr-code';
-        qrDiv.id = `qr-${record.id}`;
-
-        bodyDiv.appendChild(qrDiv);
-
-        const footer = document.createElement('div');
-        footer.className = 'qr-card-footer';
-        footer.textContent = record.name;
-
-        cardEl.appendChild(img);
-        cardEl.appendChild(bodyDiv);
-        cardEl.appendChild(footer);
-
-        document.getElementById('bulkGridPreview').appendChild(cardEl);
-
-        // Use QRCode correctly - element as first parameter
-        new QRCode(qrDiv, {
-          text: record.url,
-          width: 180,
-          height: 180
-        });
-
-        generated++;
-      } catch (error) {
-        console.error(`Error generating QR for ${record.name}:`, error);
-      }
-    });
-
-    document.getElementById('bulkPreviewArea').style.display = 'block';
-    document.getElementById('generatedCount').textContent = generated;
-    document.getElementById('downloadZipPngBtn').disabled = false;
-    document.getElementById('downloadZipPdfBtn').disabled = false;
-    document.getElementById('downloadCombinedPdfBtn').disabled = false;
-
-    this.showToast(`Generated ${generated} QR codes successfully`);
-  },
-
-  generateQrDataUrl(url) {
-    return new Promise((resolve, reject) => {
-      const container = document.createElement('div');
-      container.style.display = 'none';
-      document.body.appendChild(container);
-
-      try {
-        new QRCode({
-          text: url,
-          width: 200,
-          height: 200,
-          container: container
-        });
-
-        const canvas = container.querySelector('canvas');
-        if (canvas) {
-          const dataUrl = canvas.toDataURL();
-          document.body.removeChild(container);
-          resolve(dataUrl);
-        } else {
-          reject(new Error('Canvas not found'));
-        }
-      } catch (error) {
-        document.body.removeChild(container);
-        reject(error);
-      }
-    });
-  },
-
-  filterBulkPreview(query) {
-    const cards = document.querySelectorAll('.qr-card');
-    cards.forEach(card => {
-      const name = card.querySelector('.qr-card-footer').textContent;
-      card.style.display = name.toLowerCase().includes(query.toLowerCase()) ? 'block' : 'none';
-    });
-  },
-
-  downloadSinglePng() {
-    const canvas = document.getElementById('singlePreviewArea').querySelector('canvas');
-    if (!canvas) {
-      this.showToast('Please generate a QR code first', 'error');
-      return;
-    }
-
-    try {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = `${this.singleData.label || 'QR'}.png`;
-      link.click();
-      this.showToast('QR code downloaded as PNG');
-    } catch (error) {
-      this.showToast('Error downloading QR code: ' + error.message, 'error');
-    }
-  },
-
-  downloadSinglePdf() {
-    const preview = document.getElementById('singlePreviewArea');
-    if (!preview.querySelector('canvas')) {
-      this.showToast('Please generate a QR code first', 'error');
-      return;
-    }
-
-    html2canvas(preview, { backgroundColor: '#ffffff', scale: 2 }).then(canvas => {
-      try {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF.jsPDF();
-        const imgWidth = 180;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(imgData, 'PNG', 15, 15, imgWidth, imgHeight);
-        pdf.save(`${this.singleData.label || 'QR'}.pdf`);
-        this.showToast('QR code downloaded as PDF');
-      } catch (error) {
-        this.showToast('Error generating PDF: ' + error.message, 'error');
-      }
-    }).catch(error => {
-      this.showToast('Error capturing QR code: ' + error.message, 'error');
-    });
-  },
-
-  async downloadBulkZip(format) {
-    const zip = new JSZip();
-
-    for (const card of this.bulkData.qrCards) {
-      const cardEl = document.getElementById(`qr-${card.name.replace(/\s+/g, '-')}`).closest('.qr-card');
-
-      if (format === 'png') {
-        const canvas = cardEl.querySelector('canvas');
-        const data = canvas.toDataURL('image/png').split(',')[1];
-        zip.file(`${this.sanitizeFilename(card.name)}.png`, data, { base64: true });
-      } else {
-        const canvas = await html2canvas(cardEl, { backgroundColor: '#ffffff' });
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF.jsPDF();
-        pdf.addImage(imgData, 'PNG', 10, 10, 190, 277);
-        zip.file(`${this.sanitizeFilename(card.name)}.pdf`, pdf.output('blob'));
-      }
-    }
-
-    zip.generateAsync({ type: 'blob' }).then(blob => {
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `qr-codes-${new Date().toISOString().split('T')[0]}.zip`;
-      link.click();
-      this.showToast('ZIP file downloaded');
-    });
-  },
-
-  sanitizeFilename(name) {
-    return name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-  },
-
-  addToHistory(item) {
-    this.history.unshift({
-      ...item,
-      id: Math.random().toString(36).substr(2, 9)
-    });
-    if (this.history.length > 100) this.history.pop();
-    localStorage.setItem('qrHistory', JSON.stringify(this.history));
-  },
-
-  renderHistory() {
-    const historyList = document.getElementById('historyList');
-    if (this.history.length === 0) {
-      historyList.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No history yet. Generate your first QR code!</p>';
-      return;
-    }
-
-    historyList.innerHTML = this.history.map(item => `
-      <div class="panel" style="margin-bottom: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-          <div>
-            <p style="margin: 0 0 4px; font-weight: 600;">${item.label || item.url}</p>
-            <p style="margin: 0 0 4px; font-size: 12px; color: var(--text-secondary);">${item.url}</p>
-            <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">${new Date(item.timestamp).toLocaleString()}</p>
+      recentCodesDiv.innerHTML = recentCodes.map((code, index) => `
+        <div class="code-item">
+          <div class="code-icon">🔗</div>
+          <div class="code-info">
+            <div class="code-url">${code.url}</div>
+            <div class="code-time">${code.timestamp}</div>
           </div>
-          <button class="btn" onclick="app.deleteHistoryItem('${item.id}')" style="width: auto;">Delete</button>
         </div>
-      </div>
-    `).join('');
-  },
-
-  filterHistory(query) {
-    const items = document.getElementById('historyList').querySelectorAll('.panel');
-    items.forEach(item => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(query.toLowerCase()) ? 'block' : 'none';
-    });
-  },
-
-  deleteHistoryItem(id) {
-    this.history = this.history.filter(item => item.id !== id);
-    localStorage.setItem('qrHistory', JSON.stringify(this.history));
-    this.renderHistory();
-    this.showToast('History item deleted');
-  },
-
-  clearHistory() {
-    if (confirm('Are you sure you want to clear all history?')) {
-      this.history = [];
-      localStorage.setItem('qrHistory', JSON.stringify(this.history));
-      this.renderHistory();
-      this.showToast('History cleared');
+      `).join('');
     }
-  },
 
-  loadSettings() {
-    if (this.settings.defaultSize) document.getElementById('defaultSize').value = this.settings.defaultSize;
-    if (this.settings.defaultFrameStyle) document.getElementById('defaultFrameStyle').value = this.settings.defaultFrameStyle;
-    if (this.settings.defaultExportFormat) document.getElementById('defaultExportFormat').value = this.settings.defaultExportFormat;
-  },
+    downloadBtn.addEventListener('click', () => {
+      if (!currentQRCode) return;
+      const canvas = qrPreview.querySelector('canvas');
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL();
+      link.download = 'qrcode.png';
+      link.click();
+    });
 
-  saveSettings() {
-    this.settings = {
-      defaultSize: document.getElementById('defaultSize').value,
-      defaultFrameStyle: document.getElementById('defaultFrameStyle').value,
-      defaultExportFormat: document.getElementById('defaultExportFormat').value
-    };
-    localStorage.setItem('qrSettings', JSON.stringify(this.settings));
-    this.showToast('Settings saved');
-  },
-
-  resetSettings() {
-    this.settings = {};
-    localStorage.removeItem('qrSettings');
-    this.loadSettings();
-    this.showToast('Settings reset to defaults');
-  },
-
-  resetSingle() {
-    document.getElementById('singleUrl').value = '';
-    document.getElementById('singleLabel').value = '';
-    document.getElementById('singleHeaderFile').value = '';
-    document.getElementById('singlePreviewArea').innerHTML = '<p style="color: var(--text-secondary);">QR code will appear here</p>';
-    document.getElementById('downloadPngBtn').disabled = true;
-    document.getElementById('downloadPdfBtn').disabled = true;
-    this.singleData = {};
-  },
-
-  resetBulk() {
-    document.getElementById('bulkCsvFile').value = '';
-    document.getElementById('bulkHeaderFile').value = '';
-    document.getElementById('bulkGridPreview').innerHTML = '';
-    document.getElementById('bulkPreviewArea').style.display = 'none';
-    document.getElementById('totalRecords').textContent = '0';
-    document.getElementById('validRecords').textContent = '0';
-    document.getElementById('invalidRecords').textContent = '0';
-    document.getElementById('generatedCount').textContent = '0';
-    document.getElementById('generateBulkBtn').disabled = true;
-    this.bulkRecords = [];
-    this.bulkData = {};
-  },
-
-  showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-  }
-};
-
-app.init();
-</script>
+    copySvgBtn.addEventListener('click', () => {
+      if (!currentQRCode) return;
+      const canvas = qrPreview.querySelector('canvas');
+      canvas.toBlob(blob => {
+        navigator.clipboard.writeText(canvas.toDataURL());
+        alert('QR code copied to clipboard!');
+      });
+    });
+  </script>
 </body>
 </html>
