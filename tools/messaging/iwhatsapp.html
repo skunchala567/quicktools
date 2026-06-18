@@ -50,9 +50,14 @@
 body {
   background: var(--bg);
   font-family: 'Inter Tight', 'Segoe UI', Arial, sans-serif;
-  padding: 24px 16px;
+  padding: 40px 20px;
   color: var(--ink);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 h3 {
@@ -289,35 +294,37 @@ h3 {
 
 /* Header */
 header {
-  background: var(--card-bg);
-  padding: 16px 24px;
-  border-bottom: 1px solid rgba(176,132,49,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: -24px -16px 24px -16px;
-  border-radius: 0;
+  text-align: center;
+  margin-bottom: 48px;
+  position: relative;
+  padding: 0;
 }
 
 header h1 {
-  margin: 0;
-  font-size: 28px;
-  color: var(--ink);
+  margin: 0 0 10px;
+  font-size: clamp(32px, 6vw, 48px);
+  color: var(--green-dark);
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
 header .sub {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 16px;
   margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .app-theme-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 44px;
   height: 44px;
   border: 1px solid rgba(176,132,49,0.2);
   border-radius: 10px;
-  background: rgba(37,211,102,0.1);
-  color: var(--green-light);
+  background: var(--card-bg);
+  color: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -328,8 +335,9 @@ header .sub {
 
 .app-theme-toggle:hover {
   border-color: var(--green-light);
+  color: var(--green-light);
   transform: translateY(-1px);
-  background: rgba(37,211,102,0.2);
+  box-shadow: 0 0 10px rgba(37,211,102,0.15);
 }
 
 /* HISTORY PANEL */
@@ -621,13 +629,11 @@ header .sub {
 <body>
 
 <header>
-  <div style="flex: 1;">
-    <h1>iWhatsApp Dashboard</h1>
-    <p class="sub">Instagram & WhatsApp integrated messaging platform</p>
-  </div>
   <button class="app-theme-toggle" data-theme-toggle type="button" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
     <span data-theme-icon aria-hidden="true">🌙</span>
   </button>
+  <h1>iWhatsApp Dashboard</h1>
+  <p class="sub">Instagram & WhatsApp integrated messaging platform</p>
 </header>
 
 <div class="container-fluid">
