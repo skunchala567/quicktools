@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=Inter+Tight:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --bg-primary: #0d0e10;
+  --bg-secondary: #16181c;
+  --text-primary: #e8e9eb;
+  --text-secondary: #9ba2ab;
+  --text-accent: #c6ff3d;
+  --border-color: #262a30;
+  --card-hover-shadow: 0 0 20px rgba(198, 255, 61, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(198, 255, 61, 0.12), transparent 34rem),
+    linear-gradient(135deg, #0d0e10 0%, #16181c 100%);
+  color: var(--text-primary);
+  font-family: "Inter Tight", system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.container {
+  width: min(100%, 1040px);
+  margin: 0 auto;
+  padding: 48px 20px 72px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.hero h1 {
+  color: var(--text-accent);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 500;
+  line-height: 1;
+  margin: 0 0 12px;
+}
+
+.hero p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin: 0;
+}
+
+.toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 24px;
+}
+
+.toolCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 210px;
+  padding: 28px;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.toolCard:hover {
+  border-color: var(--text-accent);
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-4px);
+}
+
+.toolIcon {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-accent);
+  display: grid;
+  font-size: 12px;
+  font-weight: 800;
+  height: 36px;
+  letter-spacing: 0.08em;
+  place-items: center;
+  width: 46px;
+}
+
+.toolName {
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.toolDescription {
+  color: var(--text-secondary);
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.toolLink {
+  border-bottom: 2px solid transparent;
+  color: var(--text-accent);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 0 0;
+  width: max-content;
+}
+
+.toolCard:hover .toolLink {
+  border-bottom-color: var(--text-accent);
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 36px 16px 56px;
+  }
+
+  .hero {
+    margin-bottom: 36px;
+  }
+}

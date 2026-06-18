@@ -6,7 +6,7 @@ async function test() {
   const context = await browser.createContext();
   const page = await context.newPage();
 
-  const filePath = path.join(__dirname, 'excel-merger.html');
+  const filePath = path.join(__dirname, 'excel-toolkit.html');
   await page.goto(`file://${filePath}`);
 
   // Wait for page to load
