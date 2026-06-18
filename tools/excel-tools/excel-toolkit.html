@@ -730,10 +730,7 @@ footer.foot a:hover { color: var(--accent); }
     <a href="excel-toolkit.html" class="app-nav-item active"><span class="app-nav-icon app-icon-excel" aria-hidden="true"></span><span>Excel Toolkit</span></a>
   </nav>
   <div class="app-shell-footer">
-    <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme">
-      <span class="app-theme-icon" data-theme-icon aria-hidden="true">L</span>
-      <span data-theme-label>Light</span>
-    </button>
+    <button class="theme-toggle" data-theme-toggle type="button" title="Toggle light/dark mode"><span data-theme-icon>🌙</span></button>
   </div>
 </aside>
 
@@ -741,7 +738,7 @@ footer.foot a:hover { color: var(--accent); }
 
   <!-- HEADER -->
   <header>
-    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
+    <button class="theme-toggle" data-theme-toggle type="button" title="Toggle light/dark mode"><span data-theme-icon>🌙</span></button>
     <h1>Excel Toolkit</h1>
     <p class="subtitle">Merge, split, and combine Excel files and sheets</p>
   </header>
@@ -762,11 +759,11 @@ footer.foot a:hover { color: var(--accent); }
         <button class="tab-btn active" data-tab="merge-files">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           Merge Multiple Files
-        </button>
+        </span></button>
         <button class="tab-btn" data-tab="merge-sheets">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
           Merge Sheets / Split Sheet
-        </button>
+        </span></button>
       </div>
     </div>
 
@@ -835,7 +832,7 @@ footer.foot a:hover { color: var(--accent); }
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
           </svg>
           Merge Files
-        </button>
+        </span></button>
         <button class="btn btn-secondary" id="downloadBtn" disabled type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -843,8 +840,8 @@ footer.foot a:hover { color: var(--accent); }
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
           Download Merged Excel
-        </button>
-        <button class="btn btn-ghost" id="clearBtn" type="button">Clear all</button>
+        </span></button>
+        <button class="btn btn-ghost" id="clearBtn" type="button">Clear all</span></button>
       </div>
     </div>
 
@@ -956,12 +953,12 @@ footer.foot a:hover { color: var(--accent); }
             <button class="btn btn-primary" id="mergeSheetsBtn" disabled type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
               Merge Selected Sheets
-            </button>
+            </span></button>
             <button class="btn btn-secondary" id="downloadSheetBtn" disabled type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download Result
-            </button>
-            <button class="btn btn-ghost" id="clearSheetBtn" type="button">Clear</button>
+            </span></button>
+            <button class="btn btn-ghost" id="clearSheetBtn" type="button">Clear</span></button>
           </div>
         </div>
 
@@ -1028,12 +1025,12 @@ footer.foot a:hover { color: var(--accent); }
             <button class="btn btn-primary" id="splitSheetBtn" disabled type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
               Split Sheet
-            </button>
+            </span></button>
             <button class="btn btn-secondary" id="downloadSplitBtn" disabled type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download Workbooks
-            </button>
-            <button class="btn btn-ghost" id="clearSplitBtn" type="button">Clear</button>
+            </span></button>
+            <button class="btn btn-ghost" id="clearSplitBtn" type="button">Clear</span></button>
           </div>
         </div>
       </div>
