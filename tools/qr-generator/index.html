@@ -848,32 +848,40 @@ const app = {
     const preview = document.getElementById('singlePreviewArea');
     preview.innerHTML = '';
 
-    const qrContainer = document.createElement('div');
-    qrContainer.id = 'qr-single-' + Date.now();
-    qrContainer.style.cssText = `
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    `;
-
-    preview.appendChild(qrContainer);
-
     try {
-      new QRCode({
+      const qrContainer = document.createElement('div');
+      qrContainer.style.cssText = `
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      `;
+      preview.appendChild(qrContainer);
+
+      // Create QR div that will hold the canvas
+      const qrDiv = document.createElement('div');
+      qrDiv.id = 'qrcode-single-' + Date.now();
+      qrContainer.appendChild(qrDiv);
+
+      // Initialize QRCode with the element as first parameter
+      new QRCode(qrDiv, {
         text: url,
         width: size,
         height: size,
         colorDark: fgColor,
         colorLight: bgColor,
-        correctLevel: QRCode.CorrectLevel[errorLevel],
-        container: document.getElementById(qrContainer.id)
+        correctLevel: QRCode.CorrectLevel[errorLevel]
       });
 
+      // Add label below QR code
       const title = document.createElement('p');
       title.textContent = label;
-      title.style.cssText = 'margin-top: 16px; font-weight: 600; color: var(--text-primary);';
+      title.style.cssText = 'margin: 0; font-weight: 600; color: var(--text-primary);';
       qrContainer.appendChild(title);
+
+      // Store reference to QR div for download
+      this.singleData.qrElement = qrDiv;
 
       document.getElementById('downloadPngBtn').disabled = false;
       document.getElementById('downloadPdfBtn').disabled = false;
@@ -882,8 +890,9 @@ const app = {
       // Save to history
       this.addToHistory({ url, label, timestamp: new Date().toISOString() });
     } catch (error) {
-      this.showToast('Error generating QR code: ' + error.message, 'error');
-      preview.innerHTML = '<p style="color: var(--error);">Error generating QR code</p>';
+      console.error('QR Code Error:', error);
+      this.showToast('Error: ' + (error.message || 'Failed to generate QR code'), 'error');
+      preview.innerHTML = '<p style="color: var(--error); text-align: center;">Error generating QR code</p>';
     }
   },
 
@@ -978,11 +987,11 @@ const app = {
 
         document.getElementById('bulkGridPreview').appendChild(cardEl);
 
-        new QRCode({
+        // Use QRCode correctly - element as first parameter
+        new QRCode(qrDiv, {
           text: record.url,
           width: 180,
-          height: 180,
-          container: document.getElementById(`qr-${record.id}`)
+          height: 180
         });
 
         generated++;
