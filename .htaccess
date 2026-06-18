@@ -1,0 +1,95 @@
+# Enable mod_rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
+
+# ============================================================
+# REDIRECT OLD URLS TO NEW LOCATIONS (for backward compatibility)
+# ============================================================
+
+# Redirect individual tool files to new structure
+<IfModule mod_rewrite.c>
+    # RFID Coupon
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^rfid-coupon\.html$ tools/rfid-management/rfid-coupon.html [R=301,L]
+
+    # Excel Merger
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^excel-merger\.html$ tools/excel-tools/excel-merger.html [R=301,L]
+
+    # ID Card Registration
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^id-card-registration\.html$ tools/id-card/id-card-registration.html [R=301,L]
+
+    # Image URL Generator
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^image-url-generator\.html$ tools/image-generator/image-url-generator.html [R=301,L]
+
+    # WhatsApp
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^whatsapp\.html$ tools/messaging/whatsapp.html [R=301,L]
+</IfModule>
+
+# ============================================================
+# REDIRECT ROOT TO TOOLS HUB
+# ============================================================
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^index\.html$ public/tools-access.html [R=301,L]
+
+    # Redirect bare root to tools hub (optional)
+    # Uncomment if you want / to redirect to /public/tools-access.html
+    # RewriteCond %{REQUEST_FILENAME} !-f
+    # RewriteCond %{REQUEST_FILENAME} !-d
+    # RewriteRule ^$ public/tools-access.html [R=301,L]
+</IfModule>
+
+# ============================================================
+# CACHE HEADERS & COMPRESSION
+# ============================================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+
+    # CSS & JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+
+    # HTML
+    ExpiresByType text/html "access plus 1 day"
+</IfModule>
+
+# Enable gzip compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# ============================================================
+# SECURITY HEADERS
+# ============================================================
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always append X-Frame-Options "SAMEORIGIN"
+
+    # Prevent MIME-sniffing
+    Header always append X-Content-Type-Options "nosniff"
+
+    # Enable XSS protection
+    Header always append X-XSS-Protection "1; mode=block"
+</IfModule>
