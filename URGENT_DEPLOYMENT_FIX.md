@@ -64,11 +64,11 @@ If you only want to fix the 3 problem tools:
 cd /home/username/public_html/
 
 # Download latest from GitHub
-git clone https://github.com/skunchala567/myfirstproject.git
-cp -r myfirstproject/htmlbasics/core .
-cp -r myfirstproject/htmlbasics/public .
-cp -r myfirstproject/htmlbasics/tools .
-cp myfirstproject/htmlbasics/.htaccess .
+git clone https://github.com/skunchala567/quicktools.git
+cp -r quicktools/htmlbasics/core .
+cp -r quicktools/htmlbasics/public .
+cp -r quicktools/htmlbasics/tools .
+cp quicktools/htmlbasics/.htaccess .
 
 # Remove old files
 rm base-theme.js base-theme.css *.html
@@ -225,7 +225,7 @@ Once you upload the new files, all three problem URLs will display correctly wit
 
 Everything you need is in:
 ```
-https://github.com/skunchala567/myfirstproject.git
+https://github.com/skunchala567/quicktools.git
 ```
 
 Latest commit: `31b4925`

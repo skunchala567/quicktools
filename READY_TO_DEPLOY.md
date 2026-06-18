@@ -116,7 +116,7 @@ https://marketfarmer.in/public/tools-access.html
 
 ### Step 1: Download Updated Files
 ```bash
-git clone https://github.com/skunchala567/myfirstproject.git
+git clone https://github.com/skunchala567/quicktools.git
 cd htmlbasics
 ```
 
@@ -269,4 +269,4 @@ Your live site will have:
 
 **Latest commit:** `fb014db`  
 **Branch:** `main`  
-**Repository:** https://github.com/skunchala567/myfirstproject.git
+**Repository:** https://github.com/skunchala567/quicktools.git
