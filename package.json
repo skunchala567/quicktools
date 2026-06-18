@@ -1,16 +1,30 @@
 {
   "name": "quicktools",
   "version": "1.0.0",
+  "description": "Professional QR Code, Excel, Image, and Messaging Tools Suite",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "live-server --port=3000",
+    "serve": "http-server -p 3000 -o",
+    "format": "prettier --write \"**/*.{html,css,js,json,md}\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
-  "dependencies": {
-    "next": "16.2.9",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
-  },
-  "devDependencies": {}
+  "keywords": [
+    "qr-code",
+    "generator",
+    "excel",
+    "tools",
+    "image",
+    "messaging"
+  ],
+  "author": "Claude Code",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^10.5.0",
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "prettier": "^3.8.4"
+  }
 }
