@@ -31,7 +31,7 @@
       label.textContent = nextLabel;
     });
     document.querySelectorAll("[data-theme-icon]").forEach((icon) => {
-      icon.textContent = theme === "light" ? "D" : "L";
+      icon.textContent = theme === "light" ? "☀️" : "🌙";
     });
 
     const legacyIcon = document.getElementById("themeIcon");
@@ -43,6 +43,7 @@
   function applyTheme(theme) {
     const normalized = theme === "light" ? "light" : "dark";
     root.setAttribute("data-theme", normalized);
+    document.body.classList.toggle("light-mode", normalized === "light");
     saveTheme(normalized);
     updateControls(normalized);
   }
