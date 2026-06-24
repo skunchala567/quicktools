@@ -134,9 +134,10 @@ body {
 
 /* ---------- Layout ---------- */
 .shell {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 28px 80px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 40px clamp(18px, 3vw, 44px) 80px;
 }
 
 header.top {
@@ -715,7 +716,7 @@ footer.foot a:hover { color: var(--accent); }
 }
 </style>
 <link rel="stylesheet" href="../../core/base-theme.css">
-<script src="../../core/base-theme.js"></script>
+<script src="../../core/base-theme.js?v=20260624"></script>
 </head>
 <body>
 

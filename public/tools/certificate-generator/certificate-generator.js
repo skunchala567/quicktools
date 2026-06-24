@@ -466,6 +466,15 @@ function loadImg(url, opts){
   });
 }
 
+function loadDataImage(url){
+  return new Promise(res=>{
+    const img = new Image();
+    img.onload = ()=>res(img);
+    img.onerror = ()=>res(null);
+    img.src = url;
+  });
+}
+
 async function loadExportImg(url){
   const cleanUrl = normalizeImageUrl(url);
   const img = await loadImg(cleanUrl, {crossOrigin:true});
@@ -497,10 +506,10 @@ async function renderRow(row){
     } else if(f.type==='qr'){
       const qrUrl=await qrDataURL(val, 200);
       if(qrUrl){
+        const img = await loadDataImage(qrUrl);
+        if(!img) continue;
         const sz=Math.round((o.width*o.scaleX)/displayScale);
-        const qr=new fabric.Image(new Image(), {left:X,top:Y,originX:'center',originY:'center',width:sz,height:sz,scaleX:1,scaleY:1,angle:o.angle||0});
-        const img=new Image(); img.src=qrUrl;
-        qr._element=img;
+        const qr=new fabric.Image(img, {left:X,top:Y,originX:'center',originY:'center',width:sz,height:sz,scaleX:1,scaleY:1,angle:o.angle||0});
         off.add(qr);
       }
     } else if(f.type==='photo'){
@@ -516,23 +525,37 @@ async function renderRow(row){
       }catch(e){ console.error(e); }
     }
   }
-  return new Promise(r=>off.renderAll(()=>r(off.toDataURL({format:'png',quality:0.95}))));
+  off.renderAll();
+  return off.toDataURL({format:'png',quality:0.95});
 }
 
 async function renderPreview(){
   if(!canvas || !excelRows.length) return;
-  const row=excelRows[previewRowIndex];
-  const url=await renderRow(row);
-  const img=new Image(); img.src=url;
-  img.onload=()=>{
-    $('canvasFrame').style.display='block';
-    $('canvasFrame').innerHTML='<canvas id="cv"></canvas>';
-    const cv=$('cv');
-    cv.width=baseW; cv.height=baseH;
-    const ctx=cv.getContext('2d');
-    ctx.drawImage(img,0,0);
-    $('previewPill').textContent='preview row '+(previewRowIndex+1);
-  };
+  previewOn = true;
+  $('previewPill').textContent='loading row '+(previewRowIndex+1);
+  try{
+    const row=excelRows[previewRowIndex];
+    const url=await renderRow(row);
+    const img=new Image();
+    img.onload=()=>{
+      $('canvasFrame').style.display='block';
+      $('canvasFrame').innerHTML='<canvas id="cv"></canvas>';
+      const cv=$('cv');
+      cv.width=baseW; cv.height=baseH;
+      const ctx=cv.getContext('2d');
+      ctx.drawImage(img,0,0);
+      $('previewPill').textContent='preview row '+(previewRowIndex+1);
+    };
+    img.onerror=()=>{
+      $('previewPill').textContent='preview failed';
+      toast('Could not load preview image', true);
+    };
+    img.src=url;
+  }catch(err){
+    console.error(err);
+    $('previewPill').textContent='preview failed';
+    toast('Could not render preview', true);
+  }
 }
 
 async function generateAll(){

@@ -33,9 +33,9 @@ a {
 }
 
 .container {
-  width: min(100%, 1040px);
-  margin: 0 auto;
-  padding: 48px 20px 72px;
+  width: 100%;
+  margin: 0;
+  padding: 48px clamp(16px, 3vw, 40px) 72px;
 }
 
 .hero {

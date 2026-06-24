@@ -56,8 +56,9 @@ body {
 }
 
 .container-fluid {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 h3 {
@@ -77,22 +78,148 @@ h3 {
 }
 
 .preview-box {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: var(--radius);
+  background: #e9e1d8;
+  padding: 18px;
+  border-radius: 14px;
   position: sticky;
   top: 20px;
-  border: 1px solid rgba(176,132,49,0.1);
-  backdrop-filter: blur(10px);
+  border: 0;
+  color: #111;
+}
+
+.branch-picker {
+  display: grid;
+  gap: 8px;
+}
+
+.branch-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.branch-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 30px;
+}
+
+.branch-chip {
+  border: 1px solid var(--green-mid);
+  border-radius: 999px;
+  background: rgba(37, 211, 102, 0.1);
+  color: var(--green-dark);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.1;
+  padding: 6px 8px 6px 10px;
+}
+
+.branch-chip:hover,
+.branch-chip.active {
+  background: var(--green-mid);
+  color: #fff;
+}
+
+.branch-delete {
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+  color: inherit;
+  cursor: pointer;
+  display: inline-grid;
+  font-size: 13px;
+  font-weight: 900;
+  height: 18px;
+  line-height: 1;
+  padding: 0;
+  place-items: center;
+  width: 18px;
+}
+
+.branch-delete:hover {
+  background: rgba(255, 0, 0, 0.18);
 }
 
 .chat {
-  background: var(--chat-bg);
-  padding: 16px;
+  background: #fff;
+  padding: 18px 14px;
   border-radius: 14px;
   margin-bottom: 16px;
-  border: 1px solid rgba(176,132,49,0.08);
-  color: var(--ink);
+  border: 0;
+  color: #000;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.preview-title {
+  align-items: center;
+  color: #006b5d;
+  display: flex;
+  font-size: 16px;
+  font-weight: 800;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.preview-title-icon {
+  border: 1.7px solid #111;
+  border-radius: 3px;
+  display: inline-block;
+  height: 13px;
+  position: relative;
+  width: 17px;
+}
+
+.preview-title-icon::after {
+  background: #e9e1d8;
+  border-bottom: 1.7px solid #111;
+  border-left: 1.7px solid #111;
+  bottom: -4px;
+  content: "";
+  height: 5px;
+  left: 3px;
+  position: absolute;
+  transform: skewX(-24deg);
+  width: 5px;
+}
+
+.preview-title-icon::before {
+  color: #111;
+  content: "...";
+  font-size: 10px;
+  font-weight: 900;
+  left: 3px;
+  letter-spacing: -1px;
+  line-height: 8px;
+  position: absolute;
+  top: -1px;
+}
+
+.preview-from {
+  color: #6d7680;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+
+.preview-strong {
+  color: #006b5d;
+  font-weight: 800;
+}
+
+.preview-line {
+  margin: 0 0 22px;
+}
+
+.preview-message-text {
+  margin: 0 0 24px;
+  min-height: 22px;
+  white-space: pre-wrap;
 }
 
 #livePreviewImage {
@@ -623,7 +750,7 @@ header .sub {
 
 </style>
 <link rel="stylesheet" href="../../core/base-theme.css">
-<script src="../../core/base-theme.js"></script>
+<script src="../../core/base-theme.js?v=20260624"></script>
 </head>
 
 <body>
@@ -643,12 +770,17 @@ header .sub {
 
   <div class="row g-3">
 
-    <div class="col-md-6">
+    <div class="col-lg-4">
       <label class="form-label fw-semibold">Campaign Name</label>
       <input type="text" class="form-control" id="campaignName" value="" placeholder="Enter campaign name">
     </div>
 
-    <div class="col-md-6">
+    <div class="col-lg-4">
+      <label class="form-label fw-semibold">SmartPing API Key <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="smartPingApiKey" placeholder="API Key" autocomplete="new-password" required>
+    </div>
+
+    <div class="col-lg-4">
       <label class="form-label fw-semibold">Sender Account</label>
       <select class="form-select" id="userName">
         <option value="Digital Campus">Digital Campus</option>
@@ -657,31 +789,29 @@ header .sub {
       </select>
     </div>
 
-    <div class="col-md-6">
-      <label class="form-label fw-semibold">Platform</label>
-      <select class="form-select" id="platformSelect">
-        <option value="whatsapp">WhatsApp</option>
-        <option value="instagram">Instagram</option>
-        <option value="both">Both (WhatsApp + Instagram)</option>
-      </select>
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label fw-semibold">Message To <span class="text-danger">*</span></label>
-      <input type="text" class="form-control" id="messageTo" placeholder="e.g. Parents, Students..." required>
-    </div>
-
-    <div class="col-md-12">
-      <label class="form-label fw-semibold">Message</label>
-      <textarea class="form-control" id="messageText" rows="5" maxlength="950"
-        placeholder="Enter message without paragraphs"></textarea>
-      <div class="d-flex justify-content-between mt-1">
-        <small class="text-danger">Paragraphs / Enter key are disabled</small>
-        <small class="text-muted"><span id="charCount">0</span>/950</small>
+    <div class="col-lg-4">
+      <label class="form-label fw-semibold">Branch</label>
+      <div class="branch-picker">
+        <div class="branch-input-row">
+          <input type="text" class="form-control" id="branchInput" list="branchDatalist" value="DPS Nacharam" placeholder="Type branch name">
+          <button class="btn btn-outline-success" type="button" id="addBranchBtn">Add</button>
+        </div>
+        <datalist id="branchDatalist"></datalist>
+        <div class="branch-suggestions" id="branchSuggestions" aria-label="Branch suggestions"></div>
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-lg-4">
+      <label class="form-label fw-semibold">Message Type <span class="text-danger">*</span></label>
+      <select class="form-select" id="messageType">
+        <option value="text" selected>☷ Text</option>
+        <option value="image">▣ Image</option>
+        <option value="document">▤ Document</option>
+        <option value="video">▥ Video</option>
+      </select>
+    </div>
+
+    <div class="col-lg-4">
       <label class="form-label fw-semibold">Select Mode</label>
       <select class="form-select" id="modeSelect" onchange="toggleMode()">
         <option value="single">Single Contact</option>
@@ -699,8 +829,23 @@ header .sub {
     <div id="bulkSection" class="col-md-6 hidden">
       <label class="form-label fw-semibold">Upload Excel</label>
       <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls">
-      <div class="mt-2">
-        <button class="btn btn-outline-danger btn-sm" onclick="clearExcelUpload()">Clear Uploaded Excel</button>
+      <div class="d-flex gap-2 mt-2">
+        <button class="btn btn-outline-primary btn-sm flex-fill" type="button" onclick="downloadSampleExcel()">Download Sample File</button>
+        <button class="btn btn-outline-danger btn-sm flex-fill" type="button" onclick="clearExcelUpload()">Clear Uploaded Excel</button>
+      </div>
+      <div class="row g-2 mt-2">
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold">Message To Source</label>
+          <select class="form-select form-select-sm" id="bulkMessageToColumn">
+            <option value="">Use screen value</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold">Message Source</label>
+          <select class="form-select form-select-sm" id="bulkMessageColumn">
+            <option value="">Use screen value</option>
+          </select>
+        </div>
       </div>
       <table class="table table-bordered mt-3 table-sm">
         <thead class="table-dark">
@@ -710,21 +855,36 @@ header .sub {
       </table>
     </div>
 
-    <!-- Image Upload -->
-    <div class="col-md-6">
-      <label class="form-label fw-semibold">Upload Image</label>
-      <input type="file" class="form-control" id="imageFile" accept="image/*">
+    <!-- Attachment Upload -->
+    <div class="col-md-6" id="attachmentUploadGroup">
+      <label class="form-label fw-semibold" id="attachmentLabel">Upload Attachment <span class="text-danger">*</span></label>
+      <input type="file" class="form-control" id="attachmentFile" accept="*/*">
       <div class="d-flex gap-2 mt-2">
-        <button class="btn btn-primary btn-sm flex-fill" onclick="uploadImageToCloudinary()">Upload to Cloudinary</button>
-        <button class="btn btn-outline-danger btn-sm flex-fill" onclick="clearImageUpload()">Clear Image</button>
+        <button class="btn btn-primary btn-sm flex-fill" id="uploadAttachmentBtn" onclick="uploadAttachmentToCloudinary()">Upload to Cloudinary</button>
+        <button class="btn btn-outline-danger btn-sm flex-fill" onclick="clearAttachmentUpload()">Clear Attachment</button>
       </div>
       <img id="imagePreview">
     </div>
 
+    <div class="col-md-6" id="attachmentUrlGroup">
+      <label class="form-label fw-semibold" id="attachmentUrlLabel">Generated Attachment URL</label>
+      <input type="text" class="form-control" id="attachmentUrl">
+      <div id="uploadStatus" class="alert alert-secondary mt-2 py-2 small">No attachment uploaded</div>
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-label fw-semibold">Message</label>
+      <textarea class="form-control" id="messageText" rows="5" maxlength="950"
+        placeholder="Enter message without paragraphs"></textarea>
+      <div class="d-flex justify-content-between mt-1">
+        <small class="text-danger">Paragraphs / Enter key are disabled</small>
+        <small class="text-muted"><span id="charCount">0</span>/950</small>
+      </div>
+    </div>
+
     <div class="col-md-6">
-      <label class="form-label fw-semibold">Generated Image URL</label>
-      <input type="text" class="form-control" id="imageUrl">
-      <div id="uploadStatus" class="alert alert-secondary mt-2 py-2 small">No image uploaded</div>
+      <label class="form-label fw-semibold">Message To <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="messageTo" placeholder="e.g. Parents, Students..." required>
     </div>
 
     <!-- Send Button -->
@@ -764,15 +924,14 @@ header .sub {
 <div class="col-md-4">
 
   <div class="preview-box">
-    <h5 style="color:var(--green-dark)" class="mb-3">Message Preview</h5>
+    <h5 class="preview-title"><span class="preview-title-icon" aria-hidden="true"></span> WhatsApp Preview</h5>
     <div class="chat">
       <img id="livePreviewImage">
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">From: <span id="previewSender" style="font-weight:600;color:var(--green-dark)">Digital Campus</span></div>
-      <b id="previewName">Message To</b>
-      <hr class="my-2">
-      <div id="previewPlatform" class="text-muted small">Platform: WhatsApp</div>
-      <hr class="my-2">
-      <div id="previewMessage" class="small">Message preview</div>
+      <div class="preview-from">From: <span id="previewSender" class="preview-strong">Digital Campus</span></div>
+      <p class="preview-line">Dear <span id="previewName" class="preview-strong">{Name}</span>,</p>
+      <p class="preview-line">Here is an update from <span id="previewBranch" class="preview-strong">DPS Nacharam</span>:</p>
+      <div id="previewMessage" class="preview-message-text">{Message}</div>
+      <p class="preview-line mb-0">Thank You!</p>
     </div>
 
     <!-- Progress Card -->
@@ -818,15 +977,207 @@ header .sub {
 <script>
 const CLOUD_NAME = 'dgofcde5i';
 const UPLOAD_PRESET = 'whatsapp';
+const SMARTPING_ENDPOINT = 'https://backend.api-wa.co/campaign/smartpingbsp/api/v2';
+const SMARTPING_API_KEY_STORAGE = 'iwhatsappSmartPingApiKey';
+const SMARTPING_SOURCE = 'new-landing-page form';
 
 let contacts = [];
+let excelColumns = [];
 let sentCount = 0;
 let failedCount = 0;
+let attachmentFileName = '';
+let smartPingApiKey = '';
+let lastSendError = '';
 
 let isSending = false;
 let isPaused = false;
 let isStopped = false;
 let pauseResolve = null;
+const BRANCHES_KEY = 'iwhatsappBranches';
+const defaultBranches = ['DPS Nacharam', 'PIS Gandipet', 'PMS Alwal'];
+const oldDefaultBranches = ['Digital Campus', 'Pallavi Schools', 'Delhi Public School'];
+let branchNames = loadBranchNames();
+const messageTypeConfig = {
+  text: {
+    label: 'No attachment',
+    urlLabel: 'Attachment URL',
+    accept: '',
+    required: false,
+    uploadText: 'Upload to Cloudinary',
+    emptyStatus: 'No attachment required'
+  },
+  image: {
+    label: 'Upload Image',
+    urlLabel: 'Generated Image URL',
+    accept: 'image/*',
+    required: true,
+    uploadText: 'Upload Image',
+    emptyStatus: 'No image uploaded'
+  },
+  document: {
+    label: 'Upload Document',
+    urlLabel: 'Generated Document URL',
+    accept: '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/csv',
+    required: true,
+    uploadText: 'Upload Document',
+    emptyStatus: 'No document uploaded'
+  },
+  video: {
+    label: 'Upload Video',
+    urlLabel: 'Generated Video URL',
+    accept: 'video/*',
+    required: true,
+    uploadText: 'Upload Video',
+    emptyStatus: 'No video uploaded'
+  }
+};
+
+function escapeHtml(value){
+  return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+function isValidSmartPingApiKey(apiKey){
+  const key = String(apiKey || '').trim();
+  if(!key) return false;
+  return !['api', 'apikey', 'api_key', 'test', 'demo', 'sample', 'your_api_key'].includes(key.toLowerCase());
+}
+
+function setSmartPingApiKey(apiKey){
+  smartPingApiKey = String(apiKey || '').trim();
+}
+
+function ensureSmartPingApiKey(){
+  const keyInput = document.getElementById('smartPingApiKey');
+  const typedKey = keyInput ? keyInput.value.trim() : '';
+  setSmartPingApiKey(typedKey);
+  if(!isValidSmartPingApiKey(smartPingApiKey)){
+    smartPingApiKey = '';
+    if(keyInput) keyInput.value = '';
+    alert('A valid SmartPing API key is required before sending messages.');
+    if(keyInput) keyInput.focus();
+    return '';
+  }
+  return smartPingApiKey;
+}
+
+function normalizeBranchName(value){
+  return String(value || '').trim().replace(/\s+/g, ' ');
+}
+
+function uniqueBranches(values){
+  const seen = new Set();
+  return values.map(normalizeBranchName).filter(name => {
+    const key = name.toLowerCase();
+    if(!name || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function loadBranchNames(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(BRANCHES_KEY) || '[]');
+    const savedBranches = Array.isArray(saved) ? saved : [];
+    const merged = defaultBranches.concat(savedBranches.filter(branch => {
+      return !oldDefaultBranches.some(oldBranch => oldBranch.toLowerCase() === normalizeBranchName(branch).toLowerCase());
+    }));
+    return uniqueBranches(merged);
+  } catch(error){
+    return defaultBranches.slice();
+  }
+}
+
+function saveBranchNames(){
+  try{
+    localStorage.setItem(BRANCHES_KEY, JSON.stringify(branchNames));
+  } catch(error){
+    /* Suggestions still work for the current session. */
+  }
+}
+
+function branchExists(name){
+  const key = normalizeBranchName(name).toLowerCase();
+  return branchNames.some(branch => branch.toLowerCase() === key);
+}
+
+function addBranchName(name){
+  const clean = normalizeBranchName(name);
+  if(!clean) return '';
+  if(!branchExists(clean)){
+    branchNames.push(clean);
+    branchNames = uniqueBranches(branchNames).sort((a, b) => a.localeCompare(b));
+    saveBranchNames();
+    renderBranchSuggestions(clean);
+  }
+  return clean;
+}
+
+function deleteBranchName(name){
+  const clean = normalizeBranchName(name);
+  if(!clean) return;
+  branchNames = branchNames.filter(branch => branch.toLowerCase() !== clean.toLowerCase());
+  saveBranchNames();
+
+  const input = document.getElementById('branchInput');
+  if(input && normalizeBranchName(input.value).toLowerCase() === clean.toLowerCase()){
+    input.value = branchNames[0] || '';
+  }
+  renderBranchSuggestions(input ? input.value : '');
+  updateBranchPreview(input ? input.value : '');
+}
+
+function updateBranchPreview(value){
+  const branch = normalizeBranchName(value) || defaultBranches[0];
+  document.getElementById('previewBranch').innerText = branch;
+  document.querySelectorAll('.branch-chip').forEach(chip => {
+    chip.classList.toggle('active', chip.dataset.branch.toLowerCase() === branch.toLowerCase());
+  });
+}
+
+function renderBranchSuggestions(activeBranch){
+  const datalist = document.getElementById('branchDatalist');
+  const suggestions = document.getElementById('branchSuggestions');
+  if(!datalist || !suggestions) return;
+
+  const active = normalizeBranchName(activeBranch).toLowerCase();
+  datalist.innerHTML = branchNames.map(branch => `<option value="${escapeHtml(branch)}"></option>`).join('');
+  suggestions.innerHTML = branchNames.map(branch => `
+    <button class="branch-chip ${branch.toLowerCase() === active ? 'active' : ''}" type="button" data-branch="${escapeHtml(branch)}">
+      <span>${escapeHtml(branch)}</span>
+      <span class="branch-delete" role="button" tabindex="0" aria-label="Delete ${escapeHtml(branch)}" data-delete-branch="${escapeHtml(branch)}">&times;</span>
+    </button>
+  `).join('');
+
+  suggestions.querySelectorAll('.branch-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.getElementById('branchInput').value = chip.dataset.branch;
+      updateBranchPreview(chip.dataset.branch);
+    });
+  });
+  suggestions.querySelectorAll('.branch-delete').forEach(deleteBtn => {
+    deleteBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      deleteBranchName(deleteBtn.dataset.deleteBranch);
+    });
+    deleteBtn.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        e.stopPropagation();
+        deleteBranchName(deleteBtn.dataset.deleteBranch);
+      }
+    });
+  });
+}
+
+function getSelectedBranch(){
+  return addBranchName(document.getElementById('branchInput').value);
+}
 
 function toggleMode(){
   const mode = document.getElementById('modeSelect').value;
@@ -835,10 +1186,72 @@ function toggleMode(){
   document.getElementById('statusTableCard').classList.toggle('hidden', mode !== 'bulk');
 }
 
-async function uploadImageToCloudinary(){
-  const file = document.getElementById('imageFile').files[0];
-  if(!file){ alert('Please select image first'); return; }
-  setUploadStatus('info','Uploading image...');
+function getMessageType(){
+  return document.getElementById('messageType').value;
+}
+
+function selectedMessageConfig(){
+  return messageTypeConfig[getMessageType()] || messageTypeConfig.text;
+}
+
+function cloudinaryResourceType(type){
+  if(type === 'image') return 'image';
+  if(type === 'video') return 'video';
+  return 'raw';
+}
+
+function isValidAttachmentForType(file, type){
+  const name = (file.name || '').toLowerCase();
+  const mime = (file.type || '').toLowerCase();
+  if(type === 'image') return mime.startsWith('image/');
+  if(type === 'video') return mime.startsWith('video/');
+  if(type === 'document'){
+    return Boolean(
+      mime === 'application/pdf' ||
+      mime.includes('word') ||
+      mime.includes('excel') ||
+      mime.includes('spreadsheet') ||
+      mime.includes('powerpoint') ||
+      mime.includes('presentation') ||
+      mime === 'text/plain' ||
+      mime === 'text/csv' ||
+      /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|csv|txt)$/.test(name)
+    );
+  }
+  return true;
+}
+
+function updateAttachmentFields(){
+  const type = getMessageType();
+  const config = selectedMessageConfig();
+  const uploadGroup = document.getElementById('attachmentUploadGroup');
+  const urlGroup = document.getElementById('attachmentUrlGroup');
+  const fileInput = document.getElementById('attachmentFile');
+  const uploadBtn = document.getElementById('uploadAttachmentBtn');
+
+  uploadGroup.classList.toggle('hidden', type === 'text');
+  urlGroup.classList.toggle('hidden', type === 'text');
+  document.getElementById('attachmentLabel').innerHTML = config.label + (config.required ? ' <span class="text-danger">*</span>' : '');
+  document.getElementById('attachmentUrlLabel').innerText = config.urlLabel;
+  fileInput.accept = config.accept;
+  fileInput.required = config.required;
+  uploadBtn.innerText = config.uploadText;
+  setUploadStatus('secondary', config.emptyStatus);
+  clearAttachmentUpload(false);
+}
+
+async function uploadAttachmentToCloudinary(){
+  const file = document.getElementById('attachmentFile').files[0];
+  const messageType = getMessageType();
+  const config = selectedMessageConfig();
+  if(messageType === 'text') return;
+  if(!file){ alert('Please select ' + config.label.toLowerCase() + ' first'); return; }
+  if(!isValidAttachmentForType(file, messageType)){
+    alert('The selected file does not match the selected message type: ' + messageType + '.');
+    clearAttachmentUpload();
+    return;
+  }
+  setUploadStatus('info','Uploading ' + messageType + '...');
 
   try{
     const formData = new FormData();
@@ -846,17 +1259,20 @@ async function uploadImageToCloudinary(){
     formData.append('upload_preset', UPLOAD_PRESET);
 
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${cloudinaryResourceType(messageType)}/upload`,
       { method: 'POST', body: formData }
     );
 
     const data = await response.json();
 
     if(data.secure_url){
-      document.getElementById('imageUrl').value = data.secure_url;
-      document.getElementById('livePreviewImage').src = data.secure_url;
-      document.getElementById('livePreviewImage').style.display = 'block';
-      setUploadStatus('success','Image uploaded successfully');
+      document.getElementById('attachmentUrl').value = data.secure_url;
+      attachmentFileName = file.name || filenameFromUrl(data.secure_url);
+      if(messageType === 'image'){
+        document.getElementById('livePreviewImage').src = data.secure_url;
+        document.getElementById('livePreviewImage').style.display = 'block';
+      }
+      setUploadStatus('success', config.label.replace('Upload ', '') + ' uploaded successfully');
     } else {
       throw new Error(data.error?.message || 'Upload failed');
     }
@@ -873,12 +1289,133 @@ function setUploadStatus(type, msg){
   el.innerHTML = msg;
 }
 
-function clearImageUpload(){
-  document.getElementById('imageFile').value = '';
-  document.getElementById('imageUrl').value = '';
+function clearAttachmentUpload(showStatus = true){
+  document.getElementById('attachmentFile').value = '';
+  document.getElementById('attachmentUrl').value = '';
+  attachmentFileName = '';
   document.getElementById('imagePreview').style.display = 'none';
   document.getElementById('livePreviewImage').style.display = 'none';
-  setUploadStatus('secondary','No image uploaded');
+  if(showStatus) setUploadStatus('secondary', selectedMessageConfig().emptyStatus);
+}
+
+function filenameFromUrl(url){
+  try{
+    const cleanPath = new URL(url).pathname.split('/').filter(Boolean).pop();
+    return cleanPath ? cleanPath.replace(/\.[^.]+$/, '') || 'sample_media' : 'sample_media';
+  } catch(error){
+    const clean = String(url || '').split('?')[0].split('/').filter(Boolean).pop();
+    return clean ? clean.replace(/\.[^.]+$/, '') || 'sample_media' : 'sample_media';
+  }
+}
+
+function campaignNameForType(type){
+  const entered = document.getElementById('campaignName').value.trim();
+  if(entered) return entered;
+  return {
+    image: 'gdvl_custom_img',
+    video: 'gdvl_custom_vid',
+    document: 'gdvl_custom_pdf',
+    text: 'gdvl_custom_txt'
+  }[type] || 'gdvl_custom_txt';
+}
+
+function contactFirstName(contact){
+  const fallback = getContactMessageTo(contact) || 'user';
+  return String(contact.name || fallback || 'user').trim() || 'user';
+}
+
+function selectedBulkColumn(id){
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+
+function getRowValue(contact, column){
+  if(!column || !contact || !contact.row) return '';
+  const value = contact.row[column];
+  return String(value == null ? '' : value).trim();
+}
+
+function getContactMessageTo(contact){
+  const mode = document.getElementById('modeSelect').value;
+  if(mode === 'bulk'){
+    const mapped = getRowValue(contact, selectedBulkColumn('bulkMessageToColumn'));
+    if(mapped) return mapped;
+  }
+  return document.getElementById('messageTo').value.trim();
+}
+
+function getContactMessage(contact){
+  const mode = document.getElementById('modeSelect').value;
+  if(mode === 'bulk'){
+    const mapped = getRowValue(contact, selectedBulkColumn('bulkMessageColumn'));
+    if(mapped) return mapped;
+  }
+  return document.getElementById('messageText').value.trim();
+}
+
+function buildSmartPingPayload(contact, branch){
+  const messageType = getMessageType();
+  const attachmentUrl = document.getElementById('attachmentUrl').value.trim();
+  const firstName = contactFirstName(contact);
+  const messageValue = getContactMessage(contact);
+  const payload = {
+    apiKey: smartPingApiKey,
+    campaignName: campaignNameForType(messageType),
+    destination: contact.mobile,
+    userName: document.getElementById('userName').value,
+    templateParams: [
+      '$FirstName',
+      branch,
+      messageValue
+    ],
+    source: SMARTPING_SOURCE,
+    media: {},
+    buttons: [],
+    carouselCards: [],
+    location: {},
+    attributes: {
+      branch: branch,
+      messageType: messageType,
+      message: messageValue,
+      messageTo: getContactMessageTo(contact)
+    },
+    paramsFallbackValue: {
+      FirstName: firstName
+    }
+  };
+
+  if(messageType !== 'text'){
+    payload.media = {
+      url: attachmentUrl,
+      filename: attachmentFileName || filenameFromUrl(attachmentUrl)
+    };
+  }
+
+  return payload;
+}
+
+function smartPingResponseMessage(data, fallback){
+  if(!data) return fallback;
+  if(typeof data === 'string') return data;
+  return data.message ||
+    data.error ||
+    data.errorMessage ||
+    data.reason ||
+    data.description ||
+    data.response?.message ||
+    data.response?.error ||
+    data.data?.message ||
+    data.data?.error ||
+    fallback;
+}
+
+function isSmartPingSuccess(data){
+  if(!data || typeof data !== 'object') return true;
+  const statusText = String(data.status || data.statusCode || data.result || data.success || data.message || '').toLowerCase();
+  if(data.success === false || data.status === false) return false;
+  if(['false', 'failed', 'failure', 'error', 'invalid'].some(word => statusText.includes(word))) return false;
+  if(data.error || data.errorMessage) return false;
+  return true;
 }
 
 function handleExcel(e){
@@ -889,28 +1426,72 @@ function handleExcel(e){
     const workbook = XLSX.read(data,{type:'array'});
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(sheet,{raw:false,defval:''});
+    excelColumns = rows.length ? Object.keys(rows[0]) : [];
     contacts = [];
     rows.forEach(row => {
       let name = String(row.name || row.Name || '').trim();
       let mobile = String(row.mobile || row.Mobile || row.phone || row.Phone || row.handle || row.Handle || '').trim();
       mobile = mobile.replace(/\.0$/, '').replace(/[^\d@\-_]/g, '');
       if(mobile.match(/^\d{10}$/)) mobile = '91' + mobile;
-      if(mobile) contacts.push({name: name || '', mobile});
+      if(mobile) contacts.push({name: name || '', mobile, row});
     });
+    renderBulkMappingOptions();
     renderContacts();
     buildStatusTable();
   };
   reader.readAsArrayBuffer(file);
 }
 
+function downloadSampleExcel(){
+  const rows = [
+    {
+      Name: 'Srikanth',
+      Mobile: '9281122104',
+      MessageTo: 'Parents',
+      Message: 'School will remain closed tomorrow.'
+    },
+    {
+      Name: 'Anitha',
+      Mobile: '919876543210',
+      MessageTo: 'Students',
+      Message: 'Please carry your ID card.'
+    }
+  ];
+  const headers = ['Name', 'Mobile', 'MessageTo', 'Message'];
+  const worksheet = XLSX.utils.json_to_sheet(rows, {header: headers});
+  worksheet['!cols'] = [
+    {wch: 18},
+    {wch: 16},
+    {wch: 20},
+    {wch: 42}
+  ];
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Contacts');
+  XLSX.writeFile(workbook, 'iwhatsapp-bulk-sample.xlsx');
+}
+
+function renderBulkMappingOptions(){
+  ['bulkMessageToColumn', 'bulkMessageColumn'].forEach(id => {
+    const select = document.getElementById(id);
+    if(!select) return;
+    const current = select.value;
+    select.innerHTML = '<option value="">Use screen value</option>' + excelColumns.map(col => {
+      return `<option value="${escapeHtml(col)}">${escapeHtml(col)}</option>`;
+    }).join('');
+    if(excelColumns.includes(current)) select.value = current;
+  });
+}
+
 function renderContacts(){
   const tbody = document.getElementById('contactsTable');
-  tbody.innerHTML = contacts.map(c => `<tr><td>${c.name}</td><td>${c.mobile}</td></tr>`).join('');
+  tbody.innerHTML = contacts.map(c => `<tr><td>${escapeHtml(c.name)}</td><td>${escapeHtml(c.mobile)}</td></tr>`).join('');
 }
 
 function clearExcelUpload(){
   document.getElementById('excelFile').value = '';
   contacts = [];
+  excelColumns = [];
+  renderBulkMappingOptions();
   document.getElementById('contactsTable').innerHTML = '';
   document.getElementById('statusTableBody').innerHTML = '';
 }
@@ -920,8 +1501,8 @@ function buildStatusTable(){
   tbody.innerHTML = contacts.map((c, i) => `
     <tr id="row-${i}">
       <td>${i+1}</td>
-      <td>${c.name}</td>
-      <td>${c.mobile}</td>
+      <td>${escapeHtml(getContactMessageTo(c) || c.name)}</td>
+      <td>${escapeHtml(c.mobile)}</td>
       <td id="status-${i}"><span class="badge-waiting">Waiting</span></td>
     </tr>
   `).join('');
@@ -989,28 +1570,62 @@ function waitIfPaused(){
 }
 
 async function sendMessages(){
-  if(!document.getElementById('messageTo').value.trim()){
+  const mode = document.getElementById('modeSelect').value;
+  const usesBulkMessageTo = mode === 'bulk' && selectedBulkColumn('bulkMessageToColumn');
+  const usesBulkMessage = mode === 'bulk' && selectedBulkColumn('bulkMessageColumn');
+  if(!usesBulkMessageTo && !document.getElementById('messageTo').value.trim()){
     alert('"Message To" is mandatory. Please fill it in before sending.');
     document.getElementById('messageTo').focus();
     return;
   }
+  if(!usesBulkMessage && !document.getElementById('messageText').value.trim()){
+    alert('"Message" is mandatory. Please fill it in before sending or choose an Excel column.');
+    document.getElementById('messageText').focus();
+    return;
+  }
 
-  const mode = document.getElementById('modeSelect').value;
-  const platform = document.getElementById('platformSelect').value;
+  if(!ensureSmartPingApiKey()) return;
+  const messageType = getMessageType();
+  const attachmentUrl = document.getElementById('attachmentUrl').value.trim();
+  if(selectedMessageConfig().required && !attachmentUrl){
+    alert('Please upload the required ' + messageType + ' attachment before sending.');
+    document.getElementById('attachmentFile').focus();
+    return;
+  }
+  const branch = getSelectedBranch();
+  if(!branch){
+    alert('Please enter a branch name before sending.');
+    document.getElementById('branchInput').focus();
+    return;
+  }
+  updateBranchPreview(branch);
 
   if(mode === 'single'){
     const name = document.getElementById('messageTo').value;
     const mobile = document.getElementById('singleMobile').value;
-    const success = await sendSingle({name, mobile}, platform);
+    if(!mobile.trim()){
+      alert('Please enter a mobile number or username.');
+      document.getElementById('singleMobile').focus();
+      return;
+    }
+    const success = await sendSingle({name, mobile}, branch);
     if(success){ sentCount++; } else { failedCount++; }
     document.getElementById('sentCount').innerText = sentCount;
     document.getElementById('failedCount').innerText = failedCount;
     updateProgress(1, 1, name || 'Contact', success ? 'Sent' : 'Failed');
-    alert(success ? 'Message sent successfully' : 'Failed to send message');
+    alert(success ? 'Message sent successfully' : ('Failed to send message\n\n' + (lastSendError || 'SmartPing did not accept the message.')));
     return;
   }
 
   if(contacts.length === 0){ alert('Please upload an Excel file with contacts.'); return; }
+  if(usesBulkMessageTo && contacts.some(contact => !getContactMessageTo(contact))){
+    alert('Some rows are missing values in the selected Message To column.');
+    return;
+  }
+  if(usesBulkMessage && contacts.some(contact => !getContactMessage(contact))){
+    alert('Some rows are missing values in the selected Message column.');
+    return;
+  }
 
   sentCount = 0;
   failedCount = 0;
@@ -1043,14 +1658,15 @@ async function sendMessages(){
     }
 
     const contact = contacts[i];
+    const displayName = getContactMessageTo(contact) || contact.name || 'Contact';
     setRowStatus(i, 'sending');
-    updateProgress(i+1, total, contact.name, 'Sending...');
+    updateProgress(i+1, total, displayName, 'Sending...');
 
-    const success = await sendSingle(contact, platform);
+    const success = await sendSingle(contact, branch);
     if(success){ sentCount++; setRowStatus(i, 'sent'); }
     else        { failedCount++; setRowStatus(i, 'failed'); }
 
-    updateProgress(i+1, total, contact.name, 'Processed');
+    updateProgress(i+1, total, displayName, success ? 'Processed' : (lastSendError || 'Failed'));
 
     if(i < total - 1 && !isStopped) await sleep(3000);
   }
@@ -1064,20 +1680,30 @@ async function sendMessages(){
   document.getElementById('sendBtn').disabled = false;
 }
 
-async function sendSingle(contact, platform){
+async function sendSingle(contact, branch){
   try{
-    const response = await fetch('https://api.example.com/send', {
+    lastSendError = '';
+    const response = await fetch(SMARTPING_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        platform: platform,
-        destination: contact.mobile,
-        message: document.getElementById('messageText').value,
-        imageUrl: document.getElementById('imageUrl').value
-      })
+      body: JSON.stringify(buildSmartPingPayload(contact, branch))
     });
-    return response.ok;
+    const responseText = await response.text();
+    let responseData = null;
+    try{
+      responseData = responseText ? JSON.parse(responseText) : null;
+    } catch(error){
+      responseData = responseText;
+    }
+    if(!response.ok || !isSmartPingSuccess(responseData)){
+      lastSendError = smartPingResponseMessage(responseData, responseText || response.statusText || 'SmartPing rejected the message.');
+      console.error('SmartPing send failed', response.status, responseData);
+      return false;
+    }
+    return true;
   } catch(error){
+    lastSendError = error.message || 'Network error while sending message.';
+    console.error('SmartPing send failed', error);
     return false;
   }
 }
@@ -1108,15 +1734,46 @@ function updateHistoryStats(){
 }
 
 window.onload = function(){
+  const apiKeyField = document.getElementById('smartPingApiKey');
+  apiKeyField.value = '';
+  try{ localStorage.removeItem(SMARTPING_API_KEY_STORAGE); }catch(error){}
+  apiKeyField.addEventListener('input', function(){
+    smartPingApiKey = this.value.trim();
+  });
   document.getElementById('messageTo').addEventListener('input', function(){
-    document.getElementById('previewName').innerText = this.value || 'Message To';
+    document.getElementById('previewName').innerText = this.value || '{Name}';
   });
   document.getElementById('userName').addEventListener('change', function(){
     document.getElementById('previewSender').innerText = this.value;
   });
-  document.getElementById('platformSelect').addEventListener('change', function(){
-    const platformMap = {'whatsapp': 'WhatsApp', 'instagram': 'Instagram', 'both': 'WhatsApp + Instagram'};
-    document.getElementById('previewPlatform').innerText = 'Platform: ' + platformMap[this.value];
+  renderBranchSuggestions(document.getElementById('branchInput').value);
+  document.getElementById('branchInput').addEventListener('input', function(){
+    updateBranchPreview(this.value);
+  });
+  document.getElementById('branchInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      const branch = addBranchName(this.value);
+      if(branch){
+        this.value = branch;
+        updateBranchPreview(branch);
+      }
+    }
+  });
+  document.getElementById('branchInput').addEventListener('blur', function(){
+    const branch = normalizeBranchName(this.value);
+    if(branch) this.value = branch;
+    updateBranchPreview(branch);
+  });
+  document.getElementById('addBranchBtn').addEventListener('click', function(){
+    const input = document.getElementById('branchInput');
+    const branch = addBranchName(input.value);
+    if(branch){
+      input.value = branch;
+      updateBranchPreview(branch);
+    } else {
+      input.focus();
+    }
   });
   const messageField = document.getElementById('messageText');
   messageField.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); return false; }});
@@ -1124,11 +1781,26 @@ window.onload = function(){
     this.value = this.value.replace(/[\r\n]+/g,' ');
     if(this.value.length > 950) this.value = this.value.substring(0,950);
     document.getElementById('charCount').innerText = this.value.length;
-    document.getElementById('previewMessage').innerText = this.value || 'Message preview';
+    document.getElementById('previewMessage').innerText = this.value || '{Message}';
   });
-  document.getElementById('imageFile').addEventListener('change', function(e){
+  document.getElementById('messageType').addEventListener('change', updateAttachmentFields);
+  updateAttachmentFields();
+  document.getElementById('attachmentFile').addEventListener('change', function(e){
     const file = e.target.files[0];
     if(!file) return;
+    if(!isValidAttachmentForType(file, getMessageType())){
+      alert('The selected file does not match the selected message type: ' + getMessageType() + '.');
+      clearAttachmentUpload();
+      return;
+    }
+    attachmentFileName = file.name || '';
+    document.getElementById('attachmentUrl').value = '';
+    setUploadStatus('warning', 'Selected ' + file.name + '. Upload it before sending.');
+    if(getMessageType() !== 'image'){
+      document.getElementById('imagePreview').style.display = 'none';
+      document.getElementById('livePreviewImage').style.display = 'none';
+      return;
+    }
     const reader = new FileReader();
     reader.onload = function(evt){
       document.getElementById('imagePreview').src = evt.target.result;
@@ -1139,6 +1811,11 @@ window.onload = function(){
     reader.readAsDataURL(file);
   });
   document.getElementById('excelFile').addEventListener('change', handleExcel);
+  ['bulkMessageToColumn', 'bulkMessageColumn'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => {
+      if(contacts.length) buildStatusTable();
+    });
+  });
 };
 </script>
 

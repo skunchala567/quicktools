@@ -43,7 +43,9 @@
   function applyTheme(theme) {
     const normalized = theme === "light" ? "light" : "dark";
     root.setAttribute("data-theme", normalized);
-    document.body.classList.toggle("light-mode", normalized === "light");
+    if (document.body) {
+      document.body.classList.toggle("light-mode", normalized === "light");
+    }
     saveTheme(normalized);
     updateControls(normalized);
   }
@@ -60,12 +62,20 @@
     }
   };
 
-  applyTheme(storedTheme());
-
-  document.addEventListener("DOMContentLoaded", function () {
-    updateControls(window.CreatorStudioTheme.get());
+  function bindThemeControls() {
+    applyTheme(window.CreatorStudioTheme.get());
     document.querySelectorAll("[data-theme-toggle], #themeBtn").forEach((button) => {
+      if (button.dataset.themeBound === "true") return;
+      button.dataset.themeBound = "true";
       button.addEventListener("click", toggleTheme);
     });
-  });
+  }
+
+  applyTheme(storedTheme());
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindThemeControls);
+  } else {
+    bindThemeControls();
+  }
 }());
