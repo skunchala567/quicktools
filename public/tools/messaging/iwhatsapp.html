@@ -281,6 +281,52 @@ h3 {
   color: var(--ink);
 }
 
+.upload-heading-row {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  min-width: 0;
+}
+
+.upload-heading-row .form-label {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.upload-actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.upload-action-btn {
+  align-items: center;
+  border-radius: 8px !important;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 5px;
+  line-height: 1;
+  padding: 7px 9px;
+  white-space: nowrap;
+}
+
+.upload-action-btn svg {
+  flex: 0 0 auto;
+  height: 14px;
+  width: 14px;
+}
+
+@media (max-width: 575.98px) {
+  .upload-heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 /* Status table */
 #statusTableWrapper {
   max-height: 320px;
@@ -826,21 +872,39 @@ header .sub {
     </div>
 
     <!-- Bulk Section -->
-    <div id="bulkSection" class="col-md-6 hidden">
-      <label class="form-label fw-semibold">Upload Excel</label>
-      <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls">
-      <div class="d-flex gap-2 mt-2">
-        <button class="btn btn-outline-primary btn-sm flex-fill" type="button" onclick="downloadSampleExcel()">Download Sample File</button>
-        <button class="btn btn-outline-danger btn-sm flex-fill" type="button" onclick="clearExcelUpload()">Clear Uploaded Excel</button>
-      </div>
-      <div class="row g-2 mt-2">
-        <div class="col-md-6">
+    <div id="bulkSection" class="col-md-12 hidden">
+      <div class="row g-2 align-items-start">
+        <div class="col-md-4">
+          <div class="upload-heading-row">
+            <label class="form-label fw-semibold">Upload Excel</label>
+            <div class="upload-actions">
+              <button class="btn btn-outline-primary btn-sm upload-action-btn" type="button" onclick="downloadSampleExcel()" title="Download sample file">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <path d="M7 10l5 5 5-5"></path>
+                  <path d="M12 15V3"></path>
+                </svg>
+                <span>Sample</span>
+              </button>
+              <button class="btn btn-outline-danger btn-sm upload-action-btn" type="button" onclick="clearExcelUpload()" title="Clear uploaded Excel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4h8v2"></path>
+                  <path d="M19 6l-1 14H6L5 6"></path>
+                </svg>
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+          <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls">
+        </div>
+        <div class="col-md-4">
           <label class="form-label small fw-semibold">Message To Source</label>
           <select class="form-select form-select-sm" id="bulkMessageToColumn">
             <option value="">Use screen value</option>
           </select>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="form-label small fw-semibold">Message Source</label>
           <select class="form-select form-select-sm" id="bulkMessageColumn">
             <option value="">Use screen value</option>
@@ -872,7 +936,7 @@ header .sub {
       <div id="uploadStatus" class="alert alert-secondary mt-2 py-2 small">No attachment uploaded</div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-12" id="messageTextGroup">
       <label class="form-label fw-semibold">Message</label>
       <textarea class="form-control" id="messageText" rows="5" maxlength="950"
         placeholder="Enter message without paragraphs"></textarea>
@@ -882,9 +946,9 @@ header .sub {
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-6" id="messageToGroup">
       <label class="form-label fw-semibold">Message To <span class="text-danger">*</span></label>
-      <input type="text" class="form-control" id="messageTo" placeholder="e.g. Parents, Students..." required>
+      <input type="text" class="form-control" id="messageTo" placeholder="e.g. Parents, Students...">
     </div>
 
     <!-- Send Button -->
@@ -1184,6 +1248,7 @@ function toggleMode(){
   document.getElementById('singleSection').classList.toggle('hidden', mode !== 'single');
   document.getElementById('bulkSection').classList.toggle('hidden', mode !== 'bulk');
   document.getElementById('statusTableCard').classList.toggle('hidden', mode !== 'bulk');
+  updateBulkScreenFieldVisibility();
 }
 
 function getMessageType(){
@@ -1327,6 +1392,21 @@ function contactFirstName(contact){
 function selectedBulkColumn(id){
   const el = document.getElementById(id);
   return el ? el.value : '';
+}
+
+function updateBulkScreenFieldVisibility(){
+  const mode = document.getElementById('modeSelect').value;
+  const usesScreenMessageTo = mode !== 'bulk' || !selectedBulkColumn('bulkMessageToColumn');
+  const usesScreenMessage = mode !== 'bulk' || !selectedBulkColumn('bulkMessageColumn');
+  const messageToGroup = document.getElementById('messageToGroup');
+  const messageTextGroup = document.getElementById('messageTextGroup');
+  const messageTo = document.getElementById('messageTo');
+  const messageText = document.getElementById('messageText');
+
+  messageToGroup.classList.toggle('hidden', !usesScreenMessageTo);
+  messageTextGroup.classList.toggle('hidden', !usesScreenMessage);
+  messageTo.required = usesScreenMessageTo;
+  messageText.required = usesScreenMessage;
 }
 
 function getRowValue(contact, column){
@@ -1480,6 +1560,7 @@ function renderBulkMappingOptions(){
     }).join('');
     if(excelColumns.includes(current)) select.value = current;
   });
+  updateBulkScreenFieldVisibility();
 }
 
 function renderContacts(){
@@ -1813,9 +1894,11 @@ window.onload = function(){
   document.getElementById('excelFile').addEventListener('change', handleExcel);
   ['bulkMessageToColumn', 'bulkMessageColumn'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => {
+      updateBulkScreenFieldVisibility();
       if(contacts.length) buildStatusTable();
     });
   });
+  updateBulkScreenFieldVisibility();
 };
 </script>
 
