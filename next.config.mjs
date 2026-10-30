@@ -4,15 +4,16 @@ const redirects = [
   ["/index.html", "/", true],
   ["/excel-merger.html", "/tools/excel-tools/excel-toolkit.html", true],
   ["/tools/excel-tools/excel-merger.html", "/tools/excel-tools/excel-toolkit.html", true],
-  ["/whatsapp.html", "/tools/messaging/iwhatsapp.html", true],
-  ["/tools/messaging/whatsapp.html", "/tools/messaging/iwhatsapp.html", true],
   ["/image-url-generator.html", "/tools/image-generator/image-url-generator.html", true],
   ["/qr-generator.html", "/tools/qr-generator/index.html", true],
   ["/certificate-generator.html", "/tools/certificate-generator/index.html", true],
   ["/rfid-coupon.html", "/", false],
   ["/tools/rfid-management/rfid-coupon.html", "/", false],
   ["/id-card-registration.html", "/", false],
-  ["/tools/id-card/id-card-registration.html", "/", false]
+  ["/tools/id-card/id-card-registration.html", "/", false],
+  ["/whatsapp.html", "/", false],
+  ["/tools/messaging/whatsapp.html", "/", false],
+  ["/tools/messaging/iwhatsapp.html", "/", false]
 ];
 
 /** @type {import('next').NextConfig} */

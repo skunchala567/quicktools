@@ -71,8 +71,6 @@ htmlbasics/
 │   │   └── excel-toolkit.html (Excel merge/split)
 │   ├── image-generator/
 │   │   └── image-url-generator.html (Image URL conversion)
-│   ├── messaging/
-│   │   └── iwhatsapp.html (WhatsApp/Instagram messaging)
 │   └── certificate-generator/
 │       └── index.html (Certificate generator)
 ├── core/
@@ -105,11 +103,6 @@ htmlbasics/
 - Generate and manage image URLs
 - Create image links from files
 - Share and copy URLs
-
-### iWhatsApp
-- WhatsApp messaging integration
-- Instagram messaging
-- Direct messaging interface
 
 ### Certificate Generator
 - Design and customize certificates
@@ -157,7 +150,6 @@ Once the server is running:
 - **QR Generator**: http://localhost:3000/tools/qr-generator/index.html
 - **Excel Toolkit**: http://localhost:3000/tools/excel-tools/excel-toolkit.html
 - **Image Generator**: http://localhost:3000/tools/image-generator/image-url-generator.html
-- **iWhatsApp**: http://localhost:3000/tools/messaging/iwhatsapp.html
 - **Certificate Generator**: http://localhost:3000/tools/certificate-generator/index.html
 
 ## 💡 Tips

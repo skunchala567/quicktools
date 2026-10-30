@@ -1,7 +1,7 @@
 {
   "name": "quicktools",
   "version": "1.0.0",
-  "description": "Professional QR Code, Excel, Image, and Messaging Tools Suite",
+  "description": "Professional QR Code, Excel, Image, and Certificate Tools Suite",
   "private": true,
   "type": "module",
   "scripts": {
@@ -18,8 +18,7 @@
     "generator",
     "excel",
     "tools",
-    "image",
-    "messaging"
+    "image"
   ],
   "author": "Claude Code",
   "license": "MIT",

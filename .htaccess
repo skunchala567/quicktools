@@ -29,11 +29,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^image-url-generator\.html$ tools/image-generator/image-url-generator.html [R=301,L]
-
-    # WhatsApp
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^whatsapp\.html$ tools/messaging/whatsapp.html [R=301,L]
 </IfModule>
 
 # ============================================================

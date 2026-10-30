@@ -53,8 +53,6 @@
               📁 image-generator/
                 📄 image-url-generator.html
               📁 material-inward/
-              📁 messaging/
-                📄 whatsapp.html
               📁 rfid-management/
                 📄 rfid-coupon.html
                 📄 rfid-icon.svg

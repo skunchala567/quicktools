@@ -168,7 +168,6 @@ small,
 }
 
 .app-icon-cert::before { content: "CE"; }
-.app-icon-whatsapp::before { content: "WA"; }
 .app-icon-excel::before { content: "XL"; }
 .app-icon-image::before { content: "IM"; }
 .app-icon-rfid::before { content: "RF"; }

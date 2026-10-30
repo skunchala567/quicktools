@@ -148,23 +148,6 @@
           "navigationLink": "Dashboard → Image URLs"
         },
         {
-          "id": "messaging",
-          "name": "💬 Messaging",
-          "icon": "💬",
-          "description": "WhatsApp integration and messaging",
-          "path": "tools/messaging/",
-          "entryPoint": "whatsapp.html",
-          "files": [
-            {
-              "name": "whatsapp.html",
-              "type": "HTML",
-              "purpose": "WhatsApp integration interface"
-            }
-          ],
-          "dependencies": ["../../core/base-theme.js", "../../core/base-theme.css"],
-          "navigationLink": "Dashboard → WhatsApp"
-        },
-        {
           "id": "material-inward",
           "name": "📦 Material Inward (Separate Project)",
           "icon": "📦",
@@ -228,10 +211,10 @@
     }
   },
   "statistics": {
-    "totalModules": 6,
-    "totalFiles": 15,
+    "totalModules": 5,
+    "totalFiles": 14,
     "coreFiles": 4,
-    "toolModules": 6,
+    "toolModules": 5,
     "configFiles": 5
   },
   "navigationStructure": {
@@ -252,10 +235,6 @@
       {
         "label": "Image URLs",
         "href": "../tools/image-generator/image-url-generator.html"
-      },
-      {
-        "label": "WhatsApp",
-        "href": "../tools/messaging/whatsapp.html"
       },
       {
         "label": "Excel Merger",

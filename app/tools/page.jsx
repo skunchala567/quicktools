@@ -12,12 +12,6 @@ const tools = [
     href: "/tools/qr-generator/index.html"
   },
   {
-    code: "MSG",
-    name: "iWhatsApp",
-    description: "WhatsApp and Instagram messaging integration.",
-    href: "/tools/messaging/iwhatsapp.html"
-  },
-  {
     code: "XLS",
     name: "Excel Toolkit",
     description: "Merge, split, and combine Excel files and sheets.",
