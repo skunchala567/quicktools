@@ -7,6 +7,8 @@
 
 <!-- SheetJS (xlsx) from CDN: handles reading/writing .xlsx, .xls, .csv -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- JSZip: packages multi-level split output as folders when direct folder saving isn't available -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <!-- Distinctive typography pairing: Fraunces (display) + Inter Tight (body) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -598,6 +600,60 @@ header.top {
   padding: 0;
   justify-content: center;
 }
+.split-output-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.split-output-actions {
+  display: flex;
+  gap: 6px;
+}
+.split-output-actions .btn {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.split-output-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.split-output-column {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s, opacity 0.15s;
+}
+.split-output-column:hover { border-color: var(--border-strong); }
+.split-output-column input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+.split-output-column:has(input:not(:checked)) { opacity: 0.55; }
+.split-output-column:has(input:not(:checked)) span { text-decoration: line-through; }
+.split-output-column[data-split-level]::after {
+  content: 'Level ' attr(data-split-level);
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
 @media (max-width: 680px) {
   .split-config-grid { grid-template-columns: 1fr; }
 }
@@ -1088,8 +1144,20 @@ footer.foot a:hover { color: var(--accent); }
                 <label style="display: block; font-size: 12px; color: var(--text-mute); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Split by Columns</label>
                 <div id="splitLevels" class="split-levels"></div>
                 <button type="button" class="btn btn-secondary" id="addSplitLevelBtn" style="margin-top: 10px; padding: 9px 14px;" disabled>+ Add split level</button>
-                <small style="display: block; margin-top: 7px; color: var(--text-mute);">Rows are grouped by the selected columns in level order.</small>
+                <small style="display: block; margin-top: 7px; color: var(--text-mute);">Rows are grouped by the selected columns in level order. With Multiple Workbooks, every level except the last becomes a folder and the last level names the file (e.g. Section / Subject.xlsx).</small>
               </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+              <div class="split-output-head">
+                <label style="display: block; font-size: 12px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.05em;">Columns in Output</label>
+                <div class="split-output-actions">
+                  <button type="button" class="btn btn-ghost" id="skipSplitColumnsBtn">Skip split columns</button>
+                  <button type="button" class="btn btn-ghost" id="keepAllColumnsBtn">Keep all</button>
+                </div>
+              </div>
+              <div id="splitOutputColumns" class="split-output-columns"></div>
+              <small style="display: block; margin-top: 7px; color: var(--text-mute);">Untick columns to leave them out of the generated files. Split columns still group the rows even when skipped.</small>
             </div>
 
             <div style="margin-bottom: 20px;">
@@ -1125,8 +1193,13 @@ footer.foot a:hover { color: var(--accent); }
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download Workbooks
             </span></button>
+            <button class="btn btn-secondary" id="downloadSplitZipBtn" type="button" style="display: none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+              Download ZIP
+            </button>
             <button class="btn btn-ghost" id="clearSplitBtn" type="button">Clear</span></button>
           </div>
+          <small id="splitFolderHint" style="display: none; margin-top: 10px; color: var(--text-mute);"></small>
         </div>
       </div>
     </div>
@@ -1663,6 +1736,8 @@ const downloadSheetBtn = document.getElementById('downloadSheetBtn');
 const clearSheetBtn = document.getElementById('clearSheetBtn');
 const splitSheetBtn = document.getElementById('splitSheetBtn');
 const downloadSplitBtn = document.getElementById('downloadSplitBtn');
+const downloadSplitZipBtn = document.getElementById('downloadSplitZipBtn');
+const splitFolderHint = document.getElementById('splitFolderHint');
 const clearSplitBtn = document.getElementById('clearSplitBtn');
 const sheetListContainer = document.getElementById('sheetListContainer');
 const sheetCheckboxList = document.getElementById('sheetCheckboxList');
@@ -1671,6 +1746,9 @@ const splitConfigContainer = document.getElementById('splitConfigContainer');
 const splitSheetSelect = document.getElementById('splitSheetSelect');
 const splitLevels = document.getElementById('splitLevels');
 const addSplitLevelBtn = document.getElementById('addSplitLevelBtn');
+const splitOutputColumns = document.getElementById('splitOutputColumns');
+const skipSplitColumnsBtn = document.getElementById('skipSplitColumnsBtn');
+const keepAllColumnsBtn = document.getElementById('keepAllColumnsBtn');
 const sheetOpSegmented = document.getElementById('sheetOpSegmented');
 let splitHeaders = [];
 
@@ -1857,6 +1935,7 @@ function onSheetSelectChange() {
   if (isNaN(idx)) {
     splitHeaders = [];
     splitLevels.innerHTML = '';
+    splitOutputColumns.innerHTML = '';
     addSplitLevelBtn.disabled = true;
     splitSheetBtn.disabled = true;
     return;
@@ -1869,6 +1948,7 @@ function onSheetSelectChange() {
   if (!rows || rows.length === 0) {
     splitHeaders = [];
     splitLevels.innerHTML = '<span style="color: var(--text-mute); font-size: 13px;">No data in sheet</span>';
+    splitOutputColumns.innerHTML = '';
     addSplitLevelBtn.disabled = true;
     splitSheetBtn.disabled = true;
     return;
@@ -1876,6 +1956,7 @@ function onSheetSelectChange() {
 
   splitHeaders = (rows[0] || []).map(h => String(h ?? '').trim());
   splitLevels.innerHTML = '';
+  renderSplitOutputColumns();
   addSplitLevel();
   updateSplitLevelControls();
 }
@@ -1905,6 +1986,23 @@ function addSplitLevel() {
   updateSplitLevelControls();
 }
 
+function renderSplitOutputColumns() {
+  splitOutputColumns.innerHTML = '';
+  splitHeaders.forEach((header, idx) => {
+    const label = document.createElement('label');
+    label.className = 'split-output-column';
+    label.innerHTML = `
+      <input type="checkbox" value="${idx}" checked />
+      <span>${escapeHtml(header || `Column ${idx + 1}`)}</span>
+    `;
+    splitOutputColumns.appendChild(label);
+  });
+}
+
+function getExcludedOutputColumns() {
+  return new Set(Array.from(splitOutputColumns.querySelectorAll('input:not(:checked)')).map(cb => parseInt(cb.value)));
+}
+
 function getSelectedSplitColumns() {
   return Array.from(splitLevels.querySelectorAll('.split-column-select'))
     .map(select => select.value === '' ? NaN : parseInt(select.value))
@@ -1920,11 +2018,35 @@ function updateSplitLevelControls() {
     row.querySelector('.split-level-remove').style.visibility = rows.length === 1 ? 'hidden' : 'visible';
   });
 
+  // Tag each output column with the split level it is used in, if any.
+  const levelValues = rows.map(row => row.querySelector('.split-column-select').value);
+  splitOutputColumns.querySelectorAll('.split-output-column').forEach(label => {
+    const level = levelValues.indexOf(label.querySelector('input').value);
+    if (level >= 0) label.dataset.splitLevel = level + 1;
+    else delete label.dataset.splitLevel;
+  });
+  const hasOutputColumn = splitOutputColumns.querySelector('input:checked') !== null;
+
   addSplitLevelBtn.disabled = splitHeaders.length === 0 || rows.length >= splitHeaders.length;
-  splitSheetBtn.disabled = rows.length === 0 || selectedColumns.length !== rows.length || new Set(selectedColumns).size !== selectedColumns.length;
+  splitSheetBtn.disabled = rows.length === 0 || selectedColumns.length !== rows.length || new Set(selectedColumns).size !== selectedColumns.length || !hasOutputColumn;
 }
 
 addSplitLevelBtn.addEventListener('click', addSplitLevel);
+
+splitOutputColumns.addEventListener('change', updateSplitLevelControls);
+
+skipSplitColumnsBtn.addEventListener('click', () => {
+  const splitColumns = new Set(getSelectedSplitColumns());
+  splitOutputColumns.querySelectorAll('input').forEach(cb => {
+    if (splitColumns.has(parseInt(cb.value))) cb.checked = false;
+  });
+  updateSplitLevelControls();
+});
+
+keepAllColumnsBtn.addEventListener('click', () => {
+  splitOutputColumns.querySelectorAll('input').forEach(cb => { cb.checked = true; });
+  updateSplitLevelControls();
+});
 
 splitLevels.addEventListener('change', (event) => {
   if (event.target.classList.contains('split-column-select')) updateSplitLevelControls();
@@ -2123,6 +2245,12 @@ splitSheetBtn.addEventListener('click', async () => {
     toast('error', 'Duplicate column', 'Each split level must use a different column.');
     return;
   }
+  const excludedCols = getExcludedOutputColumns();
+  if (excludedCols.size >= splitHeaders.length) {
+    toast('error', 'No columns selected', 'Keep at least one column in the output.');
+    return;
+  }
+  const keepColumn = (_, colIdx) => !excludedCols.has(colIdx);
 
   splitSheetBtn.disabled = true;
   clearSplitBtn.disabled = true;
@@ -2139,9 +2267,10 @@ splitSheetBtn.addEventListener('click', async () => {
       throw new Error('Sheet has no data rows');
     }
 
-    const headers = rows[0].map(h => String(h ?? '').trim());
+    const headers = rows[0].map(h => String(h ?? '').trim()).filter(keepColumn);
 
     // Group rows by the ordered combination of all selected split columns.
+    // Split values are read before skipped columns are dropped from the row.
     const groups = new Map();
     for (let r = 1; r < rows.length; r++) {
       const row = rows[r];
@@ -2150,20 +2279,23 @@ splitSheetBtn.addEventListener('click', async () => {
       const groupName = splitValues.join(' - ');
 
       if (!groups.has(groupKey)) {
-        groups.set(groupKey, { name: groupName, rows: [] });
+        groups.set(groupKey, { name: groupName, values: splitValues, rows: [] });
       }
-      groups.get(groupKey).rows.push(row);
+      groups.get(groupKey).rows.push(excludedCols.size ? row.filter(keepColumn) : row);
     }
 
     const groupEntries = Array.from(groups.values());
     sheetState.splitBlobs = [];
     sheetState.splitMode = splitMode;
+    sheetState.splitUsesFolders = splitMode === 'workbooks' && colIndexes.length > 1;
+    const sourceBaseName = (sheetState.currentFile?.name || 'workbook').replace(/\.[^.]+$/, '');
+    sheetState.splitRootName = toSafePathSegment(`${sourceBaseName} - split`);
 
     if (splitMode === 'workbooks') {
       // Create multiple workbooks (one per group)
       document.getElementById('progressLabelSplit').textContent = 'Creating workbooks…';
 
-      groupEntries.forEach(({ name: groupName, rows: dataRows }, idx) => {
+      groupEntries.forEach(({ name: groupName, values: splitValues, rows: dataRows }, idx) => {
         const aoa = [headers];
         aoa.push(...dataRows);
 
@@ -2178,6 +2310,7 @@ splitSheetBtn.addEventListener('click', async () => {
 
         sheetState.splitBlobs.push({
           name: groupName,
+          values: splitValues,
           blob: blob,
           rowCount: dataRows.length
         });
@@ -2192,7 +2325,13 @@ splitSheetBtn.addEventListener('click', async () => {
       document.getElementById('progressLabelSplit').textContent = 'Done.';
 
       downloadSplitBtn.disabled = false;
-      toast('success', 'Split complete', `Created ${groupEntries.length} workbook${groupEntries.length > 1 ? 's' : ''}`);
+      const workbookLabel = `${groupEntries.length} workbook${groupEntries.length > 1 ? 's' : ''}`;
+      if (sheetState.splitUsesFolders) {
+        const folderCount = assignSplitFilePaths(sheetState.splitBlobs);
+        toast('success', 'Split complete', `Created ${workbookLabel} in ${folderCount} folder${folderCount > 1 ? 's' : ''}`);
+      } else {
+        toast('success', 'Split complete', `Created ${workbookLabel}`);
+      }
     } else {
       // Create single workbook with multiple sheets (one per group)
       document.getElementById('progressLabelSplit').textContent = 'Creating sheets…';
@@ -2258,6 +2397,202 @@ splitSheetBtn.addEventListener('click', async () => {
 
   splitSheetBtn.disabled = false;
   clearSplitBtn.disabled = false;
+  updateSplitDownloadOptions();
+});
+
+// =========================================================================
+//  SPLIT SHEET: Folder output (multi-level split → Level1/…/LastLevel.xlsx)
+// =========================================================================
+// Make a cell value safe to use as a file or folder name on Windows/macOS.
+function toSafePathSegment(value) {
+  let name = String(value ?? '')
+    .replace(/[<>:"/\\|?*\x00-\x1f]/g, '_')
+    .replace(/\s+/g, ' ')
+    .substring(0, 100)
+    .trim()
+    .replace(/[. ]+$/, '');
+  if (!name) name = '_';
+  if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i.test(name)) name = '_' + name;
+  return name;
+}
+
+// Every split level except the last becomes a folder; the last level names the file.
+// Paths are de-duplicated case-insensitively, since Windows treats "Math" and "math" as the same name.
+// Returns the number of distinct folders that hold files.
+function assignSplitFilePaths(items) {
+  const folderNames = new Map();
+  const usedPaths = new Set();
+
+  items.forEach(item => {
+    const segments = item.values.map(toSafePathSegment);
+    const fileBase = segments.pop();
+
+    let folderPath = '';
+    segments.forEach(segment => {
+      const candidate = folderPath ? `${folderPath}/${segment}` : segment;
+      if (!folderNames.has(candidate.toLowerCase())) folderNames.set(candidate.toLowerCase(), candidate);
+      folderPath = folderNames.get(candidate.toLowerCase());
+    });
+
+    let fileName = `${fileBase}.xlsx`;
+    let suffix = 2;
+    while (usedPaths.has(`${folderPath}/${fileName}`.toLowerCase())) {
+      fileName = `${fileBase} (${suffix++}).xlsx`;
+    }
+    usedPaths.add(`${folderPath}/${fileName}`.toLowerCase());
+
+    item.folders = folderPath.split('/');
+    item.fileName = fileName;
+  });
+
+  return new Set(items.map(item => item.folders.join('/').toLowerCase())).size;
+}
+
+function setSplitProgress(label, pct) {
+  document.getElementById('progressLabelSplit').textContent = label;
+  document.getElementById('progressFillSplit').style.width = pct + '%';
+  document.getElementById('progressPctSplit').textContent = pct + '%';
+}
+
+// Chrome/Edge can write folders straight to disk; other browsers get a ZIP instead.
+const canSaveToFolder = typeof window.showDirectoryPicker === 'function';
+
+function updateSplitDownloadOptions() {
+  const folderOutput = sheetState.splitUsesFolders && sheetState.splitBlobs.length > 0;
+  downloadSplitZipBtn.style.display = folderOutput && canSaveToFolder ? '' : 'none';
+  downloadSplitZipBtn.disabled = downloadSplitBtn.disabled;
+  splitFolderHint.style.display = folderOutput ? 'block' : 'none';
+  splitFolderHint.textContent = canSaveToFolder
+    ? 'Download Workbooks asks where to save. Chrome and Edge do not allow saving straight into Downloads, Desktop or Documents, so create or pick a folder inside one of them. Download ZIP saves to your usual downloads folder instead.'
+    : 'This browser cannot save folders directly, so the folders download as a ZIP file. Extract it to get them.';
+}
+
+// Count workbooks that already exist at their target paths, so we can ask before replacing them.
+async function countExistingFiles(dir, items) {
+  let count = 0;
+  for (const item of items) {
+    try {
+      let folderDir = dir;
+      for (const folder of item.folders) folderDir = await folderDir.getDirectoryHandle(folder);
+      await folderDir.getFileHandle(item.fileName);
+      count++;
+    } catch (err) {
+      if (err.name !== 'NotFoundError' && err.name !== 'TypeMismatchError') throw err;
+    }
+  }
+  return count;
+}
+
+async function writeSplitToDirectory(rootDir, items) {
+  const dirCache = new Map();
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    let dir = rootDir;
+    let path = '';
+    for (const folder of item.folders) {
+      path += '/' + folder.toLowerCase();
+      if (!dirCache.has(path)) dirCache.set(path, await dir.getDirectoryHandle(folder, { create: true }));
+      dir = dirCache.get(path);
+    }
+
+    const fileHandle = await dir.getFileHandle(item.fileName, { create: true });
+    const writable = await fileHandle.createWritable();
+    await writable.write(item.blob);
+    await writable.close();
+
+    setSplitProgress('Saving to folders…', Math.round(((i + 1) / items.length) * 100));
+  }
+}
+
+async function downloadSplitZip(items, rootName) {
+  if (typeof JSZip === 'undefined') {
+    throw new Error('ZIP library failed to load. Check your connection and try again.');
+  }
+
+  const zip = new JSZip();
+  const root = zip.folder(rootName);
+  items.forEach(item => root.file([...item.folders, item.fileName].join('/'), item.blob));
+
+  setSplitProgress('Building ZIP…', 0);
+  const blob = await zip.generateAsync({ type: 'blob' }, meta => {
+    setSplitProgress('Building ZIP…', Math.round(meta.percent));
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${rootName}.zip`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+// Chrome/Edge: write the folders directly into the folder the user picks.
+// Other browsers, the ZIP button, or a blocked picker: download a ZIP with the same folder structure.
+async function downloadSplitAsFolders({ asZip = false } = {}) {
+  const items = sheetState.splitBlobs;
+  const rootName = sheetState.splitRootName || 'split';
+  const fileLabel = `${items.length} workbook${items.length > 1 ? 's' : ''}`;
+
+  let targetDir = null;
+  if (!asZip && canSaveToFolder) {
+    try {
+      targetDir = await window.showDirectoryPicker({ id: 'excel-split', mode: 'readwrite', startIn: 'downloads' });
+    } catch (err) {
+      // Also raised when the user picks a folder the browser protects (Downloads, Desktop, Documents)
+      // or declines the "edit files" permission prompt.
+      if (err.name === 'AbortError' || err.name === 'NotAllowedError') {
+        toast('info', 'No folder selected', 'Create or pick a folder inside Downloads, Desktop or Documents, or use Download ZIP.');
+        return;
+      }
+      console.warn('Folder picker unavailable, falling back to ZIP:', err);
+    }
+  }
+
+  downloadSplitBtn.disabled = true;
+  downloadSplitZipBtn.disabled = true;
+  splitSheetBtn.disabled = true;
+  clearSplitBtn.disabled = true;
+  document.getElementById('progressWrapSplit').classList.add('active');
+
+  try {
+    if (targetDir) {
+      setSplitProgress('Checking folder…', 0);
+      const existing = await countExistingFiles(targetDir, items);
+      if (existing > 0 && !confirm(`${existing} file${existing > 1 ? 's' : ''} with the same name already exist${existing > 1 ? '' : 's'} in "${targetDir.name}" and will be replaced. Continue?`)) {
+        toast('info', 'Save cancelled', 'No files were changed.');
+        return;
+      }
+      await writeSplitToDirectory(targetDir, items);
+      setSplitProgress('Saved.', 100);
+      toast('success', 'Saved to folder', `${fileLabel} saved in "${targetDir.name}"`);
+    } else {
+      await downloadSplitZip(items, rootName);
+      setSplitProgress('Done.', 100);
+      toast('success', 'Downloaded ZIP', `${fileLabel} in folders — extract "${rootName}.zip"`);
+    }
+  } catch (err) {
+    console.error(err);
+    toast('error', 'Download failed', err.message || String(err));
+  } finally {
+    downloadSplitBtn.disabled = false;
+    clearSplitBtn.disabled = false;
+    updateSplitLevelControls();
+    updateSplitDownloadOptions();
+    setTimeout(() => {
+      document.getElementById('progressWrapSplit').classList.remove('active');
+    }, 800);
+  }
+}
+
+downloadSplitZipBtn.addEventListener('click', () => {
+  if (sheetState.splitBlobs.length === 0) {
+    toast('error', 'Nothing to download', 'Split sheets first.');
+    return;
+  }
+  downloadSplitAsFolders({ asZip: true });
 });
 
 downloadSplitBtn.addEventListener('click', () => {
@@ -2267,6 +2602,11 @@ downloadSplitBtn.addEventListener('click', () => {
   }
 
   const splitMode = sheetState.splitMode || 'workbooks';
+
+  if (splitMode === 'workbooks' && sheetState.splitUsesFolders) {
+    downloadSplitAsFolders();
+    return;
+  }
 
   if (splitMode === 'sheets' || sheetState.splitBlobs[0].name === 'combined') {
     // Single workbook with multiple sheets
@@ -2316,10 +2656,12 @@ clearSplitBtn.addEventListener('click', () => {
   splitHeaders = [];
   splitSheetSelect.innerHTML = '<option value="">Select a sheet...</option>';
   splitLevels.innerHTML = '';
+  splitOutputColumns.innerHTML = '';
   addSplitLevelBtn.disabled = true;
   splitConfigContainer.style.display = 'none';
   splitSheetBtn.disabled = true;
   downloadSplitBtn.disabled = true;
+  updateSplitDownloadOptions();
   document.getElementById('progressWrapSplit').classList.remove('active');
   toast('info', 'Cleared', 'Ready for a new file.');
 });
